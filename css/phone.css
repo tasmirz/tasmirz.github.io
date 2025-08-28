@@ -1,7 +1,16 @@
 /* Mobile-specific styles (up to 480px) */
 
 @media (max-width: 480px) {
-	/* General adjustments */
+	*, *::before, *::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
+	
+	.cursor {
+		animation: blink 1s infinite !important;
+	}
+
 	section {
 		padding-top: 60px;
 		padding-bottom: 40px;
@@ -381,6 +390,19 @@
   .extra-text {
     display: none;
   }
+}
+
+@media (max-width: 480px) and (prefers-reduced-motion: reduce) {
+	*, *::before, *::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
+	
+	/* Keep cursor blinking as it's essential */
+	.cursor {
+		animation: blink 1s infinite !important;
+	}
 }
 
 /* Extra small devices */

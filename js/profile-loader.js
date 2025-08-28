@@ -1,17 +1,12 @@
+import DataLoader from './data-loader.js';
+
 class ProfileLoader {
   constructor() {
     this.apiUrl = 'http://localhost:5000/Profile.aspx';
   }
 
   async fetchProfile() {
-    try {
-      const response = await fetch(this.apiUrl);
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      return await response.json();
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-      return null;
-    }
+    return await DataLoader.loadProfile();
   }
 
   updateProfileElements(profileData) {

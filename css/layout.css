@@ -1,3 +1,5 @@
+/* Layout structure with animation references */
+
 main {
 	padding-top: 60px;
 }
@@ -52,13 +54,148 @@ nav a {
 }
 
 nav a:first-of-type {
-padding-left: 0px;
+	padding-left: 0px;
 }
 
 .header-buttons {
 	display: flex;
 	align-items: center;
 	gap: var(--spacing-sm);
+}
+
+.btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: var(--spacing-sm) var(--spacing-md);
+	border-radius: var(--border-radius-sm);
+	font-family: var(--font-mono);
+	font-size: 0.9rem;
+	text-decoration: none;
+	transition: all var(--transition-fast);
+}
+
+.btn:hover {
+	transform: translateY(-2px);
+	box-shadow: var(--shadow-small);
+}
+
+.btn .material-icons {
+	margin-right: var(--spacing-sm);
+}
+
+.social-btn {
+	display: flex;
+	align-items: center;
+	padding: var(--spacing-sm) var(--spacing-md);
+	border-radius: var(--border-radius-sm);
+	text-decoration: none;
+	font-family: var(--font-mono);
+	font-size: 0.9rem;
+	transition: all var(--transition-normal);
+}
+
+.social-btn:hover {
+	transform: translateY(-2px);
+	background: linear-gradient(90deg, pink 0%, pink 100%);
+	background-size: 0% 100%;
+	background-repeat: no-repeat;
+	background-position: left;
+	animation: fillFromLeft 0.4s ease forwards;
+	border: 1px solid pink;
+	box-shadow: var(--shadow-small);
+}
+
+.social-btn .material-icons {
+	margin-right: var(--spacing-sm);
+	font-size: 1.2rem;
+}
+
+.icon-btn,
+.social-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	border-radius: var(--border-radius-round);
+	transition: all var(--transition-normal);
+}
+
+.theme-toggle, 
+.hamburger-menu {
+	background: none;
+	border: none;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	border-radius: var(--border-radius-round);
+	padding: 0;
+	margin: 0;
+	transition: all var(--transition-fast);
+}
+
+.theme-toggle .material-icons, 
+.hamburger-menu .material-icons {
+	font-size: 1.2rem;
+}
+
+.typewriter {
+	display: inline-block;
+	position: relative;
+	font-weight: 700;
+	font-size: 2.5rem;
+	text-align: left;
+}
+
+.cursor {
+	display: inline-block;
+	animation: blink 1s infinite;
+}
+
+.subtitle {
+	margin-top: var(--spacing-sm);
+	font-size: 1.2rem;
+	font-family: var(--font-mono);
+	opacity: 0.9;
+	text-align: left;
+}
+
+.email-text {
+	font-family: var(--font-mono);
+	text-decoration: none;
+	opacity: 0.9;
+	text-align: left;
+	transition: color var(--transition-fast);
+}
+
+.loading-message,
+.error-message {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 200px;
+	text-align: center;
+	padding: var(--spacing-lg);
+	font-family: var(--font-mono);
+}
+
+.loading-message p,
+.error-message p {
+	margin: 0;
+	font-size: 1.1rem;
+	opacity: 0.8;
+}
+
+.error-message {
+	color: var(--accent-red, #cc241d);
+}
+
+.loading-message {
+	color: var(--accent-blue, #458588);
 }
 
 #welcome {
@@ -157,7 +294,6 @@ h1, h2, h3, p {
 	transform: translateY(-2px);
 }
 
-/* Projects section */
 #projects {
 	min-height: 100vh;
 	display: flex;
@@ -195,10 +331,10 @@ h1, h2, h3, p {
 	border-radius: var(--border-radius-lg);
 	backdrop-filter: blur(10px);
 	-webkit-backdrop-filter: blur(10px);
-	transition: all var(--transition-normal);
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
+	transition: all var(--transition-normal);
 }
 
 .project-card:hover {
@@ -264,7 +400,6 @@ h1, h2, h3, p {
 	font-weight: 500;
 }
 
-/* Contact section */
 #contact {
 	min-height: 100vh;
 	display: flex;
@@ -384,7 +519,6 @@ h1, h2, h3, p {
 	font-size: 1.1rem;
 }
 
-/* Footer */
 footer {
 	background: var(--color-primary-darker);
 	color: var(--color-bg);
@@ -465,7 +599,163 @@ footer {
 	color: rgba(251, 241, 199, 0.6);
 }
 
-
 .hamburger-menu {
 	display: none;
+}
+.animate-on-scroll {
+	opacity: 0;
+	transform: translateY(30px);
+	transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.animate-on-scroll.visible {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+/* Scroll-triggered fade in */
+.fade-in-up {
+	animation: fadeIn 0.8s ease forwards;
+}
+
+.slide-in-left {
+	animation: slideInLeft 0.8s ease forwards;
+}
+
+.slide-in-right {
+	animation: slideInRight 0.8s ease forwards;
+}
+
+.scale-up {
+	animation: scaleUp 0.6s ease forwards;
+}
+
+/* Color applications */
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+nav a {
+  color: var(--color-nav-text);
+}
+
+nav a:hover {
+  color: var(--color-accent);
+}
+
+.theme-toggle, 
+.hamburger-menu,
+.theme-toggle .material-icons, 
+.hamburger-menu .material-icons {
+  color: var(--color-text);
+}
+
+.theme-toggle:hover, 
+.hamburger-menu:hover {
+  opacity: 0.8;
+}
+
+.typewriter {
+  color: var(--color-text);
+}
+
+.cursor {
+  color: var(--color-accent);
+}
+
+.subtitle {
+  color: var(--color-text-light);
+}
+
+.email-text {
+  color: var(--color-text);
+}
+
+.email-text:hover {
+  color: var(--color-accent);
+}
+
+.social-icon {
+  background-color: var(--color-primary);
+  color: var(--color-bg);
+}
+
+.social-icon:hover {
+  background-color: var(--color-primary-darker);
+  box-shadow: var(--shadow-medium);
+  opacity: 0.9;
+}
+
+.social-btn {
+  background-color: var(--color-primary-dark);
+  color: var(--color-bg);
+}
+
+.social-btn.github {
+  background-color: var(--color-primary-dark);
+}
+
+.social-btn.linkedin {
+  background-color: var(--color-primary-light);
+}
+
+.social-btn:hover {
+  background-color: var(--color-primary-darker);
+  box-shadow: var(--shadow-medium);
+  opacity: 0.9;
+}
+
+header {
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(var(--color-bg-rgb), 0.1);
+  background-color: rgba(var(--color-bg-rgb), 0.1);
+}
+
+.project-card {
+  border-color: var(--color-primary-light);
+  background: rgba(var(--color-bg-rgb), 0.5);
+}
+
+.project-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-medium);
+}
+
+.project-card h3 {
+  color: var(--color-text);
+}
+
+.project-card p {
+  color: var(--color-text-light);
+}
+
+.language-tag {
+  background-color: var(--color-primary);
+  color: var(--color-bg);
+}
+
+.contact-item .material-icons {
+  color: var(--color-primary);
+}
+
+.form-group input,
+.form-group textarea {
+  border-color: var(--color-primary-light);
+  background: rgba(var(--color-bg-rgb), 0.8);
+  color: var(--color-text);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--color-primary);
+}
+
+.submit-btn {
+  background: var(--color-primary);
+  color: var(--color-bg);
+}
+
+.submit-btn:hover {
+  background: var(--color-primary-dark);
 }

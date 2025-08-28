@@ -1,3 +1,5 @@
+import DataLoader from './data-loader.js';
+
 class ProjectsLoader {
     constructor() {
         if (ProjectsLoader.instance) {
@@ -18,16 +20,7 @@ class ProjectsLoader {
     }
 
     async fetchProjects() {
-        try {
-            const response = await fetch(this.apiUrl);
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            const data = await response.json();
-            return data.projects;
-        } catch (error) {
-            console.error('Error fetching projects:', error);
-            this.showState('error', 'Failed to load projects. Please try again later.');
-            return [];
-        }
+        return await DataLoader.loadProjects();
     }
 
     createProjectCard(project) {

@@ -1,3 +1,5 @@
+import DataLoader from './data-loader.js';
+
 class SkillsLoader {
     constructor() {
         if (SkillsLoader.instance) {
@@ -18,16 +20,7 @@ class SkillsLoader {
     }
 
     async fetchSkills() {
-        try {
-            const response = await fetch(this.apiUrl);
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            const data = await response.json();
-            return data.skillCategories;
-        } catch (error) {
-            console.error('Error fetching skills:', error);
-            this.displayState('error', 'Failed to load skills. Please try again later.');
-            return [];
-        }
+        return await DataLoader.loadSkills();
     }
 
     createSkillCategoryHTML(category) {

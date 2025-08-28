@@ -1,44 +1,36 @@
-/* Foundational styles, variables, and resets */
+/* Base styles, variables, and resets */
 
 :root {
-	/* Typography */
-	--font-primary: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-		sans-serif;
+	--font-primary: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 	--font-mono: "Courier New", monospace;
 
-	/* Spacing */
 	--spacing-xs: 0.25rem;
 	--spacing-sm: 0.5rem;
 	--spacing-md: 1rem;
 	--spacing-lg: 2rem;
 	--spacing-xl: 3rem;
 
-	/* Layout */
 	--header-height: 80px;
 	--content-width-max: 1200px;
 	--section-padding-desktop: 20%;
 	--section-padding-tablet: 10%;
 	--section-padding-mobile: 8%;
 
-	/* Transitions */
-	--transition-fast: 0.2s ease;
-	--transition-normal: 0.3s ease;
-	--transition-slow: 0.5s ease;
-
-	/* Border Radius */
 	--border-radius-sm: 4px;
 	--border-radius-md: 8px;
 	--border-radius-lg: 12px;
 	--border-radius-round: 50%;
+
+	--shadow-small: 0 2px 4px rgba(0, 0, 0, 0.1);
+	--shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.15);
+	--shadow-large: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-/* Reset and base styles */
 * {
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
 }
-
 
 html {
 	scroll-behavior: smooth;
@@ -51,12 +43,10 @@ body {
 	min-height: 100vh;
 	width: 100%;
 	overflow-x: hidden;
-	transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
 a {
 	text-decoration: none;
-	transition: color var(--transition-fast);
 }
 
 ul,
@@ -77,7 +67,6 @@ button {
 	font-family: inherit;
 }
 
-/* Common utility classes */
 .container {
 	width: 100%;
 	max-width: var(--content-width-max);
