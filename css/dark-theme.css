@@ -12,6 +12,8 @@
 	--color-primary-darker: #665c54;
 	--color-primary-light: #a89984;
 	--color-primary-lighter: #bdae93;
+	--color-highlight-bg:pink;
+  --color-highlight-border: #bdae93;
 
 	/* Text variations */
 	--color-text-light: #a89984;

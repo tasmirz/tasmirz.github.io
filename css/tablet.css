@@ -61,7 +61,7 @@
 	}
 	
 	/* Content sections */
-	#about, #projects, #contact {
+	#about, #projects, #lyf, #contact {
 		padding-left: var(--section-padding-tablet);
 		padding-right: 5%;
 	}
@@ -117,6 +117,7 @@
 		font-size: 0.8rem;
 	}
 	
+
 	/* Contact section tablet */
 	.contact-container {
 		flex-direction: column;

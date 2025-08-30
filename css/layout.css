@@ -97,13 +97,14 @@ nav a:first-of-type {
 
 .social-btn:hover {
 	transform: translateY(-2px);
-	background: linear-gradient(90deg, pink 0%, pink 100%);
+	background: linear-gradient(90deg, var(--color-highlight-bg) 0%, var(--color-highlight-bg) 100%);
 	background-size: 0% 100%;
 	background-repeat: no-repeat;
 	background-position: left;
-	animation: fillFromLeft 0.4s ease forwards;
-	border: 1px solid pink;
+	border: 1px solid var(--color-highlight-border);
+	animation: fillFromLeft 0.2s ease forwards;
 	box-shadow: var(--shadow-small);
+	transition: transform var(--transition-normal), background var(--transition-normal), box-shadow var(--transition-normal);
 }
 
 .social-btn .material-icons {
@@ -202,9 +203,29 @@ nav a:first-of-type {
 	align-items: flex-start;
 	padding-left: var(--section-padding-desktop);
 	text-align: left;
+	position: relative;
+}
+
+#welcome-background {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	opacity: 0.8;
+	pointer-events: auto;
+}
+
+#welcome-background canvas {
+	width: 100% !important;
+	height: 100% !important;
 }
 
 .welcome-content {
+	position: relative;
+	z-index: 2;
+	pointer-events: auto;
 	max-width: 600px;
 	display: flex;
 	flex-direction: column;
@@ -227,7 +248,7 @@ h1, h2, h3, p {
 	align-items: flex-start;
 }
 
-#about, #projects, #contact {
+#about, #projects, #lyf, #contact {
 	padding-left: var(--section-padding-desktop);
 	padding-right: var(--section-padding-desktop);
 }
@@ -398,6 +419,149 @@ h1, h2, h3, p {
 	font-family: var(--font-mono);
 	font-size: 0.8rem;
 	font-weight: 500;
+}
+
+/* Lyf Section */
+#lyf {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+}
+
+#lyf h2 {
+	margin-bottom: var(--spacing-lg);
+	align-self: flex-start;
+}
+
+.lyf-container {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: var(--spacing-md);
+}
+
+.lyf-canvas-container {
+	position: relative;
+	background: var(--bg-primary);
+	border-radius: 8px;
+	overflow: hidden;
+	width: 100%;
+	aspect-ratio: 16/9;
+	margin: 0 auto;
+}
+
+.lyf-canvas-container canvas {
+	display: block;
+	width: 100%;
+	  -webkit-mask: url('../assets/mask.svg') no-repeat center;
+  -webkit-mask-size: contain;
+
+  mask: url('../assets/mask.svg') no-repeat center;
+  mask-size: contain;
+}
+
+.lyf-instructions {
+	font-family: var(--font-mono);
+	font-size: 0.9rem;
+	line-height: 1.6;
+}
+
+.lyf-instructions strong {
+	color: var(--accent-color);
+}
+
+/* Mobile Controls */
+.lyf-mobile-controls {
+	display: none;
+	position: relative;
+	width: 100%;
+	height: 120px;
+	margin-top: 10px;
+	pointer-events: auto;
+}
+
+.lyf-dpad {
+	position: absolute;
+	left: 20px;
+	top: 10px;
+	width: 100px;
+	height: 100px;
+	pointer-events: auto;
+}
+
+.lyf-dpad-button {
+	position: absolute;
+	width: 30px;
+	height: 30px;
+	background: rgba(255, 255, 255, 0.8);
+	border: 2px solid var(--accent-color);
+	border-radius: 4px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 16px;
+	font-weight: bold;
+	color: var(--accent-color);
+	cursor: pointer;
+	user-select: none;
+	touch-action: manipulation;
+	transition: all 0.1s ease;
+}
+
+.lyf-dpad-button:active {
+	background: var(--accent-color);
+	color: white;
+	transform: scale(0.95);
+}
+
+.lyf-dpad-up {
+	top: 0;
+	left: 35px;
+}
+
+.lyf-dpad-down {
+	bottom: 0;
+	left: 35px;
+}
+
+.lyf-dpad-left {
+	left: 0;
+	top: 35px;
+}
+
+.lyf-dpad-right {
+	right: 0;
+	top: 35px;
+}
+
+.lyf-action-button {
+	position: absolute;
+	right: 20px;
+	top: 30px;
+	width: 60px;
+	height: 60px;
+	background: rgba(255, 255, 255, 0.8);
+	border: 3px solid var(--accent-color);
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 18px;
+	font-weight: bold;
+	color: var(--accent-color);
+	cursor: pointer;
+	user-select: none;
+	touch-action: manipulation;
+	transition: all 0.1s ease;
+	pointer-events: auto;
+}
+
+.lyf-action-button:active {
+	background: var(--accent-color);
+	color: white;
+	transform: scale(0.95);
 }
 
 #contact {
@@ -700,11 +864,6 @@ nav a:hover {
   background-color: var(--color-primary-light);
 }
 
-.social-btn:hover {
-  background-color: var(--color-primary-darker);
-  box-shadow: var(--shadow-medium);
-  opacity: 0.9;
-}
 
 header {
   backdrop-filter: blur(10px);

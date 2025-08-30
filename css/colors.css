@@ -13,7 +13,9 @@
   --color-primary-darker: #282828;
   --color-primary-light: #665c54;
   --color-primary-lighter: #7c6f64;
-  
+  --color-highlight-bg: rgb(214, 57, 91);
+  --color-highlight-border: pink;
+
   --color-text-light: #665c54;
   
   --color-border: rgba(60, 56, 54, 0.2);
@@ -24,4 +26,5 @@
   
   --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.1);
   --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.1);
+
 }
