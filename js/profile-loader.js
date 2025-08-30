@@ -42,25 +42,23 @@ class ProfileLoader {
 				property: 'href',
 				value: `mailto:${profileData.email}`
 			},
+			// Contact section info - email
 			{
-				selector: '.contact-item span:last-child',
+				selector: '.contact-details .contact-item:nth-child(1) span:last-child',
+				property: 'textContent',
+				value: profileData.email
+			},
+			// Contact section info - location
+			{
+				selector: '.contact-details .contact-item:nth-child(2) span:last-child',
 				property: 'textContent',
 				value: profileData.location
 			},
+			// Contact section info - description paragraph
 			{
-				selector: '.contact-info p',
+				selector: '.contact-info-section p',
 				property: 'textContent',
 				value: profileData.aboutDescription
-			},
-			{
-				selector: '.footer-section h4',
-				property: 'textContent',
-				value: profileData.name
-			},
-			{
-				selector: '.footer-section p',
-				property: 'textContent',
-				value: profileData.bio
 			}
 		]
 
@@ -85,11 +83,8 @@ class ProfileLoader {
 		const socialLinks = [
 			{ selector: '.social-btn.github', href: social.github },
 			{ selector: '.social-btn.linkedin', href: social.linkedin },
-			{ selector: '.footer-social-link[href*="github"]', href: social.github },
-			{
-				selector: '.footer-social-link[href*="linkedin"]',
-				href: social.linkedin
-			}
+			{ selector: '.footer-social-link.github', href: social.github },
+			{ selector: '.footer-social-link.linkedin', href: social.linkedin }
 		]
 
 		socialLinks.forEach(({ selector, href }) => {

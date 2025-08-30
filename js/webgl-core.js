@@ -3,12 +3,7 @@ export class Program {
 	#gl
 	#vertexShaderURL
 	#fragmentShaderURL
-	/**
-	 * Creates an instance of the class.
-	 * @param {WebGLRenderingContext} gl - The WebGL rendering context.
-	 * @param {string} vertexShaderURL - The URL to the vertex shader source.
-	 * @param {string} fragmentShaderURL - The URL to the fragment shader source.
-	 */
+
 	constructor(gl, vertexShaderURL, fragmentShaderURL) {
 		this.#gl = gl
 		this.#vertexShaderURL = vertexShaderURL

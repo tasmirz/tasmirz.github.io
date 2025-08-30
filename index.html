@@ -56,9 +56,9 @@
 				</div>
 			</section>
 			<section id="about">
+				<h2>About Me</h2>
 				<div class="about-container">
 					<div class="about-content">
-						<h2>About Me</h2>
 						<div class="skills-section">
 						</div>
 					</div>
@@ -68,13 +68,17 @@
 				</div>
 			</section>
 			<section id="projects">
-				<h2>My Projects</h2>
+				<h2>Projects</h2>
 				<div class="projects-container">
 				</div>
 			</section>
 			<section id="lyf">
 				<h2>Lyf</h2>
 				<div class="lyf-container">
+					<!-- Location indicator above canvas -->
+					<div class="lyf-location-indicator">
+						<span class="lyf-location-text">Starting Point</span>
+					</div>
 					<div class="lyf-canvas-container">
 						<!-- WebGL canvas will be added here -->
 					</div>
@@ -93,20 +97,39 @@
 			<section id="contact">
 				<h2>Contact Me</h2>
 				<div class="contact-container">
-					<div class="contact-info">
-						<h3>Get In Touch</h3>
-						<p></p>
-						<div class="contact-details">
-							<div class="contact-item">
-								<span class="material-icons">email</span>
-								<span></span>
+					<div class="contact-left-content">
+						<div class="contact-info-section">
+							<h3>Get In Touch</h3>
+							<p></p>
+							<div class="contact-details">
+								<div class="contact-item">
+									<span class="material-icons">email</span>
+									<span></span>
+								</div>
+								<div class="contact-item">
+									<span class="material-icons">location_on</span>
+									<span></span>
+								</div>
 							</div>
-							<div class="contact-item">
-								<span class="material-icons">location_on</span>
-								<span></span>
+							<div class="contact-social">
+								<a href="#" target="_blank" class="footer-social-link github">
+									<span class="material-icons">code</span>
+								</a>
+								<a href="#" target="_blank" class="footer-social-link linkedin">
+									<span class="material-icons">business</span>
+								</a>
 							</div>
 						</div>
+						
+						<div class="cv-section">
+							<h3>Download CV</h3>
+							<a href="assets/cv.pdf" download class="cv-download-btn">
+								<span class="material-icons">download</span>
+								Download Resume
+							</a>
+						</div>
 					</div>
+					
 					<form class="contact-form" id="contact-form">
 						<div class="form-group">
 							<label for="name">Name</label>
@@ -134,19 +157,16 @@
 		</main>
 		<footer>
 			<div class="footer-content">
-				<div class="footer-section">
-					<h4></h4>
-					<p></p>
+				<div class="footer-gif-container">
+					<img src="/assets/tree.gif" alt="Tree animation"></img>
 				</div>
-				<div class="footer-section">
-					<h4>Connect</h4>
-					<div class="footer-social">
-						<a href="#" target="_blank" class="footer-social-link">
-							<span class="material-icons">code</span>
-						</a>
-						<a href="#" target="_blank" class="footer-social-link">
-							<span class="material-icons">business</span>
-						</a>
+				<div class="footer-personal-note">
+					<div class="personal-note-content">
+						<span class="material-icons waving-icon">waving_hand</span>
+						<h3>Thanks for stopping by! </h3>
+
+						<p class="personal-quote">"I love building things that make life easier. Fun fact: I drink my coffee black and code best in the morning!"</p>
+
 					</div>
 				</div>
 			</div>

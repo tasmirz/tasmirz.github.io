@@ -6,6 +6,8 @@ import SkillsLoader from './skills-loader.js'
 import ProfileLoader from './profile-loader.js'
 import WebGLBackground from './webgl-background.js'
 import WebGLLyf from './webgl-lyf.js'
+import QuoteRotator from './quote-rotator.js'
+import initScrollAnimations from './scroll-animations.js'
 
 initUI()
 
@@ -24,6 +26,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 	initHorizontalScroll()
 	initContactForm()
 
+	// Initialize scroll animations for projects
+	initScrollAnimations()
+
 	// Initialize WebGL Lyf section
 	WebGLLyf.getInstance().init()
+
+	// Initialize quote rotator
+	new QuoteRotator()
 })

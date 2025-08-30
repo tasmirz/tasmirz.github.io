@@ -1,116 +1,88 @@
-/**
- * Horizontal scroll functionality for projects section
- */
 export default function initHorizontalScroll() {
-	const projectsContainer = document.querySelector('.projects-container')
 	const projectsSection = document.querySelector('#projects')
+	const projectsContainer = document.querySelector('.projects-container')
 
-	if (!projectsContainer || !projectsSection) return
-
-	let isInProjectsSection = false
-	let scrollTimer = null
-
-	function resetScrollPosition() {
-		projectsContainer.scrollLeft = 0
+	if (!projectsSection || !projectsContainer) {
+		console.log('Projects section not found')
+		return
 	}
 
-	function isAtScrollBoundary(deltaY) {
-		const maxScroll =
+	let ticking = false
+	let currentScrollLeft = 0
+
+	function updateProjectsScroll() {
+		const sectionRect = projectsSection.getBoundingClientRect()
+		const viewportHeight = window.innerHeight
+		const sectionHeight = sectionRect.height
+
+		let scrollProgress = 0
+
+		if (sectionRect.top <= 0 && sectionRect.bottom >= viewportHeight) {
+			scrollProgress =
+				Math.abs(sectionRect.top) / (sectionHeight - viewportHeight)
+		} else if (
+			sectionRect.top <= viewportHeight * 0.8 &&
+			sectionRect.bottom >= viewportHeight * 0.2
+		) {
+			const visibleTop = Math.max(0, viewportHeight * 0.2 - sectionRect.top)
+			const visibleHeight = Math.min(sectionHeight, viewportHeight * 0.6)
+			scrollProgress = visibleTop / visibleHeight
+		}
+
+		scrollProgress = Math.max(0, Math.min(1, scrollProgress))
+
+		const easedProgress =
+			scrollProgress < 0.5
+				? 4 * scrollProgress * scrollProgress * scrollProgress
+				: 1 - Math.pow(-2 * scrollProgress + 2, 3) / 2
+
+		const maxScroll = Math.max(
+			0,
 			projectsContainer.scrollWidth - projectsContainer.clientWidth
-		const currentScroll = projectsContainer.scrollLeft
+		)
+		const targetScroll = easedProgress * maxScroll
 
-		if (deltaY < 0 && currentScroll <= 0) {
-			return true
-		}
+		const scrollDiff = targetScroll - currentScrollLeft
+		currentScrollLeft += scrollDiff * 0.1
 
-		if (deltaY > 0 && currentScroll >= maxScroll) {
-			return true
-		}
+		projectsContainer.scrollLeft = currentScrollLeft
 
-		return false
+		ticking = false
 	}
 
-	projectsSection.addEventListener('mouseenter', () => {
-		isInProjectsSection = true
-		resetScrollPosition()
-	})
+	function requestTick() {
+		if (!ticking) {
+			requestAnimationFrame(updateProjectsScroll)
+			ticking = true
+		}
+	}
 
-	projectsSection.addEventListener('mouseleave', () => {
-		isInProjectsSection = false
-		document.body.style.overflow = 'auto'
-	})
+	window.addEventListener('scroll', requestTick, { passive: true })
+	window.addEventListener('resize', requestTick, { passive: true })
 
-	document.addEventListener(
-		'wheel',
-		(e) => {
-			if (isInProjectsSection) {
-				if (isAtScrollBoundary(e.deltaY)) {
-					document.body.style.overflow = 'auto'
-					return
-				}
+	updateProjectsScroll()
 
-				e.preventDefault()
-				e.stopPropagation()
-				e.stopImmediatePropagation()
+	let scrollHintHidden = false
+	function hideScrollHint() {
+		if (!scrollHintHidden) {
+			const scrollHint = document.querySelector('#projects::after')
+			if (scrollHint) {
+				scrollHint.style.opacity = '0'
+				scrollHintHidden = true
+			}
+		}
+	}
 
-				document.body.style.overflow = 'hidden'
-
-				const scrollAmount = e.deltaY * 2
-
-				projectsContainer.scrollLeft += scrollAmount
-
-				if (scrollTimer) {
-					clearTimeout(scrollTimer)
-				}
-
-				scrollTimer = setTimeout(() => {
-					if (isInProjectsSection) {
-						const maxScroll =
-							projectsContainer.scrollWidth - projectsContainer.clientWidth
-						const currentScroll = projectsContainer.scrollLeft
-
-						if (currentScroll > 0 && currentScroll < maxScroll) {
-							document.body.style.overflow = 'hidden'
-						} else {
-							document.body.style.overflow = 'auto'
-						}
-					}
-				}, 150)
-
-				return false
+	projectsContainer.addEventListener('scroll', hideScrollHint, { once: true })
+	window.addEventListener(
+		'scroll',
+		() => {
+			if (Math.abs(currentScrollLeft) > 10) {
+				hideScrollHint()
 			}
 		},
-		{ passive: false, capture: true }
+		{ once: true }
 	)
 
-	let isDown = false
-	let startX
-	let scrollLeft
-
-	projectsContainer.addEventListener('mousedown', (e) => {
-		isDown = true
-		projectsContainer.style.cursor = 'grabbing'
-		startX = e.pageX - projectsContainer.offsetLeft
-		scrollLeft = projectsContainer.scrollLeft
-	})
-
-	projectsContainer.addEventListener('mouseleave', () => {
-		isDown = false
-		projectsContainer.style.cursor = 'grab'
-	})
-
-	projectsContainer.addEventListener('mouseup', () => {
-		isDown = false
-		projectsContainer.style.cursor = 'grab'
-	})
-
-	projectsContainer.addEventListener('mousemove', (e) => {
-		if (!isDown) return
-		e.preventDefault()
-		const x = e.pageX - projectsContainer.offsetLeft
-		const walk = (x - startX) * 2
-		projectsContainer.scrollLeft = scrollLeft - walk
-	})
-
-	projectsContainer.style.cursor = 'grab'
+	console.log('Horizontal scroll initialized for projects')
 }
