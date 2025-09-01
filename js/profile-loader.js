@@ -1,22 +1,11 @@
 import DataLoader from './data-loader.js'
 import TypeWriter from './typewriter.js'
+import BaseSingleton from './base-singleton.js'
 
-class ProfileLoader {
+class ProfileLoader extends BaseSingleton {
 	constructor() {
-		if (ProfileLoader.instance) {
-			return ProfileLoader.instance
-		}
-
+		super()
 		this.apiUrl = 'http://localhost:5000/Profile.aspx'
-
-		ProfileLoader.instance = this
-	}
-
-	static getInstance() {
-		if (!ProfileLoader.instance) {
-			ProfileLoader.instance = new ProfileLoader()
-		}
-		return ProfileLoader.instance
 	}
 
 	async fetchProfile() {

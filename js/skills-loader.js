@@ -1,22 +1,11 @@
 import DataLoader from './data-loader.js'
+import BaseSingleton from './base-singleton.js'
 
-class SkillsLoader {
+class SkillsLoader extends BaseSingleton {
 	constructor() {
-		if (SkillsLoader.instance) {
-			return SkillsLoader.instance
-		}
-
+		super()
 		this.skillsContainer = document.querySelector('.skills-section')
 		this.apiUrl = 'http://localhost:5000/Skills.aspx'
-
-		SkillsLoader.instance = this
-	}
-
-	static getInstance() {
-		if (!SkillsLoader.instance) {
-			SkillsLoader.instance = new SkillsLoader()
-		}
-		return SkillsLoader.instance
 	}
 
 	async fetchSkills() {

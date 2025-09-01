@@ -125,6 +125,7 @@ export default class WebGLLyf {
 			this.setupQuad()
 			this.setupControls()
 			this.setupScrollLock()
+			this.setupTouchScroll()
 			this.startRenderLoop()
 		} catch (error) {
 			console.warn('WebGL Lyf failed:', error)
@@ -449,6 +450,54 @@ export default class WebGLLyf {
 		if (newLocationIndex !== this.currentLocationIndex) {
 			this.updateLocationText(newLocationIndex)
 		}
+	}
+
+	setupTouchScroll() {
+		const lyfSection = document.querySelector('#lyf')
+		if (!lyfSection) return
+
+		let startY = 0
+		let startScrollProgress = 0
+		let isTouching = false
+
+		lyfSection.addEventListener('touchstart', (e) => {
+			if (this.isManualControl || !this.canvasInView) return
+
+			startY = e.touches[0].clientY
+			startScrollProgress = this.scrollProgress
+			isTouching = true
+		})
+
+		lyfSection.addEventListener(
+			'touchmove',
+			(e) => {
+				if (!isTouching || this.isManualControl || !this.canvasInView) return
+
+				const deltaY = e.touches[0].clientY - startY
+				const deltaProgress = deltaY / lyfSection.clientHeight
+				let newProgress = startScrollProgress - deltaProgress
+				newProgress = Math.max(0, Math.min(1, newProgress))
+
+				// Directly set scrollProgress for boundary detection
+				this.scrollProgress = newProgress
+
+				if (newProgress > 0 && newProgress < 1) {
+					e.preventDefault()
+					this.lockGlobalScroll()
+				} else {
+					this.unlockGlobalScroll()
+				}
+			},
+			{ passive: false }
+		)
+
+		lyfSection.addEventListener('touchend', () => {
+			isTouching = false
+			// Always release lock at boundaries
+			if (this.scrollProgress === 0 || this.scrollProgress === 1) {
+				this.unlockGlobalScroll()
+			}
+		})
 	}
 
 	destroy() {

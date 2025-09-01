@@ -1,22 +1,11 @@
 import DataLoader from './data-loader.js'
+import BaseSingleton from './base-singleton.js'
 
-class ProjectsLoader {
+class ProjectsLoader extends BaseSingleton {
 	constructor() {
-		if (ProjectsLoader.instance) {
-			return ProjectsLoader.instance
-		}
-
+		super()
 		this.projectsContainer = document.querySelector('.projects-container')
 		this.apiUrl = 'http://localhost:5000/Projects.aspx'
-
-		ProjectsLoader.instance = this
-	}
-
-	static getInstance() {
-		if (!ProjectsLoader.instance) {
-			ProjectsLoader.instance = new ProjectsLoader()
-		}
-		return ProjectsLoader.instance
 	}
 
 	async fetchProjects() {

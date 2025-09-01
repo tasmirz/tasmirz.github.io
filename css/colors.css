@@ -3,6 +3,7 @@
 :root {
   --color-bg: #fbf1c7;
   --color-bg-rgb: 251, 241, 199;
+  --color-bg-secondary: #f2e5bc;
   --color-text: #282828;
   --color-nav-text: #3c3836;
   --color-accent: #504945;
@@ -17,14 +18,11 @@
   --color-highlight-border: pink;
 
   --color-text-light: #665c54;
+  --color-text-secondary: #7c6f64;
   
-  --color-border: rgba(60, 56, 54, 0.2);
+  --color-border: rgba(60, 56, 54, 0.4);
   
   --color-button-bg: var(--color-primary-dark);
   --color-button-text: var(--color-bg);
   --color-button-hover: var(--color-primary-darker);
-  
-  --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.1);
-  --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.1);
-
 }

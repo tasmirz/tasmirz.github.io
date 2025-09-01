@@ -2,6 +2,7 @@
 	/* Base colors */
 	--color-bg: #282828;
 	--color-bg-rgb: 40, 40, 40;
+	--color-bg-secondary: #3c3836;
 	--color-text: #ebdbb2;
 	--color-nav-text: #d5c4a1;
 	--color-accent: #a89984;
@@ -17,6 +18,10 @@
 
 	/* Text variations */
 	--color-text-light: #a89984;
+	--color-text-secondary: #928374;
+
+	/* Border colors */
+	--color-border: rgba(189, 174, 147, 0.4);
 
 	/* UI elements */
 	--color-button-bg: var(--color-primary-dark);

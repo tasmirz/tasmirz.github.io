@@ -24,6 +24,10 @@
 	--shadow-small: 0 2px 4px rgba(0, 0, 0, 0.1);
 	--shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.15);
 	--shadow-large: 0 8px 16px rgba(0, 0, 0, 0.2);
+
+	--transition-fast: 0.2s ease;
+	--transition-normal: 0.3s ease;
+	--transition-slow: 0.5s ease;
 }
 
 * {
@@ -87,26 +91,25 @@ button {
 }
 
 @font-face {
-  font-family: 'Material Icons';
-  font-style: normal;
-  font-weight: 400;
-  src: url('/assets///icons.woff2') format('woff2'),
+	font-family: 'Material Icons';
+	font-style: normal;
+	font-weight: 400;
+	src: url('/assets/icons.woff2') format('woff2');
 }
 
 .material-icons {
-  font-family: 'Material Icons';
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px;  /* adjustable */
-  display: inline-block;
-  line-height: 1;
-  text-transform: none;
-  letter-spacing: normal;
-  white-space: nowrap;
-  direction: ltr;
-    font-size: 24px;
-  width: 24px;
-  height: 24px;
-  line-height: 24px;
-  text-align: center;
+	font-family: 'Material Icons';
+	font-weight: normal;
+	font-style: normal;
+	font-size: 24px;
+	display: inline-block;
+	line-height: 1;
+	text-transform: none;
+	letter-spacing: normal;
+	white-space: nowrap;
+	direction: ltr;
+	width: 24px;
+	height: 24px;
+	line-height: 24px;
+	text-align: center;
 }
