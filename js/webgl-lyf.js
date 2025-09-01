@@ -91,10 +91,14 @@ export default class WebGLLyf {
 		this.isScrollLocked = false
 		this.isManualControl = false
 		this.canvasInView = false
+		this.isNavigating = false // Track when navigation is happening
 
 		// Location tracking
 		this.currentLocationIndex = 0
 		this.locationTextElement = null
+
+		// Progress tracker integration
+		this.progressTracker = null
 
 		WebGLLyf.#instance = this
 	}
@@ -114,6 +118,14 @@ export default class WebGLLyf {
 				this.updateLocationText(0) // Start with first location
 			}
 
+			// Initialize progress tracker integration
+			try {
+				const ProgressTracker = (await import('./progress-tracker.js')).default
+				this.progressTracker = ProgressTracker.getInstance()
+			} catch (error) {
+				console.warn('Progress tracker not available:', error)
+			}
+
 			this.context = new WebGLContext(container)
 			this.program = await this.context.createProgram(
 				'lyf',
@@ -126,6 +138,7 @@ export default class WebGLLyf {
 			this.setupControls()
 			this.setupScrollLock()
 			this.setupTouchScroll()
+			this.setupNavigationListeners()
 			this.startRenderLoop()
 		} catch (error) {
 			console.warn('WebGL Lyf failed:', error)
@@ -197,10 +210,12 @@ export default class WebGLLyf {
 					e.preventDefault()
 					this.scrollProgress = newProgress
 					this.lockGlobalScroll()
+					this.notifyProgressTracker()
 				} else if (newProgress > 0 && newProgress < 1) {
 					e.preventDefault()
 					this.scrollProgress = newProgress
 					this.lockGlobalScroll()
+					this.notifyProgressTracker()
 				} else {
 					this.unlockGlobalScroll()
 				}
@@ -252,13 +267,19 @@ export default class WebGLLyf {
 			(entries) => {
 				entries.forEach((entry) => {
 					this.canvasInView = entry.isIntersecting
-					//jump to #lyf , within .5s
 
+					// Skip snapping behavior if navigation is happening
+					if (this.isNavigating) return
+
+					//jump to #lyf , within .5s
 					if (entry.isIntersecting) {
 						lyfSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
 						setTimeout(() => {
 							lyfSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
-						}, 500)
+						}, 100)
+						setTimeout(() => {
+							lyfSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
+						}, 300)
 					}
 
 					if (!this.isManualControl) {
@@ -276,6 +297,43 @@ export default class WebGLLyf {
 		)
 
 		observer.observe(lyfSection)
+	}
+
+	setupNavigationListeners() {
+		// Add listeners to all navigation links
+		const navLinks = document.querySelectorAll('nav a[href^="#"]')
+
+		navLinks.forEach((link) => {
+			link.addEventListener('click', (e) => {
+				const href = link.getAttribute('href')
+
+				// If clicking on a navigation link that's not #lyf, disable snapping
+				if (href !== '#lyf') {
+					this.isNavigating = true
+					this.unlockGlobalScroll()
+
+					// Check when scroll has reached the target
+					const targetSection = document.querySelector(href)
+					if (targetSection) {
+						const checkScrollComplete = () => {
+							const rect = targetSection.getBoundingClientRect()
+							const isInView =
+								rect.top >= 0 && rect.top <= window.innerHeight * 0.1
+
+							if (isInView) {
+								this.isNavigating = false
+							} else {
+								requestAnimationFrame(checkScrollComplete)
+							}
+						}
+						requestAnimationFrame(checkScrollComplete)
+					} else {
+						// Fallback for invalid targets
+						this.isNavigating = false
+					}
+				}
+			})
+		})
 	}
 
 	lockGlobalScroll() {
@@ -400,6 +458,17 @@ export default class WebGLLyf {
 		}
 
 		this.scrollProgress = Math.max(0, Math.min(1, closestSegmentProgress))
+		this.notifyProgressTracker()
+	}
+
+	// Notify progress tracker of scroll changes
+	notifyProgressTracker() {
+		if (
+			this.progressTracker &&
+			typeof this.progressTracker.notifyProgressChange === 'function'
+		) {
+			this.progressTracker.notifyProgressChange()
+		}
 	}
 
 	startRenderLoop() {

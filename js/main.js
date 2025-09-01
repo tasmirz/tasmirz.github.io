@@ -24,4 +24,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 	WebGLLyf.getInstance().init()
 
 	// Initialize quote rotator
+
+	// Initialize progress tracker
+	try {
+		const ProgressTracker = (await import('./progress-tracker.js')).default
+		const progressTracker = ProgressTracker.getInstance()
+		progressTracker.init()
+		console.log('📊 Progress tracker initialized')
+	} catch (error) {
+		console.warn('⚠️ Progress tracker initialization failed:', error)
+	}
 })
