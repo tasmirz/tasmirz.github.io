@@ -104,6 +104,39 @@ class ProjectsLoader extends BaseSingleton {
 			}
 
 			this.renderProjects(projects)
+			window.addEventListener('scroll', () => {
+				const projectCards = document.querySelectorAll('.project-card')
+				projectCards.forEach((card, i) => {
+					const rect = card.getBoundingClientRect()
+					const scrollProgress =
+						Math.min(
+							Math.max(0, window.innerHeight * 1.1 - rect.top),
+							rect.height
+						) / rect.height
+					const mappedProgress = 0.4 + 0.6 * scrollProgress
+					card.style.transform = `translate(${
+						window.innerWidth * (1 - mappedProgress)
+					}px, ${
+						(window.innerHeight / 10) * (1 - mappedProgress)
+					}px) scale(${mappedProgress})`
+					card.style.opacity = `${mappedProgress}`
+					card.style.filter = `blur(${50 * (1 - mappedProgress)}px)`
+				})
+			})
+			const items = document.querySelectorAll('.project-card')
+			const observer = new IntersectionObserver(
+				(entries) => {
+					entries.forEach((entry) => {
+						if (entry.isIntersecting && !staticSpace.navJump) {
+							entry.target.scrollIntoView({
+								behavior: 'smooth',
+								block: 'center'
+							})
+						}
+					})
+				},
+				{ threshold: 0.99 } // adjust when to trigger
+			)
 		} catch (error) {
 			this.showState('error', `Error loading projects: ${error.message}`)
 		}

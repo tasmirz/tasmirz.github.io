@@ -1,5 +1,5 @@
 import WebGLContext from './webgl-core.js'
-
+import { staticSpace } from './staticSpace.js'
 export default class WebGLLyf {
 	static #instance
 	path = [
@@ -91,7 +91,7 @@ export default class WebGLLyf {
 		this.isScrollLocked = false
 		this.isManualControl = false
 		this.canvasInView = false
-		this.isNavigating = false // Track when navigation is happening
+		staticSpace.navJump = false // Track when navigation is happening
 
 		// Location tracking
 		this.currentLocationIndex = 0
@@ -269,7 +269,7 @@ export default class WebGLLyf {
 					this.canvasInView = entry.isIntersecting
 
 					// Skip snapping behavior if navigation is happening
-					if (this.isNavigating) return
+					if (staticSpace.navJump) return
 
 					//jump to #lyf , within .5s
 					if (entry.isIntersecting) {
@@ -309,7 +309,7 @@ export default class WebGLLyf {
 
 				// If clicking on a navigation link that's not #lyf, disable snapping
 				if (href !== '#lyf') {
-					this.isNavigating = true
+					staticSpace.navJump = true
 					this.unlockGlobalScroll()
 
 					// Check when scroll has reached the target
@@ -321,7 +321,7 @@ export default class WebGLLyf {
 								rect.top >= 0 && rect.top <= window.innerHeight * 0.1
 
 							if (isInView) {
-								this.isNavigating = false
+								staticSpace.navJump = false
 							} else {
 								requestAnimationFrame(checkScrollComplete)
 							}
@@ -329,7 +329,7 @@ export default class WebGLLyf {
 						requestAnimationFrame(checkScrollComplete)
 					} else {
 						// Fallback for invalid targets
-						this.isNavigating = false
+						staticSpace.navJump = false
 					}
 				}
 			})
