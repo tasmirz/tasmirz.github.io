@@ -30,7 +30,7 @@ void main(){
     
     // Apply wind displacement to particle position
     float ambientWind=sin(u_time+a_particleId)*5.;
-    float totalWind=ambientWind+u_mouseWind*50.;
+    float totalWind=ambientWind+u_mouseWind*1000.;
     float windDisplacement=totalWind*particleAge*.02;
     vec2 particlePos=currentPos+vec2(windDisplacement,0.);
     

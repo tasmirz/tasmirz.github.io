@@ -188,6 +188,7 @@
 	.contact-left-content,
 	.contact-form {
 		width: 100%;
+		max-width: 100%;
 	}
 	
 	.contact-icon-grid {

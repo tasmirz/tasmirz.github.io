@@ -26,7 +26,7 @@ export default class WebGLBackground {
 		// size controls: multiplier and base range (baseSize in [baseSizeMin, baseSizeMax])
 		this.sizeScale = 1.0
 		this.baseSizeMin = 10
-		this.baseSizeMax = 25
+		this.baseSizeMax = 15
 
 		// wind controlled by pointer horizontal position (-1..1)
 		this.mouseWind = 0
@@ -51,8 +51,8 @@ export default class WebGLBackground {
 		try {
 			this.program = await this.context.createProgram(
 				'leaves',
-				'./js/shaders/leaves.vert',
-				'./js/shaders/leaves.frag'
+				'../shaders/leaves.vert',
+				'../shaders/leaves.frag'
 			)
 
 			this._initParticles()
@@ -188,12 +188,13 @@ export default class WebGLBackground {
 		// Use global viewport X position. Map 0.8 (80%) -> 0.
 		// Right 20% => positive 0..1, left 80% => negative -1..0
 		const vx = e.clientX / (window.innerWidth || 1)
-		let wind
+		let wind = 0
 		if (vx >= 0.8) {
 			wind = (vx - 0.8) / 0.2 // 0..1
 		} else {
 			wind = -((0.8 - vx) / 0.8) // -1..0
 		}
+		//console.log(wind)
 		// clamp and smooth
 		wind = Math.max(-1, Math.min(1, wind))
 		this.mouseWind = this.mouseWind * 0.92 + wind * 0.08

@@ -1134,17 +1134,14 @@ body {
 	}
 	animation: from50to100 3s ease forwards;
 }
-section:nth-child(1) {
-	animation: from100to0 3s ease forwards;
-}
-header{
-	opacity: 0;
-}
+
 header {
-	/* start after 2s */
-	animation: bringToLife 1s 2s ease forwards;
-}
-section:nth-child(2) {
 	opacity: 0;
-	animation: bringToLife 1s 2s ease forwards;
+	/* start after 2s */
+	animation: bringToLife .5s 3s ease forwards;
+}
+
+#welcome {
+	opacity: 0;
+	animation: bringToLife2 .5s 3s ease forwards;
 }
