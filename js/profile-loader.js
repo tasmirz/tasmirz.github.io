@@ -5,7 +5,7 @@ import BaseSingleton from './base-singleton.js'
 class ProfileLoader extends BaseSingleton {
 	constructor() {
 		super()
-		this.apiUrl = 'http://localhost:5000/Profile.aspx'
+		this.apiUrl = 'http://localhost:5000/api/profile.aspx'
 	}
 
 	async fetchProfile() {

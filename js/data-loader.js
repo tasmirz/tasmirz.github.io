@@ -45,7 +45,7 @@ class DataLoader {
 	 */
 	static async loadProfile() {
 		return await this.loadWithFallback(
-			'http://localhost:5000/Profile.aspx',
+			'http://localhost:5000/api/profile.ashx',
 			'./data/profile.json'
 		)
 	}
@@ -56,10 +56,11 @@ class DataLoader {
 	 */
 	static async loadProjects() {
 		const result = await this.loadWithFallback(
-			'http://localhost:5000/Projects.aspx',
+			'http://localhost:5000/api/projects.ashx',
 			'./data/projects.json',
 			'projects'
 		)
+		console.log(result)
 		return result || []
 	}
 
@@ -69,10 +70,11 @@ class DataLoader {
 	 */
 	static async loadSkills() {
 		const result = await this.loadWithFallback(
-			'http://localhost:5000/Skills.aspx',
+			'http://localhost:5000/api/skills.ashx',
 			'./data/skills.json',
-			'skillCategories'
+			'categories'
 		)
+		console.log(result, 'hello')
 		return result || []
 	}
 }

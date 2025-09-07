@@ -5,7 +5,7 @@ class ProjectsLoader extends BaseSingleton {
 	constructor() {
 		super()
 		this.projectsContainer = document.querySelector('.projects-container')
-		this.apiUrl = 'http://localhost:5000/Projects.aspx'
+		this.apiUrl = 'http://localhost:5000/api/projects.aspx'
 	}
 
 	async fetchProjects() {
@@ -13,9 +13,9 @@ class ProjectsLoader extends BaseSingleton {
 	}
 
 	createProjectCard(project) {
-		const techTags = project.languages
-			.map((lang) => `<span class="tech-tag">${lang}</span>`)
-			.join('')
+		const techTags = project.Languages.map(
+			(lang) => `<span class="tech-tag">${lang}</span>`
+		).join('')
 
 		// Determine project status
 		const status = project.status || 'completed'
@@ -45,7 +45,7 @@ class ProjectsLoader extends BaseSingleton {
 		return `
 			<div class="project-card">
 				<div class="project-image">
-					<img src="${project.imageUrl}" alt="${project.name} project" loading="lazy">
+					<img src="${project.ImageUrl}" alt="${project.Name} project" loading="lazy">
 				</div>
 				<div class="project-content">
 					<div class="project-meta">
@@ -57,8 +57,8 @@ class ProjectsLoader extends BaseSingleton {
 							${linksHTML}
 						</div>
 					</div>
-					<h3>${project.name}</h3>
-					<p>${project.description}</p>
+					<h3>${project.Name}</h3>
+					<p>${project.Description}</p>
 					<div class="project-technologies">${techTags}</div>
 				</div>
 			</div>

@@ -5,7 +5,7 @@ class SkillsLoader extends BaseSingleton {
 	constructor() {
 		super()
 		this.skillsContainer = document.querySelector('.skills-section')
-		this.apiUrl = 'http://localhost:5000/Skills.aspx'
+		this.apiUrl = 'http://localhost:5000/api/skills.ashx'
 	}
 
 	async fetchSkills() {
@@ -13,13 +13,13 @@ class SkillsLoader extends BaseSingleton {
 	}
 
 	createSkillCategoryHTML(category) {
-		const skillTags = category.skills
-			.map((skill) => `<span class="skill-tag">${skill}</span>`)
-			.join(' ')
+		const skillTags = category.Skills.map(
+			(skill) => `<span class="skill-tag">${skill}</span>`
+		).join(' ')
 
 		return `
             <div class="skill-category">
-                <h4>${category.name}</h4>
+                <h4>${category.Name}</h4>
                 <div class="skill-tags">${skillTags}</div>
             </div>
         `

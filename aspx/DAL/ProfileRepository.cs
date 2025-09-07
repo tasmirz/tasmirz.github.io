@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using _71.Models;
 
@@ -48,6 +49,40 @@ namespace _71.DAL
 
             return null;
         }
+        public List<string> GetTextWriterTexts()
+        {
+            var texts = new List<string>();
+            try
+            {
+                using (var connection = DatabaseHelper.GetConnection())
+                {
+                    connection.Open();
+
+                    const string query = "SELECT Text FROM TypewriterTexts ORDER BY DisplayOrder, Id";
+
+                    using (var command = new SqlCommand(query, connection))
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var text = reader["Text"]?.ToString();
+                            if (!string.IsNullOrEmpty(text))
+                            {
+                                texts.Add(text);
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Return empty list on error
+            }
+
+            return texts;
+        }
+
+        //
 
         public string GetAboutDescription()
         {

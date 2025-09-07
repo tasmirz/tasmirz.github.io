@@ -20,6 +20,8 @@ public class Api_Profile : IHttpHandler
                 return;
             }
 
+            var textWriterTexts = repo.GetTextWriterTexts();
+
             var response = new
             {
                 id = profile.Id,
@@ -31,6 +33,7 @@ public class Api_Profile : IHttpHandler
                 about = profile.AboutDescription,
                 github = profile.GithubUrl,
                 linkedin = profile.LinkedInUrl,
+                typewriterTexts = textWriterTexts,
                 createdAt = profile.CreatedAt,
                 updatedAt = profile.UpdatedAt
             };
