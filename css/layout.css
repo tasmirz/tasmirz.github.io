@@ -73,7 +73,7 @@ nav ul {
 	gap: var(--spacing-md);
 }
 
-nav a {
+nav a, #mobile-nav-overlay a {
 	text-decoration: none;
 	font-family: var(--font-mono);
 	font-size: 1rem;
@@ -311,6 +311,7 @@ h1, h2, h3, p {
 
 .social-icons {
 	display: flex;
+	overflow: visible;
 	gap: var(--spacing-md);
 	margin-top: var(--spacing-md);
 	align-items: flex-start;
@@ -361,6 +362,7 @@ h1, h2, h3, p {
 
 .skill-tags {
 	display: flex;
+	overflow: visible;
 	flex-wrap: wrap;
 	gap: var(--spacing-sm);
 }
@@ -392,11 +394,11 @@ h1, h2, h3, p {
 	padding: 0 var(--spacing-lg);
 	position: relative;
 	z-index: 2;
-	overflow-x: auto;
-	overflow-y: hidden;
+	overflow:visible;
 	scroll-behavior: smooth;
 	scrollbar-width: none;
 	-ms-overflow-style: none;
+
 }
 
 .projects-container::-webkit-scrollbar {
@@ -416,7 +418,8 @@ h1, h2, h3, p {
 		0 1px 8px rgba(0, 0, 0, 0.2);
 	border-color: var(--color-primary-light);
 	background: rgba(var(--color-bg-rgb), 0.5);
-	height: 80vh;
+	height: auto;
+	max-height: 80vh; /* keep tall layout on large screens but allow smaller viewports to shrink */
 	display: flex;
 	flex-direction: column;
 	padding: var(--spacing-lg);
@@ -672,7 +675,7 @@ h1, h2, h3, p {
 }
 
 .lyf-canvas-container canvas {
-	filter: sepia(.8);
+	filter: var(--lyf-filter);
 	display: block;
 	width: 100%;
 	-webkit-mask: url('../assets/mask.svg') no-repeat center;
@@ -680,6 +683,7 @@ h1, h2, h3, p {
 	mask: url('../assets/mask.svg') no-repeat center;
 	mask-size: contain;
 }
+
 
 /* Mobile Controls */
 .lyf-mobile-controls {
@@ -805,6 +809,7 @@ h1, h2, h3, p {
 }
 
 .contact-info-section {
+	overflow: visible;
 	border-radius: var(--border-radius-md);
 	background: var(--color-bg);
 	margin-top: 22px;
@@ -840,6 +845,7 @@ h1, h2, h3, p {
 
 .contact-social,
 .footer-social {
+	overflow: visible;
 	display: flex;
 	gap: var(--spacing-sm);
 	margin-top: var(--spacing-md);
@@ -995,7 +1001,7 @@ footer {
 	background: var(--color-primary-darker);
 	color: var(--color-bg);
 	padding: var(--spacing-xl) var(--section-padding-desktop);
-	margin-top: var(--spacing-xl);
+	
 }
 
 .footer-content {
@@ -1007,6 +1013,7 @@ footer {
 }
 
 .footer-gif-container {
+	filter: sepia(.5);
 	flex: 0 0 var(--footer-gif-flex);
 	max-width: var(--footer-gif-max-width);
 	display: flex;
@@ -1100,4 +1107,43 @@ footer {
 body {
 	background: var(--color-bg);
 	color: var(--color-text);
+}
+
+
+/* === TREE BACKGROUND VIDEO === */
+#tree-bg-video {
+	video {
+		width: 100vw;
+	}
+	z-index: -1;
+	mix-blend-mode: multiply;
+	position: fixed;
+	bottom:0px;
+	right: 0px;
+	transition: filter 0.3s ease;
+	video {
+		transform: scaleX(-1);
+	}
+	canvas {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}
+	animation: from50to100 3s ease forwards;
+}
+section:nth-child(1) {
+	animation: from100to0 3s ease forwards;
+}
+header{
+	opacity: 0;
+}
+header {
+	/* start after 2s */
+	animation: bringToLife 1s 2s ease forwards;
+}
+section:nth-child(2) {
+	opacity: 0;
+	animation: bringToLife 1s 2s ease forwards;
 }

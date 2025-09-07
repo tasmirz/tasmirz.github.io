@@ -1,0 +1,136 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Admin.Master.cs" Inherits="_71.Admin.AdminMaster" %>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Portfolio Admin - <asp:ContentPlaceHolder ID="TitleContent" runat="server" /></title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="<%= ResolveUrl("~/css/gruvbox.css") %>" />
+    <link rel="stylesheet" href="<%= ResolveUrl("~/css/modern-admin.css") %>" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</head>
+<body>
+    <form id="form1" runat="server">
+        <!-- Theme Toggle -->
+        <div class="theme-toggle" onclick="toggleTheme()">
+            <i class="ri-sun-line" id="themeIcon"></i>
+        </div>
+
+        <div class="admin-layout">
+            <!-- Sidebar -->
+            <nav class="admin-sidebar">
+                <div class="mb-6">
+                    <h2 class="text-xl font-bold mb-2">Portfolio Admin</h2>
+                    <p class="text-sm text-secondary">Manage your portfolio</p>
+                </div>
+
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="<%= ResolveUrl("~/admin/dashboard.aspx") %>" class="nav-link" id="navDashboard">
+                            <i class="ri-dashboard-line"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<%= ResolveUrl("~/admin/projects.aspx") %>" class="nav-link" id="navProjects">
+                            <i class="ri-folder-line"></i>
+                            Projects
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<%= ResolveUrl("~/admin/skills.aspx") %>" class="nav-link" id="navSkills">
+                            <i class="ri-code-box-line"></i>
+                            Skills
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<%= ResolveUrl("~/admin/profile.aspx") %>" class="nav-link" id="navProfile">
+                            <i class="ri-user-line"></i>
+                            Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<%= ResolveUrl("~/admin/messages.aspx") %>" class="nav-link" id="navMessages">
+                            <i class="ri-mail-line"></i>
+                            Messages
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="mt-auto pt-4">
+                    <asp:LinkButton ID="lnkLogout" runat="server" CssClass="nav-link text-secondary" OnClick="lnkLogout_Click">
+                        <i class="ri-logout-box-line"></i>
+                        Logout
+                    </asp:LinkButton>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="admin-main">
+                <header class="admin-header">
+                    <asp:ContentPlaceHolder ID="HeaderContent" runat="server" />
+                </header>
+
+                <!-- Global Message Panel -->
+                <asp:Panel ID="pnlMessage" runat="server" Visible="false" CssClass="message">
+                    <asp:Label ID="lblMessage" runat="server"></asp:Label>
+                </asp:Panel>
+
+                <!-- Page Content -->
+                <asp:ContentPlaceHolder ID="MainContent" runat="server" />
+            </main>
+        </div>
+
+        <script>
+            // Theme toggle functionality
+            function toggleTheme() {
+                const body = document.body;
+                const icon = document.getElementById('themeIcon');
+                
+                if (body.classList.contains('dark-theme')) {
+                    body.classList.remove('dark-theme');
+                    icon.className = 'ri-sun-line';
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    body.classList.add('dark-theme');
+                    icon.className = 'ri-moon-line';
+                    localStorage.setItem('theme', 'dark');
+                }
+            }
+
+            // Initialize theme from localStorage
+            document.addEventListener('DOMContentLoaded', function() {
+                const savedTheme = localStorage.getItem('theme');
+                const icon = document.getElementById('themeIcon');
+                
+                if (savedTheme === 'dark') {
+                    document.body.classList.add('dark-theme');
+                    icon.className = 'ri-moon-line';
+                } else {
+                    icon.className = 'ri-sun-line';
+                }
+
+                // Highlight active nav item
+                highlightActiveNav();
+            });
+
+            function highlightActiveNav() {
+                const currentPath = window.location.pathname.toLowerCase();
+                const navLinks = document.querySelectorAll('.nav-link');
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (currentPath.includes(link.getAttribute('href').toLowerCase())) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        </script>
+
+        <asp:ContentPlaceHolder ID="ScriptContent" runat="server" />
+    </form>
+</body>
+</html>

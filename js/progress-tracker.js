@@ -10,7 +10,7 @@ export default class ProgressTracker {
 		this.sections = []
 		this.currentSection = 0
 		this.totalSections = 0
-
+		this.videoElement = document.querySelector('#tree-bg-video')
 		ProgressTracker.#instance = this
 	}
 
@@ -115,6 +115,12 @@ export default class ProgressTracker {
 		}
 
 		// Update progress bar
+
+		if (overallProgress > 0.1) {
+			this.videoElement.style.filter = `blur(${(overallProgress + 0.1) * 10}px)`
+		} else {
+			this.videoElement.style.filter = `blur(0px)`
+		}
 		const progressPercent = Math.round(overallProgress * 100)
 		this.progressBar.style.width = `${progressPercent}%`
 	}

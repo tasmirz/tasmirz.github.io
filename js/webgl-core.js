@@ -3,6 +3,10 @@ export class Program {
 	#gl
 	#vertexShaderURL
 	#fragmentShaderURL
+	#attributeBuffers = new Map() // cache for reusable buffers
+	#uniformLocations = new Map() // cache for uniform locations
+	#attributeLocations = new Map() // cache for attribute locations
+	#textureUnits = new Map() // cache for texture unit assignments
 
 	constructor(gl, vertexShaderURL, fragmentShaderURL) {
 		this.#gl = gl
@@ -73,11 +77,23 @@ export class Program {
 	}
 
 	attribLocation(name) {
-		return this.#gl.getAttribLocation(this.#program, name)
+		if (!this.#attributeLocations.has(name)) {
+			this.#attributeLocations.set(
+				name,
+				this.#gl.getAttribLocation(this.#program, name)
+			)
+		}
+		return this.#attributeLocations.get(name)
 	}
 
 	uniformLocation(name) {
-		return this.#gl.getUniformLocation(this.#program, name)
+		if (!this.#uniformLocations.has(name)) {
+			this.#uniformLocations.set(
+				name,
+				this.#gl.getUniformLocation(this.#program, name)
+			)
+		}
+		return this.#uniformLocations.get(name)
 	}
 	passAttrib(passedData) {
 		const gl = this.#gl
@@ -97,12 +113,97 @@ export class Program {
 		}
 	}
 
+	// Efficient method for dynamic attributes with buffer reuse
+	passAttribDynamic(
+		attribName,
+		data,
+		size,
+		usage = this.#gl.DYNAMIC_DRAW,
+		divisor = 0
+	) {
+		// Support batch mode: passAttribDynamic([['a_name', data, size, usage, divisor], ...])
+		if (
+			Array.isArray(attribName) &&
+			attribName.length &&
+			Array.isArray(attribName[0])
+		) {
+			for (const spec of attribName) {
+				const [name, d, s, u, div] = spec
+				// forward each spec to this same method (defaults will apply)
+				this.passAttribDynamic(name, d, s, u, div)
+			}
+			return
+		}
+		const gl = this.#gl
+		if (this.#program !== gl.getParameter(gl.CURRENT_PROGRAM)) this.use()
+
+		// Allow plain JS arrays for convenience; coerce to Float32Array
+		if (Array.isArray(data)) {
+			data = new Float32Array(data)
+		}
+
+		const attribLoc = this.attribLocation(attribName)
+		if (attribLoc === -1) {
+			console.warn(`Attribute "${attribName}" not found in program.`)
+			return
+		}
+
+		// Get or create buffer for this attribute
+		let buffer = this.#attributeBuffers.get(attribName)
+		if (!buffer) {
+			buffer = gl.createBuffer()
+			this.#attributeBuffers.set(attribName, buffer)
+		}
+
+		gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
+
+		// Check if we need to resize buffer or can just update data
+		const currentSize = gl.getBufferParameter(gl.ARRAY_BUFFER, gl.BUFFER_SIZE)
+		if (currentSize < data.byteLength) {
+			// Buffer too small, recreate
+			gl.bufferData(gl.ARRAY_BUFFER, data, usage)
+		} else {
+			// Buffer is large enough, just update data
+			gl.bufferSubData(gl.ARRAY_BUFFER, 0, data)
+		}
+
+		gl.enableVertexAttribArray(attribLoc)
+		gl.vertexAttribPointer(attribLoc, size, gl.FLOAT, false, 0, 0)
+
+		// If divisor > 0, set attribute to be instanced
+		if (divisor && typeof gl.vertexAttribDivisor === 'function') {
+			gl.vertexAttribDivisor(attribLoc, divisor)
+		}
+	}
+
+	// Efficient texture binding with unit caching
+	bindTexture(uniformName, texture, unit = null) {
+		const gl = this.#gl
+		if (this.#program !== gl.getParameter(gl.CURRENT_PROGRAM)) this.use()
+
+		// Auto-assign texture unit if not provided
+		if (unit === null) {
+			unit = this.#textureUnits.get(uniformName) ?? this.#textureUnits.size
+			this.#textureUnits.set(uniformName, unit)
+		}
+
+		gl.activeTexture(gl.TEXTURE0 + unit)
+		gl.bindTexture(gl.TEXTURE_2D, texture)
+
+		const location = this.uniformLocation(uniformName)
+		if (location !== null) {
+			gl.uniform1i(location, unit)
+		}
+
+		return unit
+	}
+
 	passUniforms(passedData) {
 		const gl = this.#gl
 		if (this.#program !== gl.getParameter(gl.CURRENT_PROGRAM)) this.use()
 
 		for (const [uniformName, data] of passedData) {
-			const location = gl.getUniformLocation(this.#program, uniformName)
+			const location = this.uniformLocation(uniformName) // uses cached location
 			if (location === null) {
 				continue
 			}
@@ -144,6 +245,16 @@ export class Program {
 		this.#gl.drawArrays(mode, s, n)
 	}
 
+	// Instanced draw helper (WebGL2)
+	drawInstanced(s, n, instanceCount, mode = this.#gl.TRIANGLE_STRIP) {
+		if (typeof this.#gl.drawArraysInstanced !== 'function') {
+			// fallback to regular draw
+			this.draw(s, n, mode)
+			return
+		}
+		this.#gl.drawArraysInstanced(mode, s, n, instanceCount)
+	}
+
 	clear(r, g, b, a) {
 		const gl = this.#gl
 		if (this.#program !== gl.getParameter(gl.CURRENT_PROGRAM)) this.use()
@@ -152,6 +263,14 @@ export class Program {
 	}
 
 	dispose() {
+		// Clean up cached buffers
+		for (const buffer of this.#attributeBuffers.values()) {
+			this.#gl.deleteBuffer(buffer)
+		}
+		this.#attributeBuffers.clear()
+		this.#uniformLocations.clear()
+		this.#attributeLocations.clear()
+
 		if (this.#program) this.#gl.deleteProgram(this.#program)
 		if (this.vertexShader) this.#gl.deleteShader(this.vertexShader)
 		if (this.fragmentShader) this.#gl.deleteShader(this.fragmentShader)

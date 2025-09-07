@@ -75,7 +75,6 @@
 	margin: 0;
 	padding: 0;
 	scrollbar-width: none; /* Firefox */
-	-ms-overflow-style: none; /* Internet Explorer 10+ */
 }
 
 *::-webkit-scrollbar {
@@ -85,7 +84,6 @@
 html {
 	scroll-behavior: smooth;
 	scrollbar-width: none; /* Firefox */
-	-ms-overflow-style: none; /* Internet Explorer 10+ */
 }
 
 html::-webkit-scrollbar {
@@ -155,12 +153,9 @@ button {
 	width: 0 !important;
 	height: 0 !important;
 }
-
-/* Additional fallback for all elements */
 * {
-	overflow: auto;
+	overflow-x: auto;
 }
-
 *::-webkit-scrollbar {
 	display: none !important;
 }
@@ -173,4 +168,8 @@ button {
 /* For Internet Explorer and Edge */
 * {
 	-ms-overflow-style: none !important;
+}
+
+.hidden {
+	display: none;
 }

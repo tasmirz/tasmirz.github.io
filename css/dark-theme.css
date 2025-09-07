@@ -31,4 +31,5 @@
 	/* Effects */
 	--shadow-small: 0 2px 4px rgba(0, 0, 0, 0.3);
 	--shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.3);
+	--lyf-filter: sepia(.8) brightness(.5);
 }

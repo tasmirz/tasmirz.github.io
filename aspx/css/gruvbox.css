@@ -1,0 +1,84 @@
+/* Consolidated Gruvbox tokens and light/dark theme rules */
+:root {
+  --color-bg: #fbf1c7;
+  --color-bg-rgb: 251, 241, 199;
+  --color-bg-secondary: #f2e5bc;
+  --color-text: #282828;
+  --color-nav-text: #3c3836;
+  --color-accent: #504945;
+
+  --color-primary: #504945;
+  --color-primary-rgb: 80, 73, 69;
+  --color-primary-dark: #3c3836;
+  --color-primary-darker: #282828;
+  --color-primary-light: #665c54;
+  --color-primary-lighter: #7c6f64;
+  --color-highlight-bg: rgb(214, 57, 91);
+  --color-highlight-border: pink;
+
+  --color-text-light: #665c54;
+  --color-text-secondary: #7c6f64;
+
+  --color-border: rgba(60, 56, 54, 0.4);
+
+  --color-button-bg: var(--color-primary-dark);
+  --color-button-text: var(--color-bg);
+  --color-button-hover: var(--color-primary-darker);
+
+  --shadow-small: 0 2px 4px rgba(0,0,0,0.06);
+  --shadow-medium: 0 4px 8px rgba(0,0,0,0.08);
+
+  --color-status-active: #83a598;
+  --color-status-inprogress: #fabd2f;
+  --color-status-archived: #928374;
+  --color-card-bg: rgba(255,255,255,0.92);
+  --color-card-border: rgba(60,56,54,0.06);
+  --color-card-shadow: 0 5px 15px rgba(0,0,0,0.06);
+
+  --color-input-bg: #ffffff;
+  --color-input-border: rgba(0,0,0,0.08);
+  --color-input-focus: var(--color-primary);
+}
+
+/* dark theme variables (activated when body.dark-theme or [data-theme="dark"]) */
+[data-theme="dark"], body.dark-theme {
+  --color-bg: #282828;
+  --color-bg-rgb: 40, 40, 40;
+  --color-bg-secondary: #3c3836;
+  --color-text: #ebdbb2;
+  --color-nav-text: #d5c4a1;
+  --color-accent: #a89984;
+
+  --color-primary: #928374;
+  --color-primary-dark: #7c6f64;
+  --color-primary-darker: #665c54;
+  --color-primary-light: #a89984;
+  --color-primary-lighter: #bdae93;
+  --color-highlight-bg: pink;
+  --color-highlight-border: #bdae93;
+
+  --color-text-light: #a89984;
+  --color-text-secondary: #928374;
+
+  --color-border: rgba(189, 174, 147, 0.4);
+
+  --color-button-bg: var(--color-primary-dark);
+  --color-button-text: var(--color-bg);
+  --color-button-hover: var(--color-primary-darker);
+
+  --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.3);
+
+  --color-card-bg: rgba(40,40,40,0.85);
+}
+
+/* Legacy component-level helpers (merged from admin.css and modern-admin.css tokens) */
+body{font-family:Inter,system-ui,Arial;background:var(--color-bg);color:var(--color-text);margin:0}
+.login-container{background:var(--color-card-bg);padding:1.25rem;border-radius:8px;box-shadow:var(--color-card-shadow);border:1px solid var(--color-card-border)}
+.form-control{width:100%;padding:.55rem .75rem;border-radius:6px;border:1px solid var(--color-input-border);background:var(--color-input-bg)}
+.btn{background:var(--color-button-bg);color:var(--color-button-text);padding:.5rem .8rem;border-radius:6px;border:none}
+.error-message{color:#c0392b;margin-top:.6rem}
+
+/* small helper tokens used by pages */
+.text-primary{color:var(--color-primary)}
+.text-secondary{color:var(--color-text-secondary)}

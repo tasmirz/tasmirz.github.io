@@ -1,0 +1,5 @@
+Microsoft (R) Build Engine version 16.10.1 for Mono
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+/home/zihad/Projects/Portfolio/aspx/admin/skills.aspx.cs(287,22): warning CS0108: 'Skills.ShowMessage(string, string)' hides inherited member 'AdminBasePage.ShowMessage(string, string)'. Use the new keyword if hiding was intended. [/home/zihad/Projects/Portfolio/aspx/71.csproj]
+  71 -> /home/zihad/Projects/Portfolio/aspx/bin/71.dll

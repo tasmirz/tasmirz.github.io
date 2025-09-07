@@ -25,4 +25,5 @@
   --color-button-bg: var(--color-primary-dark);
   --color-button-text: var(--color-bg);
   --color-button-hover: var(--color-primary-darker);
+  --lyf-filter: sepia(.8);
 }

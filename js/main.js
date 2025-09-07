@@ -4,11 +4,12 @@ import SkillsLoader from './skills-loader.js'
 import ProfileLoader from './profile-loader.js'
 import WebGLBackground from './webgl-background.js'
 import WebGLLyf from './webgl-lyf.js'
-
+import { setupVideoLoop } from './video-loop.js'
 initUI()
 
 document.addEventListener('DOMContentLoaded', async () => {
-	//WebGLBackground.getInstance().init()
+	setupVideoLoop()
+	WebGLBackground.getInstance().init()
 	// Load profile data and initialize typewriter
 	const profileLoader = ProfileLoader.getInstance()
 	await profileLoader.init()

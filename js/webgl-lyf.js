@@ -6,67 +6,67 @@ export default class WebGLLyf {
 		{
 			x: -1.37,
 			y: 0.38,
-			name: 'Childhood Home'
+			name: '20XX : Birth'
 		},
 		{
 			x: -1.354,
 			y: 0.1559999999999998,
-			name: 'Elementary School'
+			name: ''
 		},
 		{
 			x: -1.164,
 			y: 0.11399999999999977,
-			name: 'Local Library'
+			name: ''
 		},
 		{
 			x: -1.0459999999999998,
 			y: 0.17199999999999982,
-			name: 'First Computer Class'
+			name: ''
 		},
 		{
 			x: -0.9199999999999997,
 			y: 0.11999999999999977,
-			name: 'High School'
+			name: ' '
 		},
 		{
 			x: -0.8079999999999996,
 			y: 0.08199999999999974,
-			name: 'Programming Club'
+			name: ' '
 		},
 		{
 			x: -0.6739999999999995,
 			y: 0.07199999999999973,
-			name: 'First Project'
+			name: ''
 		},
 		{
 			x: -0.4579999999999993,
 			y: 0.11399999999999977,
-			name: 'University Days'
+			name: ''
 		},
 		{
 			x: -0.19399999999999906,
 			y: 0.1539999999999998,
-			name: 'Internship'
+			name: "St. Gregory's High School"
 		},
 		{
 			x: 0.15200000000000122,
 			y: 0.12399999999999978,
-			name: 'First Job'
+			name: 'Senior Patrol Leader, Gregorian Scouts'
 		},
 		{
 			x: 0.2720000000000013,
 			y: -0.06800000000000037,
-			name: 'Learning WebGL'
+			name: 'KUET CSE'
 		},
 		{
 			x: 0.3720000000000014,
 			y: -0.3860000000000006,
-			name: 'Building Projects'
+			name: 'KRPC5 : 2nd Runner Up'
 		},
 		{
 			x: 0.3880000000000014,
 			y: -0.6160000000000008,
-			name: 'Open Source'
+			name: ''
 		},
 		{
 			x: 0.3820000000000014,
@@ -168,33 +168,33 @@ export default class WebGLLyf {
 	}
 
 	setupControls() {
-		// Keyboard controls
-		document.addEventListener('keydown', (e) => {
-			const key = e.key.toLowerCase()
-			if (key in this.keys) {
-				this.keys[key] = true
-				this.isManualControl = true // Switch to manual control
-				this.lockGlobalScroll() // Ensure scroll is locked
-				e.preventDefault()
-			}
-		})
+		this.setupKeyboardControls()
+		this.setupWheelControls()
+		this.setupMobileControls()
+	}
 
-		document.addEventListener('keyup', (e) => {
-			const key = e.key.toLowerCase()
-			if (key in this.keys) {
-				this.keys[key] = false
-				const anyKeyPressed = Object.values(this.keys).some(
-					(pressed) => pressed
-				)
-				if (!anyKeyPressed) {
-					// Update scroll progress to match current manual position before switching modes
+	setupKeyboardControls() {
+		const onKey = (e, pressed) => {
+			const k = e.key.toLowerCase()
+			if (!(k in this.keys)) return
+			this.keys[k] = pressed
+			if (pressed) {
+				this.isManualControl = true
+				this.lockGlobalScroll()
+			} else {
+				if (!Object.values(this.keys).some(Boolean)) {
 					this.updateScrollProgressFromPosition()
 					this.isManualControl = false
 				}
-				e.preventDefault()
 			}
-		})
+			e.preventDefault()
+		}
 
+		document.addEventListener('keydown', (e) => onKey(e, true))
+		document.addEventListener('keyup', (e) => onKey(e, false))
+	}
+
+	setupWheelControls() {
 		document.addEventListener(
 			'wheel',
 			(e) => {
@@ -206,12 +206,7 @@ export default class WebGLLyf {
 					Math.min(1, this.scrollProgress + delta)
 				)
 
-				if (this.scrollProgress > 0 && this.scrollProgress < 1) {
-					e.preventDefault()
-					this.scrollProgress = newProgress
-					this.lockGlobalScroll()
-					this.notifyProgressTracker()
-				} else if (newProgress > 0 && newProgress < 1) {
+				if (this.shouldHandleScroll(newProgress)) {
 					e.preventDefault()
 					this.scrollProgress = newProgress
 					this.lockGlobalScroll()
@@ -222,41 +217,42 @@ export default class WebGLLyf {
 			},
 			{ passive: false }
 		)
+	}
 
-		// Mobile controls
+	setupMobileControls() {
 		document.querySelectorAll('.lyf-dpad-button').forEach((btn) => {
 			const key = btn.dataset.key
-
-			btn.addEventListener('touchstart', (e) => {
+			const handleTouch = (e, pressed) => {
 				e.preventDefault()
-				this.keys[key] = true
-				this.isManualControl = true // Switch to manual control
-				this.lockGlobalScroll() // Ensure scroll is locked
-			})
-
-			btn.addEventListener('touchend', (e) => {
-				e.preventDefault()
-				this.keys[key] = false
-				const anyKeyPressed = Object.values(this.keys).some(
-					(pressed) => pressed
-				)
-				if (!anyKeyPressed) {
-					// Update scroll progress to match current manual position before switching modes
+				this.keys[key] = pressed
+				if (pressed) {
+					this.isManualControl = true
+					this.lockGlobalScroll()
+				} else if (!Object.values(this.keys).some(Boolean)) {
 					this.updateScrollProgressFromPosition()
 					this.isManualControl = false
 				}
-			})
+			}
+
+			btn.addEventListener('touchstart', (e) => handleTouch(e, true))
+			btn.addEventListener('touchend', (e) => handleTouch(e, false))
 		})
 
 		const actionBtn = document.querySelector('.lyf-action-button')
-		if (actionBtn) {
+		if (actionBtn)
 			actionBtn.addEventListener('touchstart', () => {
 				this.scrollProgress = 0
 				this.isManualControl = false
 				this.worldOffset = { x: this.path[0].x, y: this.path[0].y }
-				this.updateLocationText(0) // Reset to starting location
+				this.updateLocationText(0)
 			})
-		}
+	}
+
+	shouldHandleScroll(newProgress) {
+		return (
+			(this.scrollProgress > 0 && this.scrollProgress < 1) ||
+			(newProgress > 0 && newProgress < 1)
+		)
 	}
 
 	setupScrollLock() {
@@ -268,28 +264,12 @@ export default class WebGLLyf {
 				entries.forEach((entry) => {
 					this.canvasInView = entry.isIntersecting
 
-					// Skip snapping behavior if navigation is happening
 					if (staticSpace.navJump) return
 
-					//jump to #lyf , within .5s
 					if (entry.isIntersecting) {
-						lyfSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
-						setTimeout(() => {
-							lyfSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
-						}, 100)
-						setTimeout(() => {
-							lyfSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
-						}, 300)
-					}
-
-					if (!this.isManualControl) {
-						if (entry.isIntersecting) {
-							if (this.scrollProgress > 0 && this.scrollProgress < 1) {
-								this.lockGlobalScroll()
-							}
-						} else {
-							this.unlockGlobalScroll()
-						}
+						this.scrollToSection(lyfSection)
+					} else if (!this.isManualControl) {
+						this.unlockGlobalScroll()
 					}
 				})
 			},
@@ -299,41 +279,49 @@ export default class WebGLLyf {
 		observer.observe(lyfSection)
 	}
 
+	scrollToSection(section) {
+		const scrollIntoView = () =>
+			section.scrollIntoView({ behavior: 'smooth', block: 'start' })
+		scrollIntoView()
+		setTimeout(scrollIntoView, 100)
+		setTimeout(scrollIntoView, 300)
+		setTimeout(scrollIntoView, 500)
+	}
+
 	setupNavigationListeners() {
-		// Add listeners to all navigation links
 		const navLinks = document.querySelectorAll('nav a[href^="#"]')
-
 		navLinks.forEach((link) => {
-			link.addEventListener('click', (e) => {
-				const href = link.getAttribute('href')
-
-				// If clicking on a navigation link that's not #lyf, disable snapping
-				if (href !== '#lyf') {
-					staticSpace.navJump = true
-					this.unlockGlobalScroll()
-
-					// Check when scroll has reached the target
-					const targetSection = document.querySelector(href)
-					if (targetSection) {
-						const checkScrollComplete = () => {
-							const rect = targetSection.getBoundingClientRect()
-							const isInView =
-								rect.top >= 0 && rect.top <= window.innerHeight * 0.1
-
-							if (isInView) {
-								staticSpace.navJump = false
-							} else {
-								requestAnimationFrame(checkScrollComplete)
-							}
-						}
-						requestAnimationFrame(checkScrollComplete)
-					} else {
-						// Fallback for invalid targets
-						staticSpace.navJump = false
-					}
-				}
-			})
+			link.addEventListener('click', (e) => this.handleNavClick(link))
 		})
+	}
+
+	handleNavClick(link) {
+		const href = link.getAttribute('href')
+		if (href === '#lyf') return
+
+		staticSpace.navJump = true
+		this.unlockGlobalScroll()
+
+		const targetSection = document.querySelector(href)
+		if (targetSection) {
+			this.waitForScrollComplete(targetSection)
+		} else {
+			staticSpace.navJump = false
+		}
+	}
+
+	waitForScrollComplete(targetSection) {
+		const checkScrollComplete = () => {
+			const rect = targetSection.getBoundingClientRect()
+			const isInView = rect.top >= 0 && rect.top <= window.innerHeight * 0.1
+
+			if (isInView) {
+				staticSpace.navJump = false
+			} else {
+				requestAnimationFrame(checkScrollComplete)
+			}
+		}
+		requestAnimationFrame(checkScrollComplete)
 	}
 
 	lockGlobalScroll() {
@@ -369,96 +357,82 @@ export default class WebGLLyf {
 			return
 
 		const location = this.path[locationIndex]
+		const element = this.locationTextElement
+		const parent = element.parentElement
 
-		// Add fade out effect before changing text
-		this.locationTextElement.style.opacity = '0'
-		this.locationTextElement.style.transform = 'translateY(-10px)'
+		// Fade out
+		element.style.opacity = '0'
+		element.style.transform = 'translateY(-10px)'
 
-		setTimeout(() => {
-			this.locationTextElement.textContent = location.name
-			this.locationTextElement.style.opacity = '1'
-			this.locationTextElement.style.transform = 'translateY(0)'
+		if (location.name.trim()) {
+			parent.style.opacity = '1'
+			element.textContent = location.name
 
-			// Trigger the CSS animation
-			this.locationTextElement.style.animation = 'none'
-			this.locationTextElement.offsetHeight // Trigger reflow
-			this.locationTextElement.style.animation = 'fadeInText 0.5s ease-out'
-		}, 150)
+			setTimeout(() => {
+				element.style.opacity = '1'
+				element.style.transform = 'translateY(0)'
+				element.style.animation = 'none'
+				element.offsetHeight // Trigger reflow
+				element.style.animation = 'fadeInText 0.5s ease-out'
+			}, 150)
+		} else {
+			parent.style.transition = 'opacity 0.5s ease-out'
+			parent.style.opacity = '0'
+		}
 
 		this.currentLocationIndex = locationIndex
 	}
 
 	updateLocationBasedOnPosition() {
-		// Find the closest location to current position
-		let closestIndex = 0
-		let closestDistance = Infinity
-
-		this.path.forEach((point, index) => {
-			const dx = point.x - this.worldOffset.x
-			const dy = point.y - this.worldOffset.y
-			const distance = Math.sqrt(dx * dx + dy * dy)
-
-			if (distance < closestDistance) {
-				closestDistance = distance
-				closestIndex = index
+		let idx = 0
+		let best = Infinity
+		for (let i = 0; i < this.path.length; i++) {
+			const p = this.path[i]
+			const d = Math.hypot(p.x - this.worldOffset.x, p.y - this.worldOffset.y)
+			if (d < best) {
+				best = d
+				idx = i
 			}
-		})
-
-		// Only update if we're close enough to a location (threshold)
-		if (closestDistance < 0.1 && closestIndex !== this.currentLocationIndex) {
-			this.updateLocationText(closestIndex)
 		}
+		if (best < 0.1 && idx !== this.currentLocationIndex)
+			this.updateLocationText(idx)
 	}
 
 	updateScrollProgressFromPosition() {
-		// Find the closest segment on the path to current position
 		let closestSegmentProgress = 0
 		let closestDistance = Infinity
 
 		for (let i = 0; i < this.path.length - 1; i++) {
-			const p0 = this.path[i]
-			const p1 = this.path[i + 1]
-
-			// Find the closest point on this segment
-			const segmentVector = { x: p1.x - p0.x, y: p1.y - p0.y }
-			const toCurrentPos = {
-				x: this.worldOffset.x - p0.x,
-				y: this.worldOffset.y - p0.y
-			}
-
-			// Project current position onto the segment
-			const segmentLength = Math.sqrt(
-				segmentVector.x * segmentVector.x + segmentVector.y * segmentVector.y
-			)
-			if (segmentLength === 0) continue
-
-			const t = Math.max(
-				0,
-				Math.min(
-					1,
-					(toCurrentPos.x * segmentVector.x +
-						toCurrentPos.y * segmentVector.y) /
-						(segmentLength * segmentLength)
-				)
-			)
-
-			const closestPointOnSegment = {
-				x: p0.x + t * segmentVector.x,
-				y: p0.y + t * segmentVector.y
-			}
-
-			const dx = this.worldOffset.x - closestPointOnSegment.x
-			const dy = this.worldOffset.y - closestPointOnSegment.y
-			const distance = Math.sqrt(dx * dx + dy * dy)
-
-			if (distance < closestDistance) {
-				closestDistance = distance
-				closestSegmentProgress = (i + t) / (this.path.length - 1)
+			const segmentProgress = this.getSegmentProgress(i)
+			if (segmentProgress.distance < closestDistance) {
+				closestDistance = segmentProgress.distance
+				closestSegmentProgress = segmentProgress.progress
 			}
 		}
 
 		this.scrollProgress = Math.max(0, Math.min(1, closestSegmentProgress))
 		this.notifyProgressTracker()
+	}
+
+	getSegmentProgress(i) {
+		const p0 = this.path[i],
+			p1 = this.path[i + 1]
+		const vx = p1.x - p0.x,
+			vy = p1.y - p0.y
+		const len2 = vx * vx + vy * vy
+		if (!len2) return { progress: 0, distance: Infinity }
+		const t = Math.max(
+			0,
+			Math.min(
+				1,
+				((this.worldOffset.x - p0.x) * vx + (this.worldOffset.y - p0.y) * vy) /
+					len2
+			)
+		)
+		const cx = p0.x + t * vx,
+			cy = p0.y + t * vy
+		const dist = Math.hypot(this.worldOffset.x - cx, this.worldOffset.y - cy)
+		return { progress: (i + t) / (this.path.length - 1), distance: dist }
 	}
 
 	// Notify progress tracker of scroll changes
@@ -479,11 +453,12 @@ export default class WebGLLyf {
 				this.updatePositionOnScroll()
 			}
 
-			const gl = this.context.gl
-			gl.activeTexture(gl.TEXTURE0)
-			gl.bindTexture(gl.TEXTURE_2D, this.texture)
+			const program = this.context.programs.get('lyf') || this.program
+			program.use()
+			// bind texture via Program helper
+			program.bindTexture('iTexture', this.texture)
 
-			this.program.passUniforms([
+			program.passUniforms([
 				['iResolution', [this.context.width, this.context.height]],
 				['iOffset', [this.worldOffset.x, this.worldOffset.y]],
 				['iTexture', 0],
@@ -491,31 +466,28 @@ export default class WebGLLyf {
 				['iProgress', this.scrollProgress]
 			])
 
-			this.program.draw(0, 4, gl.TRIANGLE_STRIP)
+			// draw using Program helper; pass GL mode constant via context.gl
+			program.draw(0, 4, this.context.gl.TRIANGLE_STRIP)
 		})
 	}
 
 	updatePositionOnScroll() {
-		const points = this.path
-		const t = this.scrollProgress // 0 to 1
-
-		// Calculate which segment we're in
-		const totalSegments = points.length - 1
+		const t = this.scrollProgress
+		const totalSegments = this.path.length - 1
 		const segmentIndex = Math.floor(t * totalSegments)
 		const segmentT = (t * totalSegments) % 1
 
-		// Clamp to valid indices
 		const i = Math.min(segmentIndex, totalSegments - 1)
-		const p0 = points[i]
-		const p1 = points[Math.min(i + 1, points.length - 1)]
+		const p0 = this.path[i]
+		const p1 = this.path[Math.min(i + 1, this.path.length - 1)]
 
-		// Interpolate between the two points
+		// Interpolate position
 		this.worldOffset.x = p0.x + (p1.x - p0.x) * segmentT
 		this.worldOffset.y = p0.y + (p1.y - p0.y) * segmentT
 
-		// Update location text based on current segment
+		// Update location text
 		const newLocationIndex =
-			segmentT < 0.5 ? i : Math.min(i + 1, points.length - 1)
+			segmentT < 0.5 ? i : Math.min(i + 1, this.path.length - 1)
 		if (newLocationIndex !== this.currentLocationIndex) {
 			this.updateLocationText(newLocationIndex)
 		}
@@ -525,29 +497,34 @@ export default class WebGLLyf {
 		const lyfSection = document.querySelector('#lyf')
 		if (!lyfSection) return
 
-		let startY = 0
-		let startScrollProgress = 0
-		let isTouching = false
+		let touchState = { startY: 0, startProgress: 0, isTouching: false }
 
 		lyfSection.addEventListener('touchstart', (e) => {
 			if (this.isManualControl || !this.canvasInView) return
-
-			startY = e.touches[0].clientY
-			startScrollProgress = this.scrollProgress
-			isTouching = true
+			touchState = {
+				startY: e.touches[0].clientY,
+				startProgress: this.scrollProgress,
+				isTouching: true
+			}
 		})
 
 		lyfSection.addEventListener(
 			'touchmove',
 			(e) => {
-				if (!isTouching || this.isManualControl || !this.canvasInView) return
+				if (
+					!touchState.isTouching ||
+					this.isManualControl ||
+					!this.canvasInView
+				)
+					return
 
-				const deltaY = e.touches[0].clientY - startY
+				const deltaY = e.touches[0].clientY - touchState.startY
 				const deltaProgress = deltaY / lyfSection.clientHeight
-				let newProgress = startScrollProgress - deltaProgress
-				newProgress = Math.max(0, Math.min(1, newProgress))
+				const newProgress = Math.max(
+					0,
+					Math.min(1, touchState.startProgress - deltaProgress)
+				)
 
-				// Directly set scrollProgress for boundary detection
 				this.scrollProgress = newProgress
 
 				if (newProgress > 0 && newProgress < 1) {
@@ -561,8 +538,7 @@ export default class WebGLLyf {
 		)
 
 		lyfSection.addEventListener('touchend', () => {
-			isTouching = false
-			// Always release lock at boundaries
+			touchState.isTouching = false
 			if (this.scrollProgress === 0 || this.scrollProgress === 1) {
 				this.unlockGlobalScroll()
 			}

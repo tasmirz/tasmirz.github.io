@@ -5,7 +5,7 @@
 		<title>Zihad's</title>
 		<!-- Base styles first -->
 		<link rel="stylesheet" href="css/base.css" />
-		<!-- Theming styles -->
+		<!-- Theme styles (light/dark) -->
 		<link rel="stylesheet" href="css/colors.css" />
 		<link rel="stylesheet" href="css/dark-theme.css" />
 		<!-- Animation definitions -->
@@ -21,7 +21,6 @@
 		<div class="scroll-progress-container">
 			<div class="scroll-progress-bar" id="scroll-progress-bar"></div>
 		</div>
-		
 		<header class="header-controls">
 			<nav>
 				<ul id="nav-menu">
@@ -41,9 +40,12 @@
 				</button>
 			</div>
 		</header>
+		<div id="tree-bg-video">
+			<video src="assets/tree_bg.webm" autoplay muted></video>
+		</div>
 		<main>
+			<section></section>
 			<section id="welcome">
-				<div id="welcome-background"></div>
 				<div class="welcome-content">
 					<h1><span id="typewriter" class="typewriter"></span></h1>
 					<div class="subtitle"></div>
@@ -170,9 +172,9 @@
 					<div class="personal-note-content">
 						<span class="material-icons waving-icon">waving_hand</span>
 						<h3>Thanks for stopping by! </h3>
-
+						
 						<p class="personal-quote">"I love building things that make life easier. Fun fact: I drink my coffee black and code best in the morning!"</p>
-
+						
 					</div>
 				</div>
 			</div>
@@ -181,5 +183,7 @@
 			</div>
 		</footer>
 		<script type="module" src="js/main.js"></script>
+		<div class="hidden" id="mobile-nav-overlay"></div>
 	</body>
-</html>
+	</html>
+	

@@ -27,10 +27,14 @@ export const initThemeToggle = () => {
 
 export const initMobileMenu = () => {
 	const hamburgerMenu = document.getElementById('hamburger-menu')
-	const navMenu = document.getElementById('nav-menu')
+	const mobileNavOverlay = document.getElementById('mobile-nav-overlay')
 	const nav = document.querySelector('nav')
 
-	if (!hamburgerMenu || !navMenu || !nav) return
+	if (!hamburgerMenu || !nav || !mobileNavOverlay) return
+
+	mobileNavOverlay.innerHTML = nav.innerHTML
+	const navMenu = mobileNavOverlay.querySelector('#nav-menu')
+	navMenu.id = 'mobile-nav-menu'
 
 	const menuIcon = hamburgerMenu.querySelector('#menu-icon')
 	const mobileMediaQuery = window.matchMedia('(max-width: 480px)')
@@ -47,12 +51,16 @@ export const initMobileMenu = () => {
 	const toggleMenu = (isActive) => {
 		// Only apply these effects if we're in mobile mode
 		if (mobileMediaQuery.matches) {
+			console.log(isActive)
 			navMenu.classList[isActive ? 'add' : 'remove']('active')
-			nav.classList[isActive ? 'add' : 'remove']('mobile-active')
-			menuIcon.textContent = isActive ? 'close' : 'menu'
-			navMenu.style.pointerEvents = isActive ? 'all' : 'none'
 			navMenu.style.opacity = isActive ? '1' : '0'
-			document.body.style.overflow = isActive ? 'hidden' : ''
+			mobileNavOverlay.classList[isActive ? 'remove' : 'add']('hidden')
+			mobileNavOverlay.classList[isActive ? 'add' : 'remove']('mobile-active')
+			menuIcon.textContent = isActive ? 'close' : 'menu'
+			mobileNavOverlay.style.pointerEvents = isActive ? 'all' : 'none'
+			navMenu.style.pointerEvents = isActive ? 'all' : 'none'
+			mobileNavOverlay.style.opacity = isActive ? '1' : '0'
+			//document.body.style.overflow = isActive ? 'hidden' : ''
 		}
 	}
 
@@ -109,7 +117,8 @@ export const initMobileMenu = () => {
 	}
 
 	hamburgerMenu.addEventListener('click', () => {
-		const isActive = !navMenu.classList.contains('active')
+		//console.log(mobileNavOverlay)
+		const isActive = !mobileNavOverlay.classList.contains('mobile-active')
 		toggleMenu(isActive)
 	})
 

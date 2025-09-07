@@ -1,0 +1,9 @@
+/usr/bin/ffmpeg -hide_banner -y -y -r 24 -start_number 0 -start_number_range 1 -i /home/zihad/Projects/Portfolio/assets/tree_bg%04d.png -framerate 15 -i frame_%03d.png -c:v libvpx-vp9 -pix_fmt yuva420p -b:v 0 -crf 30 -cpu-used 0 /home/zihad/Projects/Portfolio/assets/tree_bg.webm
+=====================================================
+Input #0, image2, from '/home/zihad/Projects/Portfolio/assets/tree_bg%04d.png':
+  Duration: 00:00:00.88, start: 0.000000, bitrate: N/A
+  Stream #0:0: Video: png, rgba(pc, gbr/unknown/unknown), 1920x1080 [SAR 11811:11811 DAR 16:9], 25 fps, 25 tbr, 25 tbn
+[image2 @ 0x55d24a0e1dc0] Could find no file with path 'frame_%03d.png' and index in the range 0-4
+[in#1 @ 0x55d24a0e1080] Error opening input: No such file or directory
+Error opening input file frame_%03d.png.
+Error opening input files: No such file or directory
