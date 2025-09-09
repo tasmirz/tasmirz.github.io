@@ -1,0 +1,19 @@
+/* base.css (deprecated) — font-face kept for backwards compatibility.
+	 Prefer using layout.css which already includes font-face and .material-icons.
+*/
+
+@font-face {
+	font-family: 'Material Icons';
+	font-style: normal;
+	font-weight: 400;
+	src: url('/assets/icons.woff2') format('woff2');
+	font-display: swap;
+}
+
+.material-icons {
+	font-family: 'Material Icons';
+	font-weight: normal;
+	font-style: normal;
+	font-size: 24px;
+	display: inline-block;
+}

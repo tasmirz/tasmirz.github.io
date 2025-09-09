@@ -7,10 +7,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace _71.Admin
+namespace _71
 {
 
-    public partial class Projects
+    public partial class AdminProjects
     {
 
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
@@ -26,6 +26,8 @@ namespace _71.Admin
         protected global::System.Web.UI.WebControls.TextBox txtNewImageUrl;
 
         protected global::System.Web.UI.WebControls.TextBox txtNewDescription;
+
+        protected global::System.Web.UI.WebControls.DropDownList ddlNewStatus;
 
         protected global::System.Web.UI.WebControls.TextBox txtNewProjectUrl;
 

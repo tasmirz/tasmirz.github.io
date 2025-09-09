@@ -4,7 +4,7 @@ namespace _71.Utils
     {
         // Session Keys
         public const string SESSION_IS_ADMIN = "IsAdmin";
-        public const string SESSION_ADMIN_USER = "AdminUser";
+        public const string SESSION_ADMIN_USER = "Zihad";
 
         // Cookie Names
         public const string COOKIE_ADMIN_REMEMBER = "AdminRemember";

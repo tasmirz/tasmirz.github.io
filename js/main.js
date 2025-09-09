@@ -5,9 +5,20 @@ import ProfileLoader from './profile-loader.js'
 import WebGLBackground from './webgl-background.js'
 import WebGLLyf from './webgl-lyf.js'
 import { setupVideoLoop } from './video-loop.js'
+import initContactForm from './contact-form.js'
 initUI()
 
 document.addEventListener('DOMContentLoaded', async () => {
+	document.getElementById('welcome').scrollIntoView()
+	//block scroll
+	document.body.style.overflow = 'hidden'
+	document.documentElement.style.scrollBehavior = 'hidden'
+	setTimeout(() => {
+		document.getElementById('welcome').scrollIntoView()
+
+		document.body.style.overflow = ''
+		document.documentElement.style.scrollBehavior = ''
+	}, 4000)
 	setupVideoLoop()
 	WebGLBackground.getInstance().init()
 	// Load profile data and initialize typewriter
@@ -18,6 +29,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 		ProjectsLoader.getInstance().init(),
 		SkillsLoader.getInstance().init()
 	])
+
+	// Initialize scroll animations
 
 	// Initialize UI components after content loads
 
@@ -35,4 +48,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 	} catch (error) {
 		console.warn('⚠️ Progress tracker initialization failed:', error)
 	}
+
+	// Initialize contact form
+	initContactForm()
 })

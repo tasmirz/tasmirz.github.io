@@ -7,6 +7,84 @@ namespace _71.DAL
 {
     public class SkillsRepository
     {
+        public List<SkillCategoryWithSkills> GetAllSkillCategoriesWithSkills()
+        {
+            var categories = new List<SkillCategoryWithSkills>();
+
+            try
+            {
+                using (var connection = DatabaseHelper.GetConnection())
+                {
+                    connection.Open();
+
+                    // Load categories - simplified query for existing schema
+                    const string categoryQuery = @"
+                        SELECT Id, Name, Description, SortOrder
+                        FROM SkillCategories 
+                        ORDER BY SortOrder, Name";
+
+                    using (var command = new SqlCommand(categoryQuery, connection))
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var category = new SkillCategoryWithSkills
+                            {
+                                Id = Convert.ToInt32(reader["Id"]),
+                                Name = reader["Name"].ToString(),
+                                Description = reader["Description"]?.ToString() ?? "",
+                                IsActive = true, // Default since we're selecting all
+                                SortOrder = reader["SortOrder"] != DBNull.Value ? Convert.ToInt32(reader["SortOrder"]) : 0,
+                                CreatedAt = DateTime.Now,
+                                UpdatedAt = DateTime.Now
+                            };
+                            categories.Add(category);
+                        }
+                    }
+
+                    // Load skills for each category - simplified query
+                    const string skillQuery = @"
+                        SELECT Id, Name, CategoryId, SortOrder
+                        FROM Skills 
+                        WHERE CategoryId = @categoryId
+                        ORDER BY SortOrder, Name";
+
+                    foreach (var category in categories)
+                    {
+                        using (var command = new SqlCommand(skillQuery, connection))
+                        {
+                            command.Parameters.AddWithValue("@categoryId", category.Id);
+                            using (var reader = command.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    var skill = new SkillModel
+                                    {
+                                        Id = Convert.ToInt32(reader["Id"]),
+                                        Name = reader["Name"].ToString(),
+                                        CategoryId = category.Id,
+                                        IsActive = true, // Default since we're selecting all
+                                        SortOrder = reader["SortOrder"] != DBNull.Value ? Convert.ToInt32(reader["SortOrder"]) : 0,
+                                        CreatedAt = DateTime.Now,
+                                        UpdatedAt = DateTime.Now
+                                    };
+                                    category.Skills.Add(skill);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error and return empty list
+                System.Diagnostics.Debug.WriteLine($"Error loading skill categories: {ex.Message}");
+                return new List<SkillCategoryWithSkills>();
+            }
+
+            return categories;
+        }
+
         public List<SkillCategoryModel> GetAllSkillCategories()
         {
             var categories = new List<SkillCategoryModel>();
@@ -55,13 +133,13 @@ namespace _71.DAL
             var categories = new List<SkillCategoryModel>();
 
             const string query = @"
-          SELECT sc.Id, sc.Name, sc.Description, sc.IsActive,
+          SELECT sc.Id, sc.Name, sc.Description,
               STUFF((SELECT ', ' + s.Name 
                   FROM Skills s 
                   WHERE s.CategoryId = sc.Id
                   FOR XML PATH('')), 1, 2, '') AS Skills
           FROM SkillCategories sc
-          WHERE sc.IsActive = 1";
+          ORDER BY sc.SortOrder, sc.Name";
 
             using (var command = new SqlCommand(query, connection))
             using (var reader = command.ExecuteReader())
@@ -73,7 +151,7 @@ namespace _71.DAL
                         Id = Convert.ToInt32(reader["Id"]),
                         Name = reader["Name"].ToString(),
                         Description = reader["Description"]?.ToString() ?? "",
-                        IsActive = Convert.ToBoolean(reader["IsActive"])
+                        IsActive = true // Default since we're selecting all
                     };
 
                     var skillsString = reader["Skills"]?.ToString();
@@ -128,6 +206,139 @@ namespace _71.DAL
             return categories;
         }
 
+        public bool AddSkill(int categoryId, string skillName)
+        {
+            try
+            {
+                using (var connection = DatabaseHelper.GetConnection())
+                {
+                    connection.Open();
+
+                    // Get next sort order for this category
+                    string sortQuery = "SELECT ISNULL(MAX(SortOrder), 0) + 1 FROM Skills WHERE CategoryId = @categoryId";
+                    int sortOrder;
+                    using (var sortCmd = new SqlCommand(sortQuery, connection))
+                    {
+                        sortCmd.Parameters.AddWithValue("@categoryId", categoryId);
+                        sortOrder = Convert.ToInt32(sortCmd.ExecuteScalar());
+                    }
+
+                    const string query = @"
+                        INSERT INTO Skills (CategoryId, Name, SortOrder, DisplayOrder)
+                        VALUES (@categoryId, @name, @sortOrder, @displayOrder)";
+
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@categoryId", categoryId);
+                        command.Parameters.AddWithValue("@name", skillName);
+                        command.Parameters.AddWithValue("@sortOrder", sortOrder);
+                        command.Parameters.AddWithValue("@displayOrder", sortOrder);
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool DeleteSkill(int skillId)
+        {
+            try
+            {
+                using (var connection = DatabaseHelper.GetConnection())
+                {
+                    connection.Open();
+
+                    // Hard delete since we don't have IsActive column
+                    const string query = "DELETE FROM Skills WHERE Id = @id";
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@id", skillId);
+                        command.ExecuteNonQuery();
+                    }
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool AddSkillCategory(string categoryName, string description = "")
+        {
+            try
+            {
+                using (var connection = DatabaseHelper.GetConnection())
+                {
+                    connection.Open();
+
+                    // Get next sort order
+                    string sortQuery = "SELECT ISNULL(MAX(SortOrder), 0) + 1 FROM SkillCategories";
+                    int sortOrder;
+                    using (var sortCmd = new SqlCommand(sortQuery, connection))
+                    {
+                        sortOrder = Convert.ToInt32(sortCmd.ExecuteScalar());
+                    }
+
+                    const string query = @"
+                        INSERT INTO SkillCategories (Name, Description, SortOrder, DisplayOrder)
+                        VALUES (@name, @description, @sortOrder, @displayOrder)";
+
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@name", categoryName);
+                        command.Parameters.AddWithValue("@description", description);
+                        command.Parameters.AddWithValue("@sortOrder", sortOrder);
+                        command.Parameters.AddWithValue("@displayOrder", sortOrder);
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool DeleteSkillCategoryAndSkills(int categoryId)
+        {
+            try
+            {
+                using (var connection = DatabaseHelper.GetConnection())
+                {
+                    connection.Open();
+
+                    // Delete skills first (foreign key constraint)
+                    const string deleteSkillsQuery = "DELETE FROM Skills WHERE CategoryId = @categoryId";
+                    using (var command = new SqlCommand(deleteSkillsQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@categoryId", categoryId);
+                        command.ExecuteNonQuery();
+                    }
+
+                    // Then delete category
+                    const string deleteCategoryQuery = "DELETE FROM SkillCategories WHERE Id = @categoryId";
+                    using (var command = new SqlCommand(deleteCategoryQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@categoryId", categoryId);
+                        command.ExecuteNonQuery();
+                    }
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public bool AddSkillCategory(SkillCategoryModel category)
         {
             try
@@ -137,16 +348,13 @@ namespace _71.DAL
                     connection.Open();
 
                     const string query = @"
-                        INSERT INTO SkillCategories (Name, Description, IsActive, CreatedAt, UpdatedAt)
-                        VALUES (@name, @description, @isActive, @createdAt, @updatedAt)";
+                        INSERT INTO SkillCategories (Name, Description)
+                        VALUES (@name, @description)";
 
                     using (var command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@name", category.Name ?? "");
                         command.Parameters.AddWithValue("@description", category.Description ?? "");
-                        command.Parameters.AddWithValue("@isActive", category.IsActive);
-                        command.Parameters.AddWithValue("@createdAt", category.CreatedAt);
-                        command.Parameters.AddWithValue("@updatedAt", category.UpdatedAt);
 
                         command.ExecuteNonQuery();
                     }
@@ -169,7 +377,7 @@ namespace _71.DAL
 
                     const string query = @"
                         UPDATE SkillCategories 
-                        SET Name = @name, Description = @description, UpdatedAt = @updatedAt
+                        SET Name = @name, Description = @description
                         WHERE Id = @id";
 
                     using (var command = new SqlCommand(query, connection))
@@ -177,7 +385,6 @@ namespace _71.DAL
                         command.Parameters.AddWithValue("@id", category.Id);
                         command.Parameters.AddWithValue("@name", category.Name ?? "");
                         command.Parameters.AddWithValue("@description", category.Description ?? "");
-                        command.Parameters.AddWithValue("@updatedAt", DateTime.Now);
 
                         command.ExecuteNonQuery();
                     }
@@ -198,8 +405,8 @@ namespace _71.DAL
                 {
                     connection.Open();
 
-                    // Soft delete
-                    const string query = "UPDATE SkillCategories SET IsActive = 0 WHERE Id = @id";
+                    // Hard delete
+                    const string query = "DELETE FROM SkillCategories WHERE Id = @id";
                     using (var command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@id", categoryId);

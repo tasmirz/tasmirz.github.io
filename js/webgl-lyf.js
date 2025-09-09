@@ -175,7 +175,29 @@ export default class WebGLLyf {
 
 	setupKeyboardControls() {
 		const onKey = (e, pressed) => {
-			const k = e.key.toLowerCase()
+			// if not focused/has mouse over it return
+			const container = document.querySelector('.lyf-canvas-container')
+			const isHovered = container ? container.matches(':hover') : false
+			const active = document.activeElement
+			const isTyping =
+				active &&
+				(active.tagName === 'INPUT' ||
+					active.tagName === 'TEXTAREA' ||
+					active.isContentEditable)
+
+			// Only handle keyboard when the canvas is in view or hovered, and no text input is focused
+			if (!this.canvasInView && !isHovered) return
+			if (isTyping) return
+
+			if (!e) return
+			// Prefer e.key when available, fall back to e.code (e.g. 'KeyW')
+			let keyVal = null
+			if (typeof e.key === 'string' && e.key.length) keyVal = e.key
+			else if (typeof e.code === 'string' && e.code.length) keyVal = e.code
+			if (!keyVal) return
+			let k = keyVal.toLowerCase()
+			// Normalize 'KeyW' -> 'w'
+			if (k.startsWith('key') && k.length > 3) k = k.slice(3)
 			if (!(k in this.keys)) return
 			this.keys[k] = pressed
 			if (pressed) {

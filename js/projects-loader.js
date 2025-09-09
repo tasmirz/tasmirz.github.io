@@ -5,7 +5,6 @@ class ProjectsLoader extends BaseSingleton {
 	constructor() {
 		super()
 		this.projectsContainer = document.querySelector('.projects-container')
-		this.apiUrl = 'http://localhost:5000/api/projects.aspx'
 	}
 
 	async fetchProjects() {

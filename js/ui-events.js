@@ -52,14 +52,28 @@ export const initMobileMenu = () => {
 		// Only apply these effects if we're in mobile mode
 		if (mobileMediaQuery.matches) {
 			console.log(isActive)
-			navMenu.classList[isActive ? 'add' : 'remove']('active')
-			navMenu.style.opacity = isActive ? '1' : '0'
-			mobileNavOverlay.classList[isActive ? 'remove' : 'add']('hidden')
-			mobileNavOverlay.classList[isActive ? 'add' : 'remove']('mobile-active')
-			menuIcon.textContent = isActive ? 'close' : 'menu'
-			mobileNavOverlay.style.pointerEvents = isActive ? 'all' : 'none'
-			navMenu.style.pointerEvents = isActive ? 'all' : 'none'
-			mobileNavOverlay.style.opacity = isActive ? '1' : '0'
+			if (isActive) {
+				navMenu.classList.add('active')
+				navMenu.style.opacity = '1'
+				mobileNavOverlay.classList.remove('hidden')
+				mobileNavOverlay.classList.add('mobile-active')
+				menuIcon.textContent = 'close'
+				mobileNavOverlay.style.pointerEvents = 'all'
+				navMenu.style.pointerEvents = 'all'
+				mobileNavOverlay.style.opacity = '1'
+				document.querySelector('#tree-bg-video').style.mixBlendMode =
+					'unset !important'
+			} else {
+				navMenu.classList.remove('active')
+				navMenu.style.opacity = '0'
+				mobileNavOverlay.classList.add('hidden')
+				mobileNavOverlay.classList.remove('mobile-active')
+				menuIcon.textContent = 'menu'
+				mobileNavOverlay.style.pointerEvents = 'none'
+				navMenu.style.pointerEvents = 'none'
+				mobileNavOverlay.style.opacity = '0'
+				document.querySelector('#tree-bg-video').style.mixBlendMode = 'normal'
+			}
 			//document.body.style.overflow = isActive ? 'hidden' : ''
 		}
 	}

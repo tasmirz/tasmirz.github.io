@@ -9,6 +9,6 @@
 <body>
     <h1>Portfolio</h1>
     <asp:Literal ID="litProfile" runat="server"></asp:Literal>
-    <p><a href="admin/dashboard.aspx">Admin</a></p>
+    <p><a href="dashboard.aspx">Admin</a></p>
 </body>
 </html>

@@ -171,3 +171,7 @@ button {
 .hidden {
 	display: none;
 }
+
+body,html {
+	animation: blockScroll 4s;
+}

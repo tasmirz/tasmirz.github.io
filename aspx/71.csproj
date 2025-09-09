@@ -75,56 +75,52 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-  <!-- Archived/moved root admin code-behinds removed from compilation; admin/ folder contains new code-behinds -->
-    <Compile Include="admin\Admin.Master.cs">
+  <!-- Archived/moved root code-behinds removed from compilation;  folder contains new code-behinds -->
+    <Compile Include="Admin.Master.cs">
       <SubType>ASPXCodeBehind</SubType>
       <DependentUpon>Admin.Master</DependentUpon>
     </Compile>
-    <Compile Include="admin\login.aspx.cs">
+    <Compile Include="login.aspx.cs">
       <SubType>ASPXCodeBehind</SubType>
       <DependentUpon>login.aspx</DependentUpon>
     </Compile>
-    <Compile Include="admin\dashboard.aspx.cs">
+    <Compile Include="dashboard.aspx.cs">
       <SubType>ASPXCodeBehind</SubType>
       <DependentUpon>dashboard.aspx</DependentUpon>
     </Compile>
-    <Compile Include="admin\skills.aspx.cs">
+    <Compile Include="skills.aspx.cs">
       <SubType>ASPXCodeBehind</SubType>
       <DependentUpon>skills.aspx</DependentUpon>
     </Compile>
-    <Compile Include="admin\messages.aspx.cs">
+    <Compile Include="messages.aspx.cs">
       <SubType>ASPXCodeBehind</SubType>
       <DependentUpon>messages.aspx</DependentUpon>
     </Compile>
-    <Compile Include="admin\dashboard.aspx.designer.cs">
+    <Compile Include="dashboard.aspx.designer.cs">
       <DependentUpon>dashboard.aspx</DependentUpon>
     </Compile>
-    <Compile Include="admin\login.aspx.designer.cs">
+    <Compile Include="login.aspx.designer.cs">
       <DependentUpon>login.aspx</DependentUpon>
     </Compile>
-    <Compile Include="admin\skills.aspx.designer.cs">
+    <Compile Include="skills.aspx.designer.cs">
       <DependentUpon>skills.aspx</DependentUpon>
     </Compile>
-    <Compile Include="admin\messages.aspx.designer.cs">
+    <Compile Include="messages.aspx.designer.cs">
       <DependentUpon>messages.aspx</DependentUpon>
     </Compile>
-    <Compile Include="admin\projects.aspx.cs">
+    <Compile Include="projects.aspx.cs">
       <SubType>ASPXCodeBehind</SubType>
       <DependentUpon>projects.aspx</DependentUpon>
     </Compile>
-    <Compile Include="admin\profile.aspx.cs">
-      <SubType>ASPXCodeBehind</SubType>
-      <DependentUpon>profile.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="admin\profile.aspx.designer.cs">
-      <DependentUpon>profile.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="admin\default.aspx.cs">
-      <SubType>ASPXCodeBehind</SubType>
-      <DependentUpon>default.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="admin\projects.aspx.designer.cs">
+    <Compile Include="projects.aspx.designer.cs">
       <DependentUpon>projects.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="profile.aspx.cs">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>profile.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="profile.aspx.designer.cs">
+      <DependentUpon>profile.aspx</DependentUpon>
     </Compile>
         <Compile Include="Default.aspx.cs">
       <SubType>ASPXCodeBehind</SubType>
@@ -141,9 +137,11 @@
   <Compile Include="DAL\MessagesRepository.cs" />
   <Compile Include="DAL\ProfileRepository.cs" />
   <Compile Include="DAL\SkillsRepository.cs" />
+  <Compile Include="AdminBasePage.cs" />
   <Compile Include="Models\Profile.cs" />
   <Compile Include="Models\Message.cs" />
   <Compile Include="Models\Project.cs" />
+  <Compile Include="Models\Skill.cs" />
   <Compile Include="Utils\Constants.cs" />
   <Compile Include="Utils\JsonHelper.cs" />
   <Compile Include="Utils\Logger.cs" />
@@ -153,12 +151,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-  <Content Include="admin\Admin.Master" />
-    <Content Include="admin\login.aspx" />
-    <Content Include="admin\dashboard.aspx" />
-    <Content Include="admin\skills.aspx" />
-    <Content Include="admin\messages.aspx" />
-  <Content Include="admin\projects.aspx" />
+  <Content Include="Admin.Master" />
+    <Content Include="login.aspx" />
+    <Content Include="dashboard.aspx" />
+    <Content Include="skills.aspx" />
+    <Content Include="messages.aspx" />
+  <Content Include="projects.aspx" />
   <Content Include="api\profile.ashx" />
   <Content Include="api\projects.ashx" />
   <Content Include="api\skills.ashx" />

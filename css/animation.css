@@ -1,5 +1,42 @@
 /* Animation definitions */
 
+/* Initial states for animated elements */
+section:not(#welcome) {
+	opacity: 0;
+	transform: translateY(50px);
+}
+
+.skill-item,
+.skill-category {
+	opacity: 0;
+	transform: translateX(-30px) scale(0.95);
+}
+
+.project-card {
+	opacity: 0;
+	transform: translateY(30px) rotateX(15deg);
+}
+
+.contact-form .form-group {
+	opacity: 0;
+	transform: translateX(30px);
+}
+
+.about-content {
+	opacity: 0;
+	transform: translateX(-30px);
+}
+
+.about-portrait {
+	opacity: 0;
+	transform: translateX(30px);
+}
+
+footer .footer-content {
+	opacity: 0;
+	transform: translateY(30px);
+}
+
 @keyframes fadeIn { 
 	from { opacity: 0; transform: translateY(30px); } 
 	to { opacity: 1; transform: translateY(0); } 
@@ -89,4 +126,153 @@
 	50% {opacity: 1;filter: blur(0px);}
 	60% {opacity: 1;;filter: blur(0px);}
 	100% {filter: blur(5px);}
+}
+
+/* Scroll-driven animations for sections */
+@keyframes sectionSlideIn {
+	from {
+		opacity: 0;
+		transform: translateY(50px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes skillSlideIn {
+	from {
+		opacity: 0;
+		transform: translateX(-30px) scale(0.95);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0) scale(1);
+	}
+}
+
+@keyframes skillProgressFill {
+	from {
+		transform: scaleX(0);
+	}
+	to {
+		transform: scaleX(1);
+	}
+}
+
+@keyframes projectCardReveal {
+	from {
+		opacity: 0;
+		transform: translateY(30px) rotateX(15deg);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0) rotateX(0deg);
+	}
+}
+
+@keyframes contactFormSlide {
+	from {
+		opacity: 0;
+		transform: translateX(30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+/* Section scroll animations */
+section {
+	animation: sectionSlideIn linear both;
+	animation-timeline: view();
+	animation-range: entry 0% entry 60%;
+}
+
+/* Override for welcome section (already visible) */
+#welcome {
+	animation: none;
+}
+
+/* Skills animations */
+.skills-section .skill-item,
+.skill-category {
+	animation: skillSlideIn linear both;
+	animation-timeline: view();
+	animation-range: entry -20% entry 80%;
+}
+
+/* Stagger skill items */
+.skill-item:nth-child(1) { animation-delay: 0ms; }
+.skill-item:nth-child(2) { animation-delay: 100ms; }
+.skill-item:nth-child(3) { animation-delay: 200ms; }
+.skill-item:nth-child(4) { animation-delay: 300ms; }
+.skill-item:nth-child(5) { animation-delay: 400ms; }
+.skill-item:nth-child(6) { animation-delay: 500ms; }
+
+/* Skill progress bars */
+.skill-progress-bar,
+.progress-fill {
+	animation: skillProgressFill ease-out both;
+	animation-timeline: view();
+	animation-range: entry 20% entry 80%;
+	transform-origin: left center;
+}
+
+
+
+
+/* Contact form elements */
+.contact-form .form-group {
+	animation: contactFormSlide ease-out both;
+	animation-timeline: view();
+	animation-range: entry 0% entry 50%;
+}
+
+/* Stagger form fields */
+.form-group:nth-child(1) { animation-delay: 0ms; }
+.form-group:nth-child(2) { animation-delay: 100ms; }
+.form-group:nth-child(3) { animation-delay: 200ms; }
+.form-group:nth-child(4) { animation-delay: 300ms; }
+
+/* About section specific animations */
+.about-content {
+	animation: slideInLeft ease-out both;
+	animation-timeline: view();
+	animation-range: entry 0% entry 70%;
+}
+
+.about-portrait {
+	animation: slideInRight ease-out both;
+	animation-timeline: view();
+	animation-range: entry 10% entry 80%;
+}
+
+/* Footer animations */
+footer .footer-content {
+	animation: fadeIn ease-out both;
+	animation-timeline: view();
+	animation-range: entry 0% entry 60%;
+}
+
+/* Fallback for browsers without scroll-timeline support */
+@supports not (animation-timeline: view()) {
+	section,
+	.skill-item,
+	.skill-category,
+	.project-card,
+	.form-group,
+	.about-content,
+	.about-portrait,
+	.footer-content {
+		animation: none;
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@keyframes blockScroll {
+	0% { overflow: hidden; height: 100vh; min-height: 100vh; }
+	99% { overflow: hidden; height: 100vh; min-height: 100vh; }
+	100% { overflow: auto; height: auto; min-height: auto; }
 }

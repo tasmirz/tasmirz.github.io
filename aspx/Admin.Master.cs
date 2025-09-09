@@ -11,7 +11,7 @@ namespace _71.Admin
             // Check if user is authenticated
             if (!IsUserAuthenticated())
             {
-                Response.Redirect("~/admin/login.aspx");
+                Response.Redirect("~/login.aspx");
                 return;
             }
         }
@@ -20,6 +20,12 @@ namespace _71.Admin
         {
             return Session[Constants.SESSION_IS_ADMIN] != null &&
                    (bool)Session[Constants.SESSION_IS_ADMIN];
+        }
+
+        // Public helper so pages and other code can ask the master if the current user is an admin.
+        public bool IsAdminAuthenticated()
+        {
+            return IsUserAuthenticated();
         }
 
         protected void lnkLogout_Click(object sender, EventArgs e)
@@ -39,7 +45,7 @@ namespace _71.Admin
                 Logger.LogActivity("Logout", username, "User logged out from admin");
             }
 
-            Response.Redirect("~/admin/login.aspx");
+            Response.Redirect("~/login.aspx");
         }
 
         private void ClearRememberMeCookie()

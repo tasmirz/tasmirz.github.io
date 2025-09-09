@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using _71.DAL;
 using _71.Utils;
+using _71.Admin;
 
 namespace _71.Admin
 {
@@ -28,7 +29,7 @@ namespace _71.Admin
         {
             LoadUserInfo();
             LoadStatistics();
-            LoadRecentProjects();
+            //LoadRecentProjects();
             LoadRecentMessages();
         }
 
@@ -109,30 +110,6 @@ namespace _71.Admin
             }
         }
 
-        private void LoadRecentProjects()
-        {
-            try
-            {
-                var projects = _projectRepository.GetAllProjects();
-                if (projects != null && projects.Count > 0)
-                {
-                    // Take only the most recent 5 projects
-                    var recentProjects = projects.Take(5).ToList();
-                    rptRecentProjects.DataSource = recentProjects;
-                    rptRecentProjects.DataBind();
-                    pnlNoProjects.Visible = false;
-                }
-                else
-                {
-                    pnlNoProjects.Visible = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError("Failed to load recent projects", ex);
-                pnlNoProjects.Visible = true;
-            }
-        }
 
         private void LoadRecentMessages()
         {

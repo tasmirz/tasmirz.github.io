@@ -5,7 +5,6 @@ class SkillsLoader extends BaseSingleton {
 	constructor() {
 		super()
 		this.skillsContainer = document.querySelector('.skills-section')
-		this.apiUrl = 'http://localhost:5000/api/skills.ashx'
 	}
 
 	async fetchSkills() {

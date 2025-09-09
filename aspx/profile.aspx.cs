@@ -7,10 +7,11 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Newtonsoft.Json;
 using System.Configuration;
+using _71.Admin;
 
 namespace _71.Admin
 {
-    public partial class Profile : Page
+    public partial class Profile : System.Web.UI.Page
     {
 
         private readonly string connectionString = ConfigurationManager.ConnectionStrings["PortfolioDB"]?.ConnectionString ?? "";
@@ -52,7 +53,7 @@ namespace _71.Admin
             catch (Exception ex)
             {
                 System.Console.WriteLine("Error loading profile data: " + ex.ToString());
-                ShowMessage("Error loading profile data: " + ex.Message, "error");
+                ((AdminMaster)this.Master)?.ShowMessage("Error loading profile data: " + ex.Message, "error");
             }
         }
 
@@ -145,12 +146,12 @@ namespace _71.Admin
             {
                 SaveToDatabase();
                 // LogActivity("Profile updated");
-                ShowMessage("Profile saved successfully!", "success");
+                ((AdminMaster)this.Master)?.ShowMessage("Profile saved successfully!", "success");
             }
             catch (Exception ex)
             {
                 System.Console.WriteLine("Error saving profile: " + ex.ToString());
-                ShowMessage("Error saving profile: " + ex.Message, "error");
+                ((AdminMaster)this.Master)?.ShowMessage("Error saving profile: " + ex.Message, "error");
             }
         }
 
@@ -281,13 +282,12 @@ namespace _71.Admin
         {
             Session.Clear();
             Session.Abandon();
-            Response.Redirect("Admin.aspx");
+            Response.Redirect("login.aspx");
         }
 
         private void ShowMessage(string message, string type)
         {
-            var master = this.Master as AdminMaster;
-            master?.ShowMessage(message, type);
+            ((AdminMaster)this.Master)?.ShowMessage(message, type);
         }
     }
 }

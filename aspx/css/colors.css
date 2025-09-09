@@ -1,2 +1,43 @@
-/* DEPRECATED: consolidated into css/gruvbox.css */
-/* See css/gruvbox.css for active color tokens and dark theme variables. */
+/* Light theme color variables only */
+
+:root {
+	--color-bg: #fbf1c7;
+	--color-bg-rgb: 251, 241, 199;
+	--color-bg-secondary: #f2e5bc;
+	--color-text: #282828;
+	--color-text-rgb: 40, 40, 40;
+	--color-nav-text: #3c3836;
+	--color-accent: #504945;
+
+	--color-primary: #504945;
+	--color-primary-rgb: 80, 73, 69;
+	--color-primary-dark: #3c3836;
+	--color-primary-darker: #282828;
+	--color-primary-light: #665c54;
+	--color-primary-lighter: #7c6f64;
+	--color-highlight-bg: rgb(214, 57, 91);
+	--color-highlight-border: pink;
+
+	--color-text-light: #665c54;
+	--color-text-secondary: #7c6f64;
+	--color-text-secondary-rgb: 124, 111, 100;
+
+	--color-border: rgba(60, 56, 54, 0.4);
+	--color-card-bg: #f9f5d7;
+
+	--color-button-bg: var(--color-primary-dark);
+	--color-button-text: var(--color-bg);
+	--color-button-hover: var(--color-primary-darker);
+
+	/* Status colors */
+	--color-success: #458588;
+	--color-success-bg: rgba(69, 133, 136, 0.1);
+	--color-error: #cc241d;
+	--color-error-bg: rgba(204, 36, 29, 0.1);
+	--color-warning: #d79921;
+	--color-warning-bg: rgba(215, 153, 33, 0.1);
+	--color-info: #458588;
+	--color-info-bg: rgba(69, 133, 136, 0.1);
+
+	--lyf-filter: sepia(0.8);
+}

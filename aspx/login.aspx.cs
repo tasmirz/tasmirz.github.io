@@ -5,6 +5,7 @@ using System.Web.UI;
 using BCrypt.Net;
 using _71.Utils;
 using _71.DAL;
+using _71.Admin;
 
 namespace _71.Admin
 {
@@ -23,28 +24,28 @@ namespace _71.Admin
             // If user is already logged in, redirect to dashboard
             if (Session[Constants.SESSION_IS_ADMIN] != null && (bool)Session[Constants.SESSION_IS_ADMIN])
             {
-                Response.Redirect("~/admin/dashboard.aspx");
+                Response.Redirect("~/dashboard.aspx");
             }
         }
 
         protected void btnLogin_Click(object sender, EventArgs e)
         {
-            string username = txtUsername?.Text?.Trim() ?? string.Empty;
             string password = txtPassword?.Text ?? string.Empty;
+            string resolvedUsername = "Me";
 
-            Logger.LogInfo($"Login attempt for user: {username}");
+            Logger.LogInfo("Login attempt (password-only)");
 
-            if (ValidateAdmin(username, password))
+            if (ValidateAdmin(password, out resolvedUsername))
             {
-                CreateUserSession(username);
-                HandleRememberMe(username);
-                Logger.LogActivity("Login", username, "Successful login");
-                Response.Redirect("~/admin/dashboard.aspx");
+                CreateUserSession(resolvedUsername);
+                HandleRememberMe(resolvedUsername);
+                Logger.LogActivity("Login", resolvedUsername, "Successful login");
+                Response.Redirect("~/dashboard.aspx");
             }
             else
             {
                 ShowLoginError();
-                Logger.LogActivity("Login Failed", username, "Invalid credentials");
+                Logger.LogActivity("Login Failed", resolvedUsername, "Invalid password");
             }
         }
 
@@ -71,24 +72,25 @@ namespace _71.Admin
 
         private void ShowLoginError()
         {
-            ShowMessage("Invalid username or password.", "error");
+            ((AdminMaster)this.Master)?.ShowMessage("Invalid password.", "error");
         }
 
         private void ShowMessage(string message, string type)
         {
-            lblMessage.Text = message;
-            pnlMessage.CssClass = $"message {type}";
-            pnlMessage.Visible = true;
+            ((AdminMaster)this.Master)?.ShowMessage(message, type);
         }
 
-        private bool ValidateAdmin(string username, string password)
+        private bool ValidateAdmin(string password, out string username)
         {
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            username = Constants.DEFAULT_ADMIN_USERNAME;
+
+            if (string.IsNullOrEmpty(password))
                 return false;
 
-            // Check default admin credentials
-            if (username == Constants.DEFAULT_ADMIN_USERNAME && password == Constants.DEFAULT_ADMIN_PASSWORD)
+            // Check default admin password first
+            if (password == Constants.DEFAULT_ADMIN_PASSWORD)
             {
+                username = Constants.DEFAULT_ADMIN_USERNAME;
                 return true;
             }
 
@@ -98,15 +100,21 @@ namespace _71.Admin
                 {
                     connection.Open();
 
-                    const string query = @"SELECT PasswordHash FROM AdminUsers WHERE Username = @username AND IsActive = 1";
+                    // Find the primary active admin (or first active) and verify the password hash
+                    const string query = @"SELECT TOP 1 Username, PasswordHash FROM AdminUsers WHERE IsActive = 1 ORDER BY IsPrimary DESC, Id ASC";
                     using (var command = new SqlCommand(query, connection))
+                    using (var reader = command.ExecuteReader())
                     {
-                        command.Parameters.AddWithValue("@username", username);
-                        var storedHash = command.ExecuteScalar() as string;
-
-                        if (!string.IsNullOrEmpty(storedHash))
+                        if (reader.Read())
                         {
-                            return BCrypt.Net.BCrypt.Verify(password, storedHash);
+                            var dbUsername = reader["Username"] as string;
+                            var storedHash = reader["PasswordHash"] as string;
+
+                            if (!string.IsNullOrEmpty(storedHash) && BCrypt.Net.BCrypt.Verify(password, storedHash))
+                            {
+                                username = !string.IsNullOrEmpty(dbUsername) ? dbUsername : Constants.DEFAULT_ADMIN_USERNAME;
+                                return true;
+                            }
                         }
                     }
                 }

@@ -6,6 +6,11 @@
     <title>Portfolio Admin - Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="<%= ResolveUrl("~/css/gruvbox.css") %>" />
+    <link rel="stylesheet" href="<%= ResolveUrl("~/css/colors.css") %>" />
+    <link rel="stylesheet" href="<%= ResolveUrl("~/css/dark-theme.css") %>" />
+    <link rel="stylesheet" href="<%= ResolveUrl("~/css/layout.css") %>" />
+    <link rel="stylesheet" href="<%= ResolveUrl("~/css/keyframes.css") %>" />
+    <link rel="stylesheet" href="<%= ResolveUrl("~/css/responsive.css") %>" />
     <style>
         /* Page-specific styling for login */
         body { 
@@ -64,11 +69,6 @@
             <asp:Panel ID="pnlMessage" runat="server" Visible="false" CssClass="message">
                 <asp:Label ID="lblMessage" runat="server"></asp:Label>
             </asp:Panel>
-
-            <div class="form-group">
-                <label for="txtUsername">Username</label>
-                <asp:TextBox ID="txtUsername" runat="server" CssClass="form-control" placeholder="Enter username"></asp:TextBox>
-            </div>
 
             <div class="form-group">
                 <label for="txtPassword">Password</label>

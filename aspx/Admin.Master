@@ -1,0 +1,183 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Admin.Master.cs" Inherits="_71.Admin.AdminMaster" %>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Portfolio Admin - <asp:ContentPlaceHolder ID="TitleContent" runat="server" /></title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="<%= ResolveUrl("~/css/gruvbox.css") %>" />
+    <link rel="stylesheet" href="<%= ResolveUrl("~/css/colors.css") %>" />
+    <link rel="stylesheet" href="<%= ResolveUrl("~/css/dark-theme.css") %>" />
+    <link rel="stylesheet" href="<%= ResolveUrl("~/css/layout.css") %>" />
+    <link rel="stylesheet" href="<%= ResolveUrl("~/css/keyframes.css") %>" />
+    <link rel="stylesheet" href="<%= ResolveUrl("~/css/responsive.css") %>" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- replaced external icon font with local Material Icons (icons.woff2). -->
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</head>
+<body>
+    <form id="form1" runat="server">
+        <!-- Theme Toggle -->
+        <div class="theme-toggle" onclick="toggleTheme()">
+            <i class="material-icons" id="themeIcon">wb_sunny</i>
+        </div>
+
+        <div class="admin-layout">
+            <!-- Sidebar -->
+            <nav class="admin-sidebar">
+                <div class="mb-6">
+                    <h2 class="text-xl font-bold mb-2">Portfolio Admin</h2>
+                    <p class="text-sm text-secondary">Manage my portfolio</p>
+                </div>
+
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="<%= ResolveUrl("~/dashboard.aspx") %>" class="nav-link" id="navDashboard">
+                            <i class="material-icons">dashboard</i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<%= ResolveUrl("~/projects.aspx") %>" class="nav-link" id="navProjects">
+                            <i class="material-icons">folder_open</i>
+                            Projects
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<%= ResolveUrl("~/skills.aspx") %>" class="nav-link" id="navSkills">
+                            <i class="material-icons">code</i>
+                            Skills
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<%= ResolveUrl("~/profile.aspx") %>" class="nav-link" id="navProfile">
+                            <i class="material-icons">person</i>
+                            Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<%= ResolveUrl("~/messages.aspx") %>" class="nav-link" id="navMessages">
+                            <i class="material-icons">mail</i>
+                            Messages
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="mt-auto pt-4">
+                    <asp:LinkButton ID="lnkLogout" runat="server" CssClass="nav-link text-secondary" OnClick="lnkLogout_Click">
+                        <i class="material-icons">logout</i>
+                        Logout
+                    </asp:LinkButton>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="admin-main">
+                <header class="admin-header">
+                    <div style="display:flex;align-items:center;gap:1rem;">
+                        <button type="button" id="mobileNavToggle" class="btn btn-outline" style="display:none;" onclick="toggleMobileNav()">
+                            <i class="material-icons">menu</i>
+                        </button>
+                        <asp:ContentPlaceHolder ID="HeaderContent" runat="server" />
+                    </div>
+                </header>
+
+                <!-- Global Message Panel -->
+                <asp:Panel ID="pnlMessage" runat="server" Visible="false" CssClass="message">
+                    <asp:Label ID="lblMessage" runat="server"></asp:Label>
+                </asp:Panel>
+
+                <!-- Page Content -->
+                <asp:ContentPlaceHolder ID="MainContent" runat="server" />
+            </main>
+        </div>
+
+    <!-- Mobile backdrop for sidebar -->
+    <div id="mobileBackdrop" style="display:none;" onclick="closeMobileNav()" aria-hidden="true"></div>
+
+        <script>
+            // Theme toggle functionality
+            function toggleTheme() {
+                const body = document.body;
+                const icon = document.getElementById('themeIcon');
+                
+                if (body.getAttribute('data-theme') === 'dark') {
+                    body.removeAttribute('data-theme');
+                    icon.textContent = 'wb_sunny';
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    body.setAttribute('data-theme', 'dark');
+                    icon.textContent = 'dark_mode';
+                    localStorage.setItem('theme', 'dark');
+                }
+            }
+
+            // Initialize theme from localStorage
+            document.addEventListener('DOMContentLoaded', function() {
+                const savedTheme = localStorage.getItem('theme');
+                const icon = document.getElementById('themeIcon');
+                
+                if (savedTheme === 'dark') {
+                    document.body.setAttribute('data-theme', 'dark');
+                    icon.textContent = 'dark_mode';
+                } else {
+                    document.body.removeAttribute('data-theme');
+                    icon.textContent = 'wb_sunny';
+                }
+
+                // Highlight active nav item
+                highlightActiveNav();
+            });
+
+            function highlightActiveNav() {
+                const currentPath = window.location.pathname.toLowerCase();
+                const navLinks = document.querySelectorAll('.nav-link');
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (currentPath.includes(link.getAttribute('href').toLowerCase())) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            // Mobile nav toggle
+            function toggleMobileNav() {
+                const sidebar = document.querySelector('.admin-sidebar');
+                if (!sidebar) return;
+                sidebar.classList.toggle('mobile-open');
+                const backdrop = document.getElementById('mobileBackdrop');
+                if (!backdrop) return;
+                if (sidebar.classList.contains('mobile-open')) backdrop.style.display = 'block';
+                else backdrop.style.display = 'none';
+            }
+
+            function closeMobileNav() {
+                const sidebar = document.querySelector('.admin-sidebar');
+                const backdrop = document.getElementById('mobileBackdrop');
+                if (sidebar) sidebar.classList.remove('mobile-open');
+                if (backdrop) backdrop.style.display = 'none';
+            }
+
+            // Close on ESC
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') closeMobileNav();
+            });
+
+            // Show mobile toggle when below 900px
+            function updateMobileNavVisibility() {
+                const btn = document.getElementById('mobileNavToggle');
+                if (!btn) return;
+                if (window.innerWidth <= 900) btn.style.display = 'inline-flex';
+                else { btn.style.display = 'none'; document.querySelectorAll('.admin-sidebar.mobile-open').forEach(el => el.classList.remove('mobile-open')); }
+            }
+
+            window.addEventListener('resize', updateMobileNavVisibility);
+            document.addEventListener('DOMContentLoaded', updateMobileNavVisibility);
+        </script>
+
+        <asp:ContentPlaceHolder ID="ScriptContent" runat="server" />
+    </form>
+</body>
+</html>

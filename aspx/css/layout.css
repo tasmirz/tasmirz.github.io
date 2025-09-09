@@ -1,0 +1,520 @@
+/* layout.css — layout, components, and core UI rules.
+	 This file intentionally maps UI tokens to the canonical --color-* variables
+	 defined in `colors.css` and `dark-theme.css`.
+*/
+
+@font-face {
+	font-family: 'Material Icons';
+	font-style: normal;
+	font-weight: 400;
+	src: url('/assets/icons.woff2') format('woff2');
+	font-display: swap;
+}
+
+.material-icons {
+	font-family: 'Material Icons';
+	font-weight: normal;
+	font-style: normal;
+	font-size: 24px;
+	display: inline-block;
+	text-transform: none;
+	letter-spacing: normal;
+	white-space: nowrap;
+	direction: ltr;
+	text-align: center;
+}
+
+/* Map commonly-used names to canonical color tokens */
+:root {
+	--bg: var(--color-bg);
+	--bg-rgb: var(--color-bg-rgb);
+	--surface: var(--color-bg-secondary);
+	--text: var(--color-text);
+	--muted: var(--color-text-secondary);
+	--primary: var(--color-primary);
+	--accent: var(--color-accent);
+	--card-bg: var(--color-card-bg);
+	--border: var(--color-border);
+}
+
+/* Reset */
+* {
+	box-sizing: border-box;
+}
+html,
+body {
+	height: 100%;
+	margin: 0;
+	font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+		Arial;
+	background: var(--bg);
+	color: var(--text);
+	-webkit-font-smoothing: antialiased;
+}
+a {
+	color: var(--primary);
+	text-decoration: none;
+}
+
+/* Layout */
+.admin-layout {
+	display: flex;
+	min-height: 100vh;
+}
+.admin-sidebar {
+	width: 260px;
+	padding: 2rem;
+	border-right: 1px solid var(--border);
+	background: linear-gradient(180deg, transparent, rgba(var(--bg-rgb), 0.03));
+	/* make sidebar positioned so it can sit above fixed backdrop */
+	position: relative;
+	z-index: 1300;
+}
+.admin-main {
+	flex: 1;
+	padding: 1.5rem 2rem;
+}
+
+.text-xl {
+	font-size: 1.125rem;
+}
+.text-2xl {
+	font-size: 1.5rem;
+}
+.text-sm {
+	font-size: 0.875rem;
+	color: var(--muted);
+}
+
+/* Sidebar */
+.admin-sidebar h2 {
+	margin: 0 0 0.25rem;
+	color: var(--primary);
+}
+.nav-menu {
+	list-style: none;
+	padding: 0;
+	margin: 1.25rem 0;
+}
+.nav-item {
+	margin: 0.35rem 0;
+}
+.nav-link {
+	display: flex;
+	gap: 0.6rem;
+	align-items: center;
+	padding: 0.55rem 0.6rem;
+	border-radius: 6px;
+	color: var(--text);
+}
+.nav-link i {
+	font-size: 1.05rem;
+	color: var(--muted);
+}
+.nav-link.active {
+	background: var(--card-bg);
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+	border: 1px solid var(--border);
+	color: var(--primary);
+}
+
+/* Header */
+.admin-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 1rem;
+}
+.btn {
+	display: inline-flex;
+	gap: 0.5rem;
+	align-items: center;
+	padding: 0.45rem 0.7rem;
+	border-radius: 6px;
+	background: var(--primary);
+	color: var(--bg);
+	border: none;
+}
+.btn-outline {
+	background: transparent;
+	border: 1px solid var(--border);
+	color: var(--text);
+}
+.btn-sm {
+	padding: 0.35rem 0.5rem;
+	font-size: 0.9rem;
+}
+
+/* Cards */
+.card {
+	background: var(--card-bg);
+	border: 1px solid var(--border);
+	border-radius: 10px;
+	padding: 1rem;
+	margin-bottom: 1rem;
+}
+.card-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 0.5rem;
+}
+.card-title {
+	margin: 0;
+	font-weight: 600;
+}
+
+.grid {
+	display: grid;
+	gap: 1rem;
+}
+.grid.grid-2 {
+	grid-template-columns: 1fr 1fr;
+}
+.grid.grid-3 {
+	grid-template-columns: repeat(3, 1fr);
+}
+.grid.grid-4 {
+	grid-template-columns: repeat(4, 1fr);
+}
+
+.status-badge {
+	display: inline-block;
+	padding: 0.25rem 0.45rem;
+	border-radius: 999px;
+	font-size: 0.8rem;
+	background: rgba(0, 0, 0, 0.04);
+}
+.status-active {
+	background: rgba(131, 165, 152, 0.14);
+	color: var(--primary);
+}
+.status-inprogress {
+	background: rgba(250, 189, 47, 0.12);
+	color: var(--muted);
+}
+.status-archived {
+	background: rgba(146, 131, 116, 0.08);
+	color: var(--muted);
+}
+
+/* Tables */
+.table {
+	width: 100%;
+	border-collapse: collapse;
+}
+.table th,
+.table td {
+	padding: 0.6rem 0.75rem;
+	border-bottom: 1px solid var(--border);
+	text-align: left;
+}
+
+/* Small helpers */
+.text-primary {
+	color: var(--primary);
+}
+.text-secondary {
+	color: var(--muted);
+}
+
+/* Theme toggle */
+.theme-toggle {
+	position: fixed;
+	right: 18px;
+	bottom: 18px;
+	background: var(--card-bg);
+	border: 1px solid var(--border);
+	padding: 0.5rem;
+	border-radius: 8px;
+	cursor: pointer;
+}
+
+/* Small responsive adjustments preserved here; larger responsive rules live in responsive.css */
+@media (max-width: 900px) {
+	.admin-layout {
+		flex-direction: column;
+	}
+	.admin-main {
+		padding: 1rem;
+	}
+
+	/* Make the sidebar off-canvas and fixed so it doesn't affect layout when closed */
+	.admin-sidebar {
+		position: fixed;
+		left: 0;
+		top: 0;
+		bottom: 0;
+		width: 260px;
+		padding: 2rem;
+		transform: translateX(-100%);
+		transition: transform 220ms ease;
+		z-index: 1400; /* above backdrop */
+		background: var(--card-bg);
+		box-shadow: 2px 0 12px rgba(0, 0, 0, 0.12);
+		border-right: none;
+	}
+
+	/* When opened, slide into view. Do NOT push the main content. */
+	.admin-sidebar.mobile-open {
+		transform: translateX(0);
+	}
+
+	/* Ensure the main content is not shifted by the sidebar at any time */
+	.admin-main {
+		margin-left: 0 !important;
+	}
+}
+
+/* Mobile backdrop for sidebar */
+#mobileBackdrop {
+	position: fixed;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.4);
+	z-index: 1100;
+}
+
+#mobileBackdrop[style*='display: none'] {
+	display: none;
+}
+
+/* (handled by the off-canvas rules above) */
+
+/* Skills Management Specific Styles */
+.skills-grid {
+	display: grid;
+	gap: 1.5rem;
+	grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+}
+
+.category-card {
+	background: var(--card-bg);
+	border: 1px solid var(--border);
+	border-radius: 12px;
+	padding: 1.5rem;
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.category-card:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.category-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 1rem;
+	padding-bottom: 0.75rem;
+	border-bottom: 1px solid var(--border);
+}
+
+.category-title {
+	font-size: 1.125rem;
+	font-weight: 600;
+	color: var(--text);
+	margin: 0;
+}
+
+.category-actions {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.skills-list {
+	margin-bottom: 1rem;
+	min-height: 60px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+}
+
+.skill-tag {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	background: rgba(var(--color-primary-rgb), 0.1);
+	color: var(--primary);
+	padding: 0.4rem 0.75rem;
+	border-radius: 20px;
+	font-size: 0.85rem;
+	border: 1px solid rgba(var(--color-primary-rgb), 0.2);
+	transition: all 0.2s ease;
+}
+
+.skill-tag:hover {
+	background: rgba(var(--color-primary-rgb), 0.15);
+	transform: translateY(-1px);
+}
+
+.remove-skill {
+	color: var(--color-text-secondary);
+	text-decoration: none;
+	font-size: 1rem;
+	line-height: 1;
+	padding: 0 2px;
+	border-radius: 50%;
+	transition: all 0.2s ease;
+}
+
+.remove-skill:hover {
+	background: rgba(220, 53, 69, 0.1);
+	color: #dc3545;
+}
+
+.add-skill-form {
+	display: flex;
+	gap: 0.5rem;
+	margin-top: 1rem;
+	padding-top: 1rem;
+	border-top: 1px solid var(--border);
+}
+
+.add-skill-form .form-control {
+	flex: 1;
+	padding: 0.5rem 0.75rem;
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	background: var(--bg);
+	color: var(--text);
+	font-size: 0.9rem;
+}
+
+.add-skill-form .form-control:focus {
+	outline: none;
+	border-color: var(--primary);
+	box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb), 0.1);
+}
+
+.add-category-form {
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	padding: 1.5rem;
+	margin-bottom: 2rem;
+	display: none;
+}
+
+.add-category-form.show {
+	display: block;
+}
+
+.add-category-form h3 {
+	margin: 0 0 1rem 0;
+	color: var(--text);
+	font-size: 1.125rem;
+}
+
+.form-group {
+	margin-bottom: 1rem;
+}
+
+.form-group label {
+	display: block;
+	margin-bottom: 0.5rem;
+	font-weight: 500;
+	color: var(--text);
+}
+
+.form-control {
+	width: 100%;
+	padding: 0.6rem 0.75rem;
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	background: var(--bg);
+	color: var(--text);
+	font-size: 1rem;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control:focus {
+	outline: none;
+	border-color: var(--primary);
+	box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.1);
+}
+
+.btn-small {
+	padding: 0.35rem 0.6rem;
+	font-size: 0.85rem;
+	border-radius: 5px;
+}
+
+.btn-delete {
+	background: #dc3545;
+	color: white;
+	border: none;
+}
+
+.btn-delete:hover {
+	background: #c82333;
+}
+
+.btn-edit {
+	background: var(--primary);
+	color: white;
+	border: none;
+}
+
+.btn-edit:hover {
+	background: rgba(var(--color-primary-rgb), 0.8);
+}
+
+.btn-secondary {
+	background: var(--color-text-secondary);
+	color: white;
+	border: none;
+}
+
+.btn-secondary:hover {
+	background: rgba(var(--color-text-secondary-rgb), 0.8);
+}
+
+/* Message styles */
+.message {
+	padding: 1rem 1.25rem;
+	margin-bottom: 1.5rem;
+	border-radius: 8px;
+	border-left: 4px solid;
+}
+
+.message.success {
+	background: rgba(40, 167, 69, 0.1);
+	border-left-color: #28a745;
+	color: #155724;
+}
+
+.message.error {
+	background: rgba(220, 53, 69, 0.1);
+	border-left-color: #dc3545;
+	color: #721c24;
+}
+
+.message.info {
+	background: rgba(23, 162, 184, 0.1);
+	border-left-color: #17a2b8;
+	color: #0c5460;
+}
+
+/* Responsive adjustments for skills */
+@media (max-width: 768px) {
+	.skills-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.category-header {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 0.75rem;
+	}
+
+	.category-actions {
+		justify-content: flex-end;
+	}
+
+	.add-skill-form {
+		flex-direction: column;
+	}
+}
