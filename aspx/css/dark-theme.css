@@ -90,4 +90,6 @@
 	--shadow-light: rgba(0, 0, 0, 0.1);
 	--shadow-medium: rgba(0, 0, 0, 0.2);
 	--shadow-heavy: rgba(0, 0, 0, 0.3);
+	--bg: #1d2021;
+	--surface: #1d2021;
 }

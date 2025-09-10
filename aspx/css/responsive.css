@@ -30,3 +30,26 @@
 		width: 220px;
 	}
 }
+
+
+/* Responsive adjustments for skills */
+@media (max-width: 768px) {
+	.skills-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.category-header {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 0.75rem;
+	}
+
+	.category-actions {
+		justify-content: flex-end;
+	}
+
+	.add-skill-form {
+		flex-direction: column;
+	}
+}
+

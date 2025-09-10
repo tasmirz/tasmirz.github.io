@@ -22,9 +22,6 @@
 }
 
 :root {
-	--bg: var(--color-bg);
-	--bg-rgb: var(--color-bg-rgb);
-	--surface: var(--color-bg-secondary);
 	--text: var(--color-text);
 	--muted: var(--color-text-secondary);
 	--primary: var(--color-primary);
@@ -63,11 +60,13 @@ a {
 	border-right: 1px solid var(--border);
 	background: linear-gradient(180deg, transparent, rgba(var(--bg-rgb), 0.03));
 	position: relative;
+	background: var(--bg-secondary);
 	z-index: 1300;
 }
 .admin-main {
 	flex: 1;
 	padding: 1.5rem 2rem;
+	background: var(--bg-primary);
 }
 
 .text-xl {
@@ -217,7 +216,7 @@ a {
 .theme-toggle {
 	position: fixed;
 	right: 18px;
-	bottom: 18px;
+	top: 18px;
 	background: var(--card-bg);
 	border: 1px solid var(--border);
 	padding: 0.5rem;
@@ -439,6 +438,12 @@ a {
 	color: white;
 	border: none;
 }
+.btn:hover {
+	background: var(--primary-hover);
+	transition: 0.5s ease-in-out;
+	cursor: pointer;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
 
 .btn-delete:hover {
 	background: #c82333;
@@ -488,25 +493,4 @@ a {
 	background: rgba(23, 162, 184, 0.1);
 	border-left-color: #17a2b8;
 	color: #0c5460;
-}
-
-/* Responsive adjustments for skills */
-@media (max-width: 768px) {
-	.skills-grid {
-		grid-template-columns: 1fr;
-	}
-
-	.category-header {
-		flex-direction: column;
-		align-items: stretch;
-		gap: 0.75rem;
-	}
-
-	.category-actions {
-		justify-content: flex-end;
-	}
-
-	.add-skill-form {
-		flex-direction: column;
-	}
 }
