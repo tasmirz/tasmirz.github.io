@@ -8,7 +8,6 @@ namespace _71.Admin
     public partial class Dashboard
     {
 
-        protected global::System.Web.UI.WebControls.Label lblUsername;
 
         protected global::System.Web.UI.WebControls.Label lblProjectCount;
 

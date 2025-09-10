@@ -56,16 +56,25 @@ namespace _71
                     txtNewLanguage.Text = string.Empty;
                     BindNewLanguages();
 
-                    // If we're in edit mode, keep the form visible and buttons in edit state
-                    if (hfEditProjectId != null && !string.IsNullOrEmpty(hfEditProjectId.Value))
+                    // Determine add vs edit mode and set button visibility
+                    var isEdit = hfEditProjectId != null && !string.IsNullOrEmpty(hfEditProjectId.Value);
+                    if (isEdit)
                     {
                         if (btnAddProject != null) btnAddProject.Visible = false;
                         if (btnUpdateProject != null) btnUpdateProject.Visible = true;
                         if (btnCancelEdit != null) btnCancelEdit.Visible = true;
-
-                        // Show the form using JavaScript
-                        ClientScript.RegisterStartupScript(this.GetType(), "ShowEditForm", "document.getElementById('addProjectForm').classList.add('show'); document.getElementById('formTitle').textContent = 'Edit Project';", true);
                     }
+                    else
+                    {
+                        if (btnAddProject != null) btnAddProject.Visible = true;
+                        if (btnUpdateProject != null) btnUpdateProject.Visible = false;
+                        if (btnCancelEdit != null) btnCancelEdit.Visible = false;
+                    }
+
+                    // Always re-show the form after a postback caused by language add/remove so the user doesn't lose the form state.
+                    var title = isEdit ? "Edit Project" : "Add New Project";
+                    if (hfKeepFormOpen != null) hfKeepFormOpen.Value = "1";
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowEditForm", $"document.getElementById('addProjectForm').classList.add('show'); document.getElementById('formTitle').textContent = '{title}';", true);
                 }
             }
         }
@@ -91,16 +100,25 @@ namespace _71
                     NewLanguages = list;
                     BindNewLanguages();
 
-                    // If we're in edit mode, keep the form visible and buttons in edit state
-                    if (hfEditProjectId != null && !string.IsNullOrEmpty(hfEditProjectId.Value))
+                    // Determine add vs edit mode and set button visibility
+                    var isEdit = hfEditProjectId != null && !string.IsNullOrEmpty(hfEditProjectId.Value);
+                    if (isEdit)
                     {
                         if (btnAddProject != null) btnAddProject.Visible = false;
                         if (btnUpdateProject != null) btnUpdateProject.Visible = true;
                         if (btnCancelEdit != null) btnCancelEdit.Visible = true;
-
-                        // Show the form using JavaScript
-                        ClientScript.RegisterStartupScript(this.GetType(), "ShowEditForm", "document.getElementById('addProjectForm').classList.add('show'); document.getElementById('formTitle').textContent = 'Edit Project';", true);
                     }
+                    else
+                    {
+                        if (btnAddProject != null) btnAddProject.Visible = true;
+                        if (btnUpdateProject != null) btnUpdateProject.Visible = false;
+                        if (btnCancelEdit != null) btnCancelEdit.Visible = false;
+                    }
+
+                    // Always re-show the form after a postback caused by language add/remove so the user doesn't lose the form state.
+                    var title = isEdit ? "Edit Project" : "Add New Project";
+                    if (hfKeepFormOpen != null) hfKeepFormOpen.Value = "1";
+                    ClientScript.RegisterStartupScript(this.GetType(), "ShowEditForm", $"document.getElementById('addProjectForm').classList.add('show'); document.getElementById('formTitle').textContent = '{title}';", true);
                 }
             }
         }
@@ -226,6 +244,7 @@ namespace _71
                 btnUpdateProject.Visible = false;
                 btnCancelEdit.Visible = false;
                 // Hide the form and reset title
+                if (hfKeepFormOpen != null) hfKeepFormOpen.Value = string.Empty;
                 ClientScript.RegisterStartupScript(this.GetType(), "HideEditForm", "document.getElementById('addProjectForm').classList.remove('show'); document.getElementById('formTitle').textContent = 'Add New Project';", true);
             }
             else ((AdminMaster)this.Master)?.ShowMessage("Failed to update project.", "error");
@@ -238,6 +257,7 @@ namespace _71
             btnUpdateProject.Visible = false;
             btnCancelEdit.Visible = false;
             // Hide the form and reset title
+            if (hfKeepFormOpen != null) hfKeepFormOpen.Value = string.Empty;
             ClientScript.RegisterStartupScript(this.GetType(), "HideEditForm", "document.getElementById('addProjectForm').classList.remove('show'); document.getElementById('formTitle').textContent = 'Add New Project';", true);
         }
 

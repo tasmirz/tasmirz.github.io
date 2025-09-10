@@ -105,6 +105,11 @@ namespace _71
         protected global::System.Web.UI.WebControls.HiddenField hfEditProjectId;
 
         /// <summary>
+        /// hfKeepFormOpen control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.HiddenField hfKeepFormOpen;
+
+        /// <summary>
         /// btnAddProject control.
         /// </summary>
         /// <remarks>

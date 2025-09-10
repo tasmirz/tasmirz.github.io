@@ -153,6 +153,7 @@
 
         <div id="addProjectForm" class="add-project-form">
             <h3 id="formTitle" style="margin-bottom: 1rem;">Add New Project</h3>
+            <asp:HiddenField ID="hfKeepFormOpen" runat="server" />
             
             <div class="form-row">
                 <div class="form-group">
@@ -217,6 +218,17 @@
                 <asp:Button ID="btnCancelEdit" runat="server" Text="Cancel" CssClass="btn btn-secondary" OnClick="btnCancelEdit_Click" Visible="false" />
             </div>
         </div>
+
+    <script>
+        // On DOMContentLoaded ensure server-requested form visibility is honored.
+        document.addEventListener('DOMContentLoaded', function () {
+            var hf = document.getElementById('<%= hfKeepFormOpen.ClientID %>');
+            var form = document.getElementById('addProjectForm');
+            if (hf && hf.value === '1' && form) {
+                form.classList.add('show');
+            }
+        });
+    </script>
 
         <div class="projects-grid">
             <asp:Repeater ID="rptProjects" runat="server" OnItemCommand="rptProjects_ItemCommand">
