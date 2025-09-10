@@ -9,9 +9,7 @@
         <h1 class="text-2xl font-bold">Dashboard</h1>
         <p class="text-sm text-secondary">Overview of my portfolio</p>
     </div>
-    <div class="flex align-center gap-4">
-        <span class="text-sm">Welcome, <asp:Label ID="lblUsername" runat="server" CssClass="font-semibold"></asp:Label></span>
-    </div>
+
 </asp:Content>
 
 <asp:Content ID="MainContent" ContentPlaceHolderID="MainContent" runat="server">

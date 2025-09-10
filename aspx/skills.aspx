@@ -7,12 +7,7 @@
         <h1 class="text-2xl font-bold">Skills Management</h1>
         <p class="text-sm text-secondary">Organize my skill categories and skills</p>
     </div>
-    <div class="flex align-center gap-4">
-        <a href="<%= ResolveUrl("~/dashboard.aspx") %>" class="btn btn-outline">
-            <i class="material-icons">arrow_back</i>
-            Back to Dashboard
-        </a>
-    </div>
+
 </asp:Content>
 
 <asp:Content ID="MainContent" ContentPlaceHolderID="MainContent" runat="server">

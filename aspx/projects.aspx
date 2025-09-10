@@ -7,12 +7,7 @@
         <h1 class="text-2xl font-bold">Projects Management</h1>
         <p class="text-sm text-secondary">Manage my portfolio projects</p>
     </div>
-    <div class="flex align-center gap-4">
-        <a href="<%= ResolveUrl("~/dashboard.aspx") %>" class="btn btn-outline">
-            <i class="material-icons">arrow_back</i>
-            Back to Dashboard
-        </a>
-    </div>
+
 </asp:Content>
 
 <asp:Content ID="HeadContent" ContentPlaceHolderID="HeadContent" runat="server">
@@ -253,11 +248,6 @@
                 </ItemTemplate>
             </asp:Repeater>
         </div>
-
-        <div id="emptyState" runat="server" visible="false" style="text-align: center; padding: 3rem 1rem; color: var(--color-text-secondary);">
-            <i class="material-icons" style="font-size: 64px; margin-bottom: 1rem; opacity: 0.5;">folder_open</i>
-            <h3 style="margin-bottom: 0.5rem;">No projects yet</h3>
-            <p>Create my first project to showcase my work.</p>
-        </div>
+        
     </div>
 </asp:Content>

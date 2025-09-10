@@ -18,11 +18,29 @@ namespace _71.Admin
 
         protected virtual bool IsUserAuthenticated()
         {
-            return Session[Constants.SESSION_IS_ADMIN] != null &&
-                   (bool)Session[Constants.SESSION_IS_ADMIN];
-        }
+            if (Session[Constants.SESSION_IS_ADMIN] != null &&
+                (bool)Session[Constants.SESSION_IS_ADMIN])
+            {
+                return true;
+            }
 
-        // Public helper so pages and other code can ask the master if the current user is an admin.
+            var cookie = Request.Cookies[Constants.COOKIE_ADMIN_REMEMBER];
+            if (cookie != null && !string.IsNullOrEmpty(cookie.Value))
+            {
+                if (ValidateAdminRememberMeCookie(cookie.Value))
+                {
+                    Session[Constants.SESSION_IS_ADMIN] = true;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        bool ValidateAdminRememberMeCookie(string cookieValue)
+        {
+            if (cookieValue != Constants.DEFAULT_ADMIN_USERNAME) return false;
+            return true;
+        }
         public bool IsAdminAuthenticated()
         {
             return IsUserAuthenticated();
@@ -39,11 +57,6 @@ namespace _71.Admin
             // Clear remember me cookie
             ClearRememberMeCookie();
 
-            // Log activity (use static Logger since we're clearing session)
-            if (!string.IsNullOrEmpty(username))
-            {
-                Logger.LogActivity("Logout", username, "User logged out from admin");
-            }
 
             Response.Redirect("~/login.aspx");
         }

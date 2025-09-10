@@ -4,13 +4,13 @@ namespace _71.Utils
     {
         // Session Keys
         public const string SESSION_IS_ADMIN = "IsAdmin";
-        public const string SESSION_ADMIN_USER = "Zihad";
+        public const string SESSION_ADMIN_USER = "AdminUser";
 
         // Cookie Names
         public const string COOKIE_ADMIN_REMEMBER = "AdminRemember";
 
         // Default Values
-        public const string DEFAULT_ADMIN_USERNAME = "admin";
+        public const string DEFAULT_ADMIN_USERNAME = "Zihad";
         public const string DEFAULT_ADMIN_PASSWORD = "admin";
 
         // Messages
@@ -19,7 +19,7 @@ namespace _71.Utils
         public const string MESSAGE_LOGOUT_SUCCESS = "Logged out successfully.";
         public const string MESSAGE_UNAUTHORIZED = "You must be logged in to access this page.";
 
-        // Admin Pages
+        // Admin Pages (relative)
         public const string PAGE_ADMIN_LOGIN = "~/admin/login.aspx";
         public const string PAGE_ADMIN_DASHBOARD = "~/admin/dashboard.aspx";
 

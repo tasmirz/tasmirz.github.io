@@ -1,7 +1,6 @@
 using System;
 using System.Web.UI;
 using _71.DAL;
-using _71.Utils;
 
 namespace _71.Admin
 {
@@ -28,7 +27,6 @@ namespace _71.Admin
             }
             catch (Exception ex)
             {
-                Logger.LogError("Failed to load messages", ex);
                 ((AdminMaster)this.Master)?.ShowMessage("Error loading messages: " + ex.Message, "error");
             }
         }
@@ -54,7 +52,6 @@ namespace _71.Admin
                 }
                 catch (Exception ex)
                 {
-                    Logger.LogError("Failed to delete message", ex);
                     ShowMessage("Error deleting message: " + ex.Message, "error");
                 }
             }

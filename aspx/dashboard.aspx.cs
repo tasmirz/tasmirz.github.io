@@ -5,8 +5,8 @@ using System.Data.SqlClient;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using _71.DAL;
-using _71.Utils;
 using _71.Admin;
+using _71.Utils;
 
 namespace _71.Admin
 {
@@ -27,20 +27,15 @@ namespace _71.Admin
 
         private void LoadDashboardData()
         {
-            LoadUserInfo();
+            ///LoadUserInfo();
             LoadStatistics();
             //LoadRecentProjects();
             LoadRecentMessages();
         }
 
-        private void LoadUserInfo()
-        {
-            lblUsername.Text = GetCurrentUsername();
-        }
-
         private string GetCurrentUsername()
         {
-            return Session[Constants.SESSION_ADMIN_USER]?.ToString() ?? "Admin";
+            return Session[Constants.SESSION_ADMIN_USER]?.ToString() ?? Constants.DEFAULT_ADMIN_USERNAME;
         }
 
         private void LoadStatistics()
@@ -53,8 +48,8 @@ namespace _71.Admin
             }
             catch (Exception ex)
             {
-                Logger.LogError("Failed to load dashboard statistics", ex);
                 SetDefaultStatistics();
+                Console.WriteLine("Error loading dashboard statistics: " + ex.Message);
             }
         }
 
@@ -131,7 +126,7 @@ namespace _71.Admin
             }
             catch (Exception ex)
             {
-                Logger.LogError("Failed to load recent messages", ex);
+                Console.WriteLine("Error loading recent messages: " + ex.Message);
                 pnlNoMessages.Visible = true;
             }
         }

@@ -16,9 +16,20 @@ namespace _71.Admin
             if (!IsPostBack)
             {
                 CheckExistingSession();
+                CheckExistingCookie();
             }
         }
-
+        private void CheckExistingCookie()
+        {
+            // Check for remember me cookie
+            HttpCookie rememberCookie = Request.Cookies[Constants.COOKIE_ADMIN_REMEMBER];
+            if (rememberCookie != null && !string.IsNullOrEmpty(rememberCookie.Value))
+            {
+                string username = rememberCookie.Value;
+                CreateUserSession(username);
+                Response.Redirect("~/dashboard.aspx");
+            }
+        }
         private void CheckExistingSession()
         {
             // If user is already logged in, redirect to dashboard
@@ -31,21 +42,18 @@ namespace _71.Admin
         protected void btnLogin_Click(object sender, EventArgs e)
         {
             string password = txtPassword?.Text ?? string.Empty;
-            string resolvedUsername = "Me";
+            string resolvedUsername = "Zihad";
 
-            Logger.LogInfo("Login attempt (password-only)");
 
             if (ValidateAdmin(password, out resolvedUsername))
             {
                 CreateUserSession(resolvedUsername);
                 HandleRememberMe(resolvedUsername);
-                Logger.LogActivity("Login", resolvedUsername, "Successful login");
                 Response.Redirect("~/dashboard.aspx");
             }
             else
             {
                 ShowLoginError();
-                Logger.LogActivity("Login Failed", resolvedUsername, "Invalid password");
             }
         }
 
@@ -87,42 +95,12 @@ namespace _71.Admin
             if (string.IsNullOrEmpty(password))
                 return false;
 
-            // Check default admin password first
             if (password == Constants.DEFAULT_ADMIN_PASSWORD)
             {
                 username = Constants.DEFAULT_ADMIN_USERNAME;
                 return true;
             }
 
-            try
-            {
-                using (var connection = DatabaseHelper.GetConnection())
-                {
-                    connection.Open();
-
-                    // Find the primary active admin (or first active) and verify the password hash
-                    const string query = @"SELECT TOP 1 Username, PasswordHash FROM AdminUsers WHERE IsActive = 1 ORDER BY IsPrimary DESC, Id ASC";
-                    using (var command = new SqlCommand(query, connection))
-                    using (var reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            var dbUsername = reader["Username"] as string;
-                            var storedHash = reader["PasswordHash"] as string;
-
-                            if (!string.IsNullOrEmpty(storedHash) && BCrypt.Net.BCrypt.Verify(password, storedHash))
-                            {
-                                username = !string.IsNullOrEmpty(dbUsername) ? dbUsername : Constants.DEFAULT_ADMIN_USERNAME;
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError("Database validation error", ex);
-            }
 
             return false;
         }

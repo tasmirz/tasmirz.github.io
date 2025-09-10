@@ -58,7 +58,7 @@
     </style>
 </head>
 <body>
-    <form id="form1" runat="server">
+    <form runat="server">
         <div class="login-container">
             <div class="login-header">
                 <h1>Portfolio Admin</h1>

@@ -55,7 +55,6 @@ namespace _71.Admin
                 {
                     txtNewCategoryName.Text = "";
                     LoadSkillCategories();
-                    Utils.Logger.LogActivity("AddSkillCategory", Session["Username"]?.ToString(), $"Added new skill category: {categoryName}");
                     ShowMessage("Category added successfully!", "success");
                 }
                 else
@@ -80,7 +79,6 @@ namespace _71.Admin
                     case "DeleteCategory":
                         if (_skillsRepository.DeleteSkillCategoryAndSkills(categoryId))
                         {
-                            Utils.Logger.LogActivity("DeleteSkillCategory", Session["Username"]?.ToString(), $"Deleted skill category ID: {categoryId}");
                             ShowMessage("Category deleted successfully!", "success");
                         }
                         else
@@ -120,7 +118,6 @@ namespace _71.Admin
                 {
                     txtNewSkill.Text = "";
                     LoadSkillCategories();
-                    Utils.Logger.LogActivity("AddSkill", Session["Username"]?.ToString(), $"Added new skill: {skillName}");
                     ShowMessage("Skill added successfully!", "success");
                 }
                 else
@@ -144,7 +141,6 @@ namespace _71.Admin
                     if (_skillsRepository.DeleteSkill(skillId))
                     {
                         LoadSkillCategories();
-                        Utils.Logger.LogActivity("RemoveSkill", Session["Username"]?.ToString(), $"Removed skill ID: {skillId}");
                         ShowMessage("Skill removed successfully!", "success");
                     }
                     else
