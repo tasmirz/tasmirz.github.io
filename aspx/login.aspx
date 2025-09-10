@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="<%= ResolveUrl("~/css/keyframes.css") %>" />
     <link rel="stylesheet" href="<%= ResolveUrl("~/css/responsive.css") %>" />
     <style>
-        /* Page-specific styling for login */
         body { 
             display: flex; 
             align-items: center; 

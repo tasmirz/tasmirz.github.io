@@ -55,14 +55,14 @@ namespace _71
                     NewLanguages = list;
                     txtNewLanguage.Text = string.Empty;
                     BindNewLanguages();
-                    
+
                     // If we're in edit mode, keep the form visible and buttons in edit state
                     if (hfEditProjectId != null && !string.IsNullOrEmpty(hfEditProjectId.Value))
                     {
                         if (btnAddProject != null) btnAddProject.Visible = false;
                         if (btnUpdateProject != null) btnUpdateProject.Visible = true;
                         if (btnCancelEdit != null) btnCancelEdit.Visible = true;
-                        
+
                         // Show the form using JavaScript
                         ClientScript.RegisterStartupScript(this.GetType(), "ShowEditForm", "document.getElementById('addProjectForm').classList.add('show'); document.getElementById('formTitle').textContent = 'Edit Project';", true);
                     }
@@ -90,14 +90,14 @@ namespace _71
                     list.RemoveAt(idx);
                     NewLanguages = list;
                     BindNewLanguages();
-                    
+
                     // If we're in edit mode, keep the form visible and buttons in edit state
                     if (hfEditProjectId != null && !string.IsNullOrEmpty(hfEditProjectId.Value))
                     {
                         if (btnAddProject != null) btnAddProject.Visible = false;
                         if (btnUpdateProject != null) btnUpdateProject.Visible = true;
                         if (btnCancelEdit != null) btnCancelEdit.Visible = true;
-                        
+
                         // Show the form using JavaScript
                         ClientScript.RegisterStartupScript(this.GetType(), "ShowEditForm", "document.getElementById('addProjectForm').classList.add('show'); document.getElementById('formTitle').textContent = 'Edit Project';", true);
                     }

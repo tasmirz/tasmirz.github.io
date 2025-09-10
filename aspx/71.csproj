@@ -129,9 +129,6 @@
         <Compile Include="Default.aspx.designer.cs">
           <DependentUpon>Default.aspx</DependentUpon>
         </Compile>
-  <!-- Projects.aspx.cs and Profile.aspx.cs converted to API handlers under /api/; stop compiling as page code-behinds -->
-  <!-- Removed Skills.aspx.cs compile entry per refactor: the page is now served via API handlers or archived -->
-  <!-- New source files added by refactor -->
   <Compile Include="DAL\DatabaseHelper.cs" />
   <Compile Include="DAL\ProjectRepository.cs" />
   <Compile Include="DAL\MessagesRepository.cs" />

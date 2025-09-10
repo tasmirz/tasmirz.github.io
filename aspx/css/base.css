@@ -1,7 +1,3 @@
-/* base.css (deprecated) — font-face kept for backwards compatibility.
-	 Prefer using layout.css which already includes font-face and .material-icons.
-*/
-
 @font-face {
 	font-family: 'Material Icons';
 	font-style: normal;

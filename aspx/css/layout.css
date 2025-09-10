@@ -1,7 +1,4 @@
-/* layout.css — layout, components, and core UI rules.
-	 This file intentionally maps UI tokens to the canonical --color-* variables
-	 defined in `colors.css` and `dark-theme.css`.
-*/
+/* Layout, components, and core UI rules. Maps UI tokens to canonical color variables. */
 
 @font-face {
 	font-family: 'Material Icons';
@@ -24,7 +21,6 @@
 	text-align: center;
 }
 
-/* Map commonly-used names to canonical color tokens */
 :root {
 	--bg: var(--color-bg);
 	--bg-rgb: var(--color-bg-rgb);
@@ -66,7 +62,6 @@ a {
 	padding: 2rem;
 	border-right: 1px solid var(--border);
 	background: linear-gradient(180deg, transparent, rgba(var(--bg-rgb), 0.03));
-	/* make sidebar positioned so it can sit above fixed backdrop */
 	position: relative;
 	z-index: 1300;
 }
@@ -230,7 +225,6 @@ a {
 	cursor: pointer;
 }
 
-/* Small responsive adjustments preserved here; larger responsive rules live in responsive.css */
 @media (max-width: 900px) {
 	.admin-layout {
 		flex-direction: column;
@@ -255,12 +249,12 @@ a {
 		border-right: none;
 	}
 
-	/* When opened, slide into view. Do NOT push the main content. */
+	/* Slide into view when opened. */
 	.admin-sidebar.mobile-open {
 		transform: translateX(0);
 	}
 
-	/* Ensure the main content is not shifted by the sidebar at any time */
+	/* Keep main content static when sidebar is toggled */
 	.admin-main {
 		margin-left: 0 !important;
 	}
@@ -280,8 +274,6 @@ a {
 #mobileBackdrop[style*='display: none'] {
 	display: none;
 }
-
-/* (handled by the off-canvas rules above) */
 
 /* Skills Management Specific Styles */
 .skills-grid {
