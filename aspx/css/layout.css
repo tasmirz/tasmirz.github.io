@@ -126,7 +126,7 @@ a {
 	padding: 0.45rem 0.7rem;
 	border-radius: 6px;
 	background: var(--primary);
-	color: var(--bg);
+	color: var(--color-bg);
 	border: none;
 }
 .btn-outline {

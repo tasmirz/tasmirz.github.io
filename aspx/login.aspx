@@ -50,6 +50,7 @@
         }
         .btn {
             width: 100%;
+            color: wheat;
             margin-top: 1rem;
         }
         .btn:hover {
@@ -62,7 +63,7 @@
         <div class="login-container">
             <div class="login-header">
                 <h1>Portfolio Admin</h1>
-                <p>Sign in to manage your portfolio</p>
+                <p>Sign in</p>
             </div>
 
             <asp:Panel ID="pnlMessage" runat="server" Visible="false" CssClass="message">
