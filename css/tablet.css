@@ -15,6 +15,7 @@
 	section {
 		padding-top: 60px;
 		padding-bottom: 30px;
+		scroll-margin-top: 70px;
 	}
 	
 	.header-controls {
@@ -95,23 +96,28 @@
 	}
 	
 	.projects-container {
-		gap: var(--spacing-lg);
+		display: flex;
+		flex-direction: column;
+		gap: var(--spacing-xl);
 		padding: 0 var(--spacing-md);
-		overflow-x: auto;
-		overflow-y: hidden;
+		width: 100%;
+		max-width: 640px;
+		margin: 0 auto;
+		box-sizing: border-box;
+		overflow: visible;
 	}
 	
 	.project-card {
-		/* make cards adaptive on tablet: fixed widths cause overflow on some devices */
 		flex-direction: column !important;
-		/* max-width: 340px; */
-		/* width: 320px; */
+		width: 100% !important;
+		max-width: 100% !important;
 		height: auto !important;
 		min-height: auto !important;
+		max-height: none !important;
 		border-radius: 16px;
-		flex-shrink: 0;
-		padding: 0;
-		background: rgba(var(--color-bg-rgb), 0.6);
+		padding: var(--spacing-md);
+		box-sizing: border-box;
+		background: rgba(var(--color-bg-rgb), 0.7);
 		box-shadow: var(--shadow-small);
 		transition: transform 200ms ease, box-shadow 200ms ease;
 	}
@@ -123,16 +129,11 @@
 	.project-image {
 		flex: none;
 		width: 100%;
-		height: 180px;
-	}
-	
-	.project-card:nth-child(even) .project-image::after {
-		background: linear-gradient(
-			180deg,
-			transparent 0%,
-			transparent 60%,
-			rgba(var(--color-bg-rgb), 0.8) 100%
-		);
+		height: auto;
+		aspect-ratio: 16 / 9;
+		overflow: hidden;
+		border-radius: 10px;
+		margin-bottom: var(--spacing-sm);
 	}
 	
 			/* only apply the stronger hover lift on devices that support hover */

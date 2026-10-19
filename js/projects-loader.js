@@ -109,41 +109,22 @@ class ProjectsLoader extends BaseSingleton {
 			}
 
 			this.renderProjects(projects)
-			const updateCards = () => {
-				const projectCards = document.querySelectorAll('.project-card')
-				projectCards.forEach((card) => {
-					const rect = card.getBoundingClientRect()
-					const scrollProgress =
-						Math.min(
-							Math.max(0, window.innerHeight * 1.1 - rect.top),
-							rect.height
-						) / rect.height
-					const mappedProgress = Math.min(1, Math.max(0, 0.4 + 0.6 * scrollProgress))
-					card.style.transform = `translate(${
-						window.innerWidth * (1 - mappedProgress)
-					}px, ${
-						(window.innerHeight / 10) * (1 - mappedProgress)
-					}px) scale(${mappedProgress})`
-					card.style.opacity = `${mappedProgress}`
-					card.style.filter = `blur(${50 * (1 - mappedProgress)}px)`
-				})
-			}
-			window.addEventListener('scroll', updateCards)
-			requestAnimationFrame(updateCards)
-			const items = document.querySelectorAll('.project-card')
+
+			// Clean, touch-friendly fade-in reveal without scroll hijacking or layout shifts
 			const observer = new IntersectionObserver(
 				(entries) => {
 					entries.forEach((entry) => {
-						if (entry.isIntersecting && !staticSpace.navJump) {
-							entry.target.scrollIntoView({
-								behavior: 'smooth',
-								block: 'center'
-							})
+						if (entry.isIntersecting) {
+							entry.target.classList.add('in-view')
+							observer.unobserve(entry.target)
 						}
 					})
 				},
-				{ threshold: 0.99 } // adjust when to trigger
+				{ threshold: 0.1 }
 			)
+			document.querySelectorAll('.project-card').forEach((card) => {
+				observer.observe(card)
+			})
 		} catch (error) {
 			this.showState('error', `Error loading projects: ${error.message}`)
 		}

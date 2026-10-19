@@ -9,16 +9,6 @@ import initContactForm from './contact-form.js'
 initUI()
 
 document.addEventListener('DOMContentLoaded', async () => {
-	document.getElementById('welcome').scrollIntoView()
-	//block scroll
-	document.body.style.overflow = 'hidden'
-	document.documentElement.style.scrollBehavior = 'hidden'
-	setTimeout(() => {
-		document.getElementById('welcome').scrollIntoView()
-
-		document.body.style.overflow = ''
-		document.documentElement.style.scrollBehavior = ''
-	}, 4000)
 	setupVideoLoop()
 	WebGLBackground.getInstance().init()
 	// Load profile data and initialize typewriter

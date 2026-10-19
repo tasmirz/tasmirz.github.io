@@ -13,8 +13,8 @@ section:not(#welcome) {
 }
 
 .project-card {
-	opacity: 0;
-	transform: translateY(30px) rotateX(15deg);
+	opacity: 1;
+	transform: none;
 }
 
 .contact-form .form-group {

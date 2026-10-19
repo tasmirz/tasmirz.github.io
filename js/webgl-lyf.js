@@ -302,12 +302,9 @@ export default class WebGLLyf {
 	}
 
 	scrollToSection(section) {
-		const scrollIntoView = () =>
+		if (section) {
 			section.scrollIntoView({ behavior: 'smooth', block: 'start' })
-		scrollIntoView()
-		setTimeout(scrollIntoView, 100)
-		setTimeout(scrollIntoView, 300)
-		setTimeout(scrollIntoView, 500)
+		}
 	}
 
 	setupNavigationListeners() {
@@ -528,7 +525,7 @@ export default class WebGLLyf {
 				startProgress: this.scrollProgress,
 				isTouching: true
 			}
-		})
+		}, { passive: true })
 
 		lyfSection.addEventListener(
 			'touchmove',
@@ -548,23 +545,17 @@ export default class WebGLLyf {
 				)
 
 				this.scrollProgress = newProgress
-
-				if (newProgress > 0 && newProgress < 1) {
-					e.preventDefault()
-					this.lockGlobalScroll()
-				} else {
-					this.unlockGlobalScroll()
-				}
 			},
-			{ passive: false }
+			{ passive: true }
 		)
 
-		lyfSection.addEventListener('touchend', () => {
+		const endTouch = () => {
 			touchState.isTouching = false
-			if (this.scrollProgress === 0 || this.scrollProgress === 1) {
-				this.unlockGlobalScroll()
-			}
-		})
+			this.unlockGlobalScroll()
+		}
+
+		lyfSection.addEventListener('touchend', endTouch, { passive: true })
+		lyfSection.addEventListener('touchcancel', endTouch, { passive: true })
 	}
 
 	destroy() {
