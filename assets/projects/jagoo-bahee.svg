@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" width="100%" height="100%" shape-rendering="crispEdges">
+  <defs>
+    <!-- Bayer 2x2 Checkerboard 50% -->
+    <pattern id="dither-50" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="2" height="2" fill="#3c3836" />
+      <rect x="2" y="2" width="2" height="2" fill="#3c3836" />
+    </pattern>
+    <!-- Light Dither 25% -->
+    <pattern id="dither-25" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="2" height="2" fill="#504945" />
+    </pattern>
+    <!-- Green Accent Dither 50% -->
+    <pattern id="dither-green" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="2" height="2" fill="#b8bb26" opacity="0.4" />
+      <rect x="2" y="2" width="2" height="2" fill="#b8bb26" opacity="0.4" />
+    </pattern>
+    <!-- Amber Accent Dither 50% -->
+    <pattern id="dither-amber" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="2" height="2" fill="#fabd2f" opacity="0.4" />
+      <rect x="2" y="2" width="2" height="2" fill="#fabd2f" opacity="0.4" />
+    </pattern>
+    <!-- Aqua Accent Dither 50% -->
+    <pattern id="dither-aqua" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="2" height="2" fill="#8ec07c" opacity="0.4" />
+      <rect x="2" y="2" width="2" height="2" fill="#8ec07c" opacity="0.4" />
+    </pattern>
+    <!-- Purple Accent Dither 50% -->
+    <pattern id="dither-purple" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="2" height="2" fill="#d3869b" opacity="0.4" />
+      <rect x="2" y="2" width="2" height="2" fill="#d3869b" opacity="0.4" />
+    </pattern>
+    <!-- Pixel CRT Scanline filter -->
+    <pattern id="scanlines" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="4" height="1" fill="#1d2021" opacity="0.3" />
+    </pattern>
+  </defs>
+
+  <!-- Background Base Canvas -->
+  <rect width="600" height="360" fill="#282828" />
+
+  
+  <!-- Dither Ground Plane -->
+  <rect x="20" y="20" width="560" height="320" fill="url(#dither-50)" />
+  
+  <!-- Isometric Grid Base Lines -->
+  <g stroke="#504945" stroke-width="2">
+    <line x1="80" y1="60" x2="80" y2="300" stroke-dasharray="4,8" />
+    <line x1="130" y1="60" x2="130" y2="300" stroke-dasharray="4,8" />
+    <line x1="180" y1="60" x2="180" y2="300" stroke-dasharray="4,8" />
+    <line x1="230" y1="60" x2="230" y2="300" stroke-dasharray="4,8" />
+    <line x1="280" y1="60" x2="280" y2="300" stroke-dasharray="4,8" />
+    <line x1="330" y1="60" x2="330" y2="300" stroke-dasharray="4,8" />
+    <line x1="380" y1="60" x2="380" y2="300" stroke-dasharray="4,8" />
+    <line x1="430" y1="60" x2="430" y2="300" stroke-dasharray="4,8" />
+    <line x1="480" y1="60" x2="480" y2="300" stroke-dasharray="4,8" />
+    <line x1="80" y1="80" x2="520" y2="80" stroke-dasharray="4,8" />
+    <line x1="80" y1="115" x2="520" y2="115" stroke-dasharray="4,8" />
+    <line x1="80" y1="150" x2="520" y2="150" stroke-dasharray="4,8" />
+    <line x1="80" y1="185" x2="520" y2="185" stroke-dasharray="4,8" />
+    <line x1="80" y1="220" x2="520" y2="220" stroke-dasharray="4,8" />
+    <line x1="80" y1="255" x2="520" y2="255" stroke-dasharray="4,8" />
+    <line x1="80" y1="290" x2="520" y2="290" stroke-dasharray="4,8" />
+  </g>
+
+  <!-- Isometric Pixel Towers (16-bit blocks) -->
+  <!-- Tower 1 Left -->
+  <g transform="translate(140, 110)">
+    <polygon points="40,0 80,20 40,40 0,20" fill="#fabd2f" />
+    <polygon points="0,20 40,40 40,110 0,90" fill="#d79921" />
+    <polygon points="40,40 80,20 80,90 40,110" fill="#b57614" />
+    <polygon points="0,20 40,40 40,110 0,90" fill="url(#dither-amber)" />
+  </g>
+  <!-- Tower 2 Center (Main High Tower) -->
+  <g transform="translate(260, 60)">
+    <polygon points="40,0 80,20 40,40 0,20" fill="#ebdbb2" />
+    <polygon points="0,20 40,40 40,160 0,140" fill="#928374" />
+    <polygon points="40,40 80,20 80,140 40,160" fill="#7c6f64" />
+    <polygon points="0,20 40,40 40,160 0,140" fill="url(#dither-50)" />
+    <!-- Pixel window slits -->
+    <rect x="12" y="50" width="16" height="6" fill="#fabd2f" />
+    <rect x="12" y="75" width="16" height="6" fill="#8ec07c" />
+    <rect x="12" y="100" width="16" height="6" fill="#b8bb26" />
+    <rect x="52" y="50" width="16" height="6" fill="#fabd2f" />
+    <rect x="52" y="75" width="16" height="6" fill="#8ec07c" />
+    <rect x="52" y="100" width="16" height="6" fill="#b8bb26" />
+  </g>
+  <!-- Tower 3 Right -->
+  <g transform="translate(380, 130)">
+    <polygon points="40,0 80,20 40,40 0,20" fill="#8ec07c" />
+    <polygon points="0,20 40,40 40,90 0,70" fill="#689d6a" />
+    <polygon points="40,40 80,20 80,70 40,90" fill="#427b58" />
+    <polygon points="0,20 40,40 40,90 0,70" fill="url(#dither-aqua)" />
+  </g>
+
+  <!-- Pixel Conduit Buses -->
+  <path d="M 180 180 L 260 220 L 380 200" fill="none" stroke="#fabd2f" stroke-width="4" stroke-dasharray="8,4" />
+  <circle cx="180" cy="180" r="6" fill="#fabd2f" />
+  <circle cx="260" cy="220" r="6" fill="#ebdbb2" />
+  <circle cx="380" cy="200" r="6" fill="#8ec07c" />
+
+  <!-- Pixel Badges -->
+  <rect x="40" y="36" width="140" height="24" fill="#1d2021" stroke="#3c3836" stroke-width="2" />
+  <text x="50" y="52" font-family="'Courier New', monospace" font-size="12" font-weight="bold" fill="#fabd2f">JAGOO-BAHEE // 16B</text>
+
+
+  <!-- Scanlines overlay -->
+  <rect width="600" height="360" fill="url(#scanlines)" pointer-events="none" />
+  <!-- Pixel Frame Border -->
+  <rect x="8" y="8" width="584" height="344" fill="none" stroke="#3c3836" stroke-width="4" />
+  <rect x="14" y="14" width="572" height="332" fill="none" stroke="#504945" stroke-width="2" />
+</svg>

@@ -1,81 +1,61 @@
 /**
- * DataLoader - A utility class for loading data with automatic fallback to static JSON files
- * when XHR requests fail.
+ * DataLoader - A client for fetching live portfolio content from Sanity CMS
+ * Project: ooipgfky | Dataset: production
  */
 class DataLoader {
-	/**
-	 * Loads data from a primary URL with fallback to static JSON
-	 * @param {string} primaryUrl - The primary API endpoint
-	 * @param {string} fallbackUrl - The static JSON file path
-	 * @param {string} dataKey - Optional key to extract from response (e.g., 'projects', 'skillCategories')
-	 * @returns {Promise<any>} The loaded data or null if both fail
-	 */
-	static async loadWithFallback(primaryUrl, fallbackUrl, dataKey = null) {
-		// Try primary URL first
-		try {
-			console.log(`Attempting to load data from: ${primaryUrl}`)
-			const response = await fetch(primaryUrl)
-			if (!response.ok)
-				throw new Error(`HTTP error! status: ${response.status}`)
-			const data = await response.json()
-			console.log(`Successfully loaded data from: ${primaryUrl}`)
-			return dataKey ? data[dataKey] : data
-		} catch (error) {
-			console.error(`Error fetching from primary URL (${primaryUrl}):`, error)
-		}
+	static SANITY_PROJECT_ID = 'ooipgfky'
+	static SANITY_DATASET = 'production'
+	static SANITY_API_VERSION = 'v2021-10-21'
 
-		// Fallback to static JSON
+	static get queryUrl() {
+		return `https://${this.SANITY_PROJECT_ID}.apicdn.sanity.io/${this.SANITY_API_VERSION}/data/query/${this.SANITY_DATASET}`
+	}
+
+	/**
+	 * Queries Sanity CDN using GROQ
+	 * @param {string} groqQuery - The GROQ query string
+	 * @returns {Promise<any>} The parsed result
+	 */
+	static async querySanity(groqQuery) {
 		try {
-			console.log(`Attempting to load fallback data from: ${fallbackUrl}`)
-			const response = await fetch(fallbackUrl)
-			if (!response.ok)
-				throw new Error(`HTTP error! status: ${response.status}`)
-			const data = await response.json()
-			console.log(`Successfully loaded fallback data from: ${fallbackUrl}`)
-			return dataKey ? data[dataKey] : data
+			const encodedQuery = encodeURIComponent(groqQuery)
+			const url = `${this.queryUrl}?query=${encodedQuery}`
+			const response = await fetch(url)
+			if (!response.ok) {
+				throw new Error(`Sanity query error: ${response.status} ${response.statusText}`)
+			}
+			const json = await response.json()
+			return json.result
 		} catch (error) {
-			console.error(`Error loading fallback data (${fallbackUrl}):`, error)
+			console.error(`DataLoader error executing query [${groqQuery}]:`, error)
 			return null
 		}
 	}
 
 	/**
-	 * Loads profile data with fallback
-	 * @returns {Promise<Object|null>} Profile data or null
+	 * Loads profile data from Sanity
+	 * @returns {Promise<Object|null>} Profile data
 	 */
 	static async loadProfile() {
-		return await this.loadWithFallback(
-			'http://localhost:5000/api/profile.ashx',
-			'./data/profile.json'
-		)
+		return await this.querySanity('*[_type == "profile"][0]')
 	}
 
 	/**
-	 * Loads projects data with fallback
-	 * @returns {Promise<Array>} Projects array or empty array
+	 * Loads projects data from Sanity
+	 * @returns {Promise<Array>} Projects array ordered by display rank
 	 */
 	static async loadProjects() {
-		const result = await this.loadWithFallback(
-			'http://localhost:5000/api/projects.ashx',
-			'./data/projects.json',
-			'projects'
-		)
-		console.log(result)
-		return result || []
+		const projects = await this.querySanity('*[_type == "project"] | order(order asc)')
+		return projects || []
 	}
 
 	/**
-	 * Loads skills data with fallback
-	 * @returns {Promise<Array>} Skill categories array or empty array
+	 * Loads skills categories from Sanity
+	 * @returns {Promise<Array>} Skill categories array ordered by display rank
 	 */
 	static async loadSkills() {
-		const result = await this.loadWithFallback(
-			'http://localhost:5000/api/skills.ashx',
-			'./data/skills.json',
-			'categories'
-		)
-		console.log(result, 'hello')
-		return result || []
+		const categories = await this.querySanity('*[_type == "skillCategory"] | order(order asc)')
+		return categories || []
 	}
 }
 

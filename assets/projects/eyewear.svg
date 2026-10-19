@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" width="100%" height="100%" shape-rendering="crispEdges">
+  <defs>
+    <!-- Bayer 2x2 Checkerboard 50% -->
+    <pattern id="dither-50" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="2" height="2" fill="#3c3836" />
+      <rect x="2" y="2" width="2" height="2" fill="#3c3836" />
+    </pattern>
+    <!-- Light Dither 25% -->
+    <pattern id="dither-25" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="2" height="2" fill="#504945" />
+    </pattern>
+    <!-- Green Accent Dither 50% -->
+    <pattern id="dither-green" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="2" height="2" fill="#b8bb26" opacity="0.4" />
+      <rect x="2" y="2" width="2" height="2" fill="#b8bb26" opacity="0.4" />
+    </pattern>
+    <!-- Amber Accent Dither 50% -->
+    <pattern id="dither-amber" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="2" height="2" fill="#fabd2f" opacity="0.4" />
+      <rect x="2" y="2" width="2" height="2" fill="#fabd2f" opacity="0.4" />
+    </pattern>
+    <!-- Aqua Accent Dither 50% -->
+    <pattern id="dither-aqua" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="2" height="2" fill="#8ec07c" opacity="0.4" />
+      <rect x="2" y="2" width="2" height="2" fill="#8ec07c" opacity="0.4" />
+    </pattern>
+    <!-- Purple Accent Dither 50% -->
+    <pattern id="dither-purple" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="2" height="2" fill="#d3869b" opacity="0.4" />
+      <rect x="2" y="2" width="2" height="2" fill="#d3869b" opacity="0.4" />
+    </pattern>
+    <!-- Pixel CRT Scanline filter -->
+    <pattern id="scanlines" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="4" height="1" fill="#1d2021" opacity="0.3" />
+    </pattern>
+  </defs>
+
+  <!-- Background Base Canvas -->
+  <rect width="600" height="360" fill="#282828" />
+
+  
+  <rect x="20" y="20" width="560" height="320" fill="url(#dither-50)" />
+  
+  <!-- Retro Cyber Visor Frame -->
+  <g transform="translate(110, 85)">
+    <!-- Visor Shell -->
+    <polygon points="20,0 360,0 380,20 380,100 360,120 20,120 0,100 0,20" fill="#1d2021" stroke="#504945" stroke-width="4" />
+    
+    <!-- Left Lens Screen with Dither -->
+    <rect x="25" y="25" width="150" height="70" fill="#282828" stroke="#8ec07c" stroke-width="2" />
+    <rect x="25" y="25" width="150" height="70" fill="url(#dither-aqua)" />
+    
+    <!-- Right Lens Screen with Dither -->
+    <rect x="205" y="25" width="150" height="70" fill="#282828" stroke="#8ec07c" stroke-width="2" />
+    <rect x="205" y="25" width="150" height="70" fill="url(#dither-aqua)" />
+
+    <!-- OCR Pixel Crosshair In Left Screen -->
+    <g transform="translate(60, 40)">
+      <rect x="0" y="18" width="12" height="4" fill="#fabd2f" />
+      <rect x="36" y="18" width="12" height="4" fill="#fabd2f" />
+      <rect x="22" y="0" width="4" height="12" fill="#fabd2f" />
+      <rect x="22" y="28" width="4" height="12" fill="#fabd2f" />
+      <rect x="20" y="18" width="8" height="4" fill="#fb4934" />
+    </g>
+    <!-- Pixel OCR Text Blocks -->
+    <rect x="110" y="45" width="50" height="6" fill="#ebdbb2" />
+    <rect x="110" y="57" width="38" height="6" fill="#a89984" />
+    <rect x="110" y="69" width="44" height="6" fill="#ebdbb2" />
+
+    <!-- WebRTC Pixel Sine Wave In Right Screen -->
+    <path d="M 220 60 H 240 L 250 40 L 260 80 L 270 45 L 280 75 L 290 60 H 340" fill="none" stroke="#fabd2f" stroke-width="4" />
+  </g>
+
+  <!-- HUD Status Bar -->
+  <rect x="40" y="36" width="150" height="24" fill="#1d2021" stroke="#3c3836" stroke-width="2" />
+  <text x="50" y="52" font-family="'Courier New', monospace" font-size="12" font-weight="bold" fill="#8ec07c">EYEWEAR // HUD-V01</text>
+  
+  <rect x="430" y="36" width="130" height="24" fill="#1d2021" stroke="#3c3836" stroke-width="2" />
+  <text x="442" y="52" font-family="'Courier New', monospace" font-size="12" font-weight="bold" fill="#fb4934">● LIVE REC</text>
+
+
+  <!-- Scanlines overlay -->
+  <rect width="600" height="360" fill="url(#scanlines)" pointer-events="none" />
+  <!-- Pixel Frame Border -->
+  <rect x="8" y="8" width="584" height="344" fill="none" stroke="#3c3836" stroke-width="4" />
+  <rect x="14" y="14" width="572" height="332" fill="none" stroke="#504945" stroke-width="2" />
+</svg>

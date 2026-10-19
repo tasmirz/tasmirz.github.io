@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" width="100%" height="100%" shape-rendering="crispEdges">
+  <defs>
+    <!-- Bayer 2x2 Checkerboard 50% -->
+    <pattern id="dither-50" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="2" height="2" fill="#3c3836" />
+      <rect x="2" y="2" width="2" height="2" fill="#3c3836" />
+    </pattern>
+    <!-- Light Dither 25% -->
+    <pattern id="dither-25" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="2" height="2" fill="#504945" />
+    </pattern>
+    <!-- Green Accent Dither 50% -->
+    <pattern id="dither-green" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="2" height="2" fill="#b8bb26" opacity="0.4" />
+      <rect x="2" y="2" width="2" height="2" fill="#b8bb26" opacity="0.4" />
+    </pattern>
+    <!-- Amber Accent Dither 50% -->
+    <pattern id="dither-amber" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="2" height="2" fill="#fabd2f" opacity="0.4" />
+      <rect x="2" y="2" width="2" height="2" fill="#fabd2f" opacity="0.4" />
+    </pattern>
+    <!-- Aqua Accent Dither 50% -->
+    <pattern id="dither-aqua" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="2" height="2" fill="#8ec07c" opacity="0.4" />
+      <rect x="2" y="2" width="2" height="2" fill="#8ec07c" opacity="0.4" />
+    </pattern>
+    <!-- Purple Accent Dither 50% -->
+    <pattern id="dither-purple" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="2" height="2" fill="#d3869b" opacity="0.4" />
+      <rect x="2" y="2" width="2" height="2" fill="#d3869b" opacity="0.4" />
+    </pattern>
+    <!-- Pixel CRT Scanline filter -->
+    <pattern id="scanlines" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="4" height="1" fill="#1d2021" opacity="0.3" />
+    </pattern>
+  </defs>
+
+  <!-- Background Base Canvas -->
+  <rect width="600" height="360" fill="#282828" />
+
+  
+  <rect x="20" y="20" width="560" height="320" fill="url(#dither-50)" />
+
+  <!-- Green PCB Dither Base -->
+  <rect x="40" y="40" width="520" height="280" fill="#1d2021" stroke="#3c3836" stroke-width="3" />
+  <rect x="40" y="40" width="520" height="280" fill="url(#dither-green)" />
+
+  <!-- Motherboard Traces in Gruvbox Copper/Amber -->
+  <g stroke="#d79921" stroke-width="3" fill="none">
+    <path d="M 60 80 H 180 L 220 120 H 250" />
+    <path d="M 60 120 H 160 L 200 160 H 250" />
+    <path d="M 60 160 H 250" />
+    <path d="M 60 200 H 170 L 210 170 H 250" />
+    <path d="M 60 240 H 190 L 230 180 H 250" />
+
+    <path d="M 350 120 H 380 L 420 80 H 540" />
+    <path d="M 350 160 H 540" />
+    <path d="M 350 180 H 390 L 430 240 H 540" />
+  </g>
+
+  <!-- Gold Pixel Solder Pads -->
+  <g fill="#fabd2f">
+    <rect x="56" y="76" width="8" height="8" />
+    <rect x="56" y="116" width="8" height="8" />
+    <rect x="56" y="156" width="8" height="8" />
+    <rect x="56" y="196" width="8" height="8" />
+    <rect x="56" y="236" width="8" height="8" />
+
+    <rect x="536" y="76" width="8" height="8" />
+    <rect x="536" y="156" width="8" height="8" />
+    <rect x="536" y="236" width="8" height="8" />
+  </g>
+
+  <!-- CPU Socket (Center Package) -->
+  <g transform="translate(245, 110)">
+    <rect x="0" y="0" width="110" height="110" fill="#32302f" stroke="#7c6f64" stroke-width="4" />
+    <rect x="0" y="0" width="110" height="110" fill="url(#dither-50)" />
+    <!-- Die core -->
+    <rect x="25" y="25" width="60" height="60" fill="#282828" stroke="#8ec07c" stroke-width="2" />
+    <text x="55" y="60" font-family="'Courier New', monospace" font-size="12" font-weight="bold" fill="#8ec07c" text-anchor="middle">CSE-3200</text>
+    <text x="55" y="75" font-family="'Courier New', monospace" font-size="10" fill="#a89984" text-anchor="middle">SYS // LAB</text>
+  </g>
+
+  <!-- Header Badge -->
+  <rect x="50" y="50" width="150" height="24" fill="#1d2021" stroke="#3c3836" stroke-width="2" />
+  <text x="60" y="66" font-family="'Courier New', monospace" font-size="12" font-weight="bold" fill="#fabd2f">CSE3200 // OS-CORE</text>
+
+
+  <!-- Scanlines overlay -->
+  <rect width="600" height="360" fill="url(#scanlines)" pointer-events="none" />
+  <!-- Pixel Frame Border -->
+  <rect x="8" y="8" width="584" height="344" fill="none" stroke="#3c3836" stroke-width="4" />
+  <rect x="14" y="14" width="572" height="332" fill="none" stroke="#504945" stroke-width="2" />
+</svg>

@@ -12,13 +12,14 @@ class SkillsLoader extends BaseSingleton {
 	}
 
 	createSkillCategoryHTML(category) {
-		const skillTags = category.Skills.map(
+		const skills = category.skills || category.Skills || []
+		const skillTags = skills.map(
 			(skill) => `<span class="skill-tag">${skill}</span>`
 		).join(' ')
 
 		return `
             <div class="skill-category">
-                <h4>${category.Name}</h4>
+                <h4>${category.name || category.Name}</h4>
                 <div class="skill-tags">${skillTags}</div>
             </div>
         `

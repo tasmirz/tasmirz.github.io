@@ -1,0 +1,16 @@
+# Environment variables and secrets
+.env
+.env.local
+*.log
+
+# Dependencies
+node_modules/
+studio/node_modules/
+studio/dist/
+.sanity/
+
+# Build and temporary files
+.vscode/
+*.bak
+*.tmp
+assets/portfolio.png

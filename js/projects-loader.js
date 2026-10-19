@@ -12,7 +12,8 @@ class ProjectsLoader extends BaseSingleton {
 	}
 
 	createProjectCard(project) {
-		const techTags = project.Languages.map(
+		const languages = project.languages || project.Languages || []
+		const techTags = languages.map(
 			(lang) => `<span class="tech-tag">${lang}</span>`
 		).join('')
 
@@ -27,24 +28,29 @@ class ProjectsLoader extends BaseSingleton {
 
 		// Create links section
 		const links = []
-		if (project.githubUrl) {
-			links.push(`<a href="${project.githubUrl}" target="_blank" class="project-link">
+		const github = project.githubUrl || project.GithubUrl
+		if (github) {
+			links.push(`<a href="${github}" target="_blank" class="project-link">
 				<span class="material-icons">code</span>
 				GitHub
 			</a>`)
 		}
-		if (project.liveUrl) {
-			links.push(`<a href="${project.liveUrl}" target="_blank" class="project-link">
+		const live = project.liveUrl || project.LiveUrl
+		if (live) {
+			links.push(`<a href="${live}" target="_blank" class="project-link">
 				<span class="material-icons">launch</span>
 				Live Demo
 			</a>`)
 		}
 		const linksHTML = links.join('')
+		const image = project.imageUrl || project.ImageUrl || ''
+		const title = project.title || project.Title || project.name || project.Name || 'Project'
+		const description = project.description || project.Description || ''
 
 		return `
 			<div class="project-card">
 				<div class="project-image">
-					<img src="${project.ImageUrl}" alt="${project.Name} project" loading="lazy">
+					<img src="${image}" alt="${title} project" loading="lazy">
 				</div>
 				<div class="project-content">
 					<div class="project-meta">
@@ -56,8 +62,8 @@ class ProjectsLoader extends BaseSingleton {
 							${linksHTML}
 						</div>
 					</div>
-					<h3>${project.Name}</h3>
-					<p>${project.Description}</p>
+					<h3>${title}</h3>
+					<p>${description}</p>
 					<div class="project-technologies">${techTags}</div>
 				</div>
 			</div>
