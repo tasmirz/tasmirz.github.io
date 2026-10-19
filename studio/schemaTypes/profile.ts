@@ -32,16 +32,6 @@ export const profileType = defineType({
       type: 'string',
     }),
     defineField({
-      name: 'cgpa',
-      title: 'CGPA',
-      type: 'number',
-    }),
-    defineField({
-      name: 'semestersCompleted',
-      title: 'Semesters Completed',
-      type: 'number',
-    }),
-    defineField({
       name: 'bio',
       title: 'Short Bio',
       type: 'text',

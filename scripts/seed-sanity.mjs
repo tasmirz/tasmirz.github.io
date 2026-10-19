@@ -31,10 +31,8 @@ const mutations = [
       title: 'Studying CSE @ KUET',
       email: 'tasmirz@tuta.io',
       location: 'Khulna, Bangladesh',
-      cgpa: 3.68,
-      semestersCompleted: 6,
       bio: 'Full-Stack Developer passionate about systems design, low-level architecture, and innovative computing.',
-      about: 'I am a Computer Science and Engineering student at KUET passionate about full-stack development, systems design, and AI tooling. 6 semesters completed with CGPA 3.68.',
+      about: 'I am a Computer Science and Engineering student at KUET passionate about full-stack development, systems design, and AI tooling.',
       aboutDescription: 'Always interested in new opportunities, open-source collaborations, and systems research. Feel free to reach out!',
       social: {
         github: 'https://github.com/tasmirz',
