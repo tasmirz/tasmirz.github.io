@@ -63,6 +63,41 @@ class ProfileLoader extends BaseSingleton {
 		// Update social links
 		this.updateSocialLinks(profileData.social)
 
+		// Handle Portrait visibility
+		const portraitContainer = document.querySelector('.about-portrait')
+		const portraitImg = document.querySelector('.portrait-img')
+		const aboutContent = document.querySelector('.about-content')
+
+		const portraitSrc =
+			profileData.portraitUrl ||
+			profileData.portrait ||
+			profileData.imageUrl ||
+			profileData.image
+
+		if (portraitSrc && portraitImg) {
+			portraitImg.onload = () => {
+				if (portraitContainer) {
+					portraitContainer.classList.remove('hidden')
+					portraitContainer.style.display = ''
+				}
+				if (aboutContent) aboutContent.classList.remove('no-portrait')
+			}
+			portraitImg.onerror = () => {
+				if (portraitContainer) {
+					portraitContainer.classList.add('hidden')
+					portraitContainer.style.display = 'none'
+				}
+				if (aboutContent) aboutContent.classList.add('no-portrait')
+			}
+			portraitImg.src = portraitSrc
+		} else {
+			if (portraitContainer) {
+				portraitContainer.classList.add('hidden')
+				portraitContainer.style.display = 'none'
+			}
+			if (aboutContent) aboutContent.classList.add('no-portrait')
+		}
+
 		// Update footer copyright
 		const footerCopyright = document.querySelector('.footer-bottom p')
 		if (footerCopyright && profileData.name) {

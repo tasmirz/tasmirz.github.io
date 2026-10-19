@@ -69,8 +69,8 @@
 						<div class="skills-section">
 						</div>
 					</div>
-					<div class="about-portrait">
-						<img src="assets/portfolio.png" alt="Portrait" class="portrait-img">
+					<div class="about-portrait hidden" style="display: none;">
+						<img src="" alt="Portrait" class="portrait-img" onload="this.parentElement.style.display=''; this.parentElement.classList.remove('hidden'); document.querySelector('.about-content')?.classList.remove('no-portrait');" onerror="this.parentElement.style.display='none'; this.parentElement.classList.add('hidden'); document.querySelector('.about-content')?.classList.add('no-portrait');">
 					</div>
 				</div>
 			</section>

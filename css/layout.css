@@ -339,11 +339,25 @@ p {
 .about-content {
 	flex: 1;
 	max-width: var(--about-content-max-width);
+	transition: max-width var(--transition-normal);
+}
+
+.about-content.no-portrait,
+.about-container:not(:has(.about-portrait:not(.hidden):not([style*="display: none"]))) .about-content {
+	max-width: 100%;
 }
 
 .about-portrait {
 	flex: 0 0 var(--portrait-max-width);
 	text-align: center;
+}
+
+.about-portrait.hidden,
+.about-portrait[hidden],
+.about-portrait[style*="display: none"],
+.about-portrait:has(img:not([src])),
+.about-portrait:has(img[src=""]) {
+	display: none !important;
 }
 
 .portrait-img {

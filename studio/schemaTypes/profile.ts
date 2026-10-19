@@ -22,6 +22,11 @@ export const profileType = defineType({
       type: 'string',
     }),
     defineField({
+      name: 'portraitUrl',
+      title: 'Portrait Image URL (Optional)',
+      type: 'string',
+    }),
+    defineField({
       name: 'location',
       title: 'Location',
       type: 'string',
