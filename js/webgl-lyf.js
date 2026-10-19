@@ -480,7 +480,6 @@ export default class WebGLLyf {
 			program.passUniforms([
 				['iResolution', [this.context.width, this.context.height]],
 				['iOffset', [this.worldOffset.x, this.worldOffset.y]],
-				['iTexture', 0],
 				['iTime', time / 1000 - this.startTime],
 				['iProgress', this.scrollProgress]
 			])

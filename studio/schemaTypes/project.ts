@@ -26,8 +26,14 @@ export const projectType = defineType({
     }),
     defineField({
       name: 'imageUrl',
-      title: 'Image URL / SVG Path',
+      title: 'Primary Image URL / SVG Path',
       type: 'string',
+    }),
+    defineField({
+      name: 'images',
+      title: 'Gallery Images (Optional carousel array)',
+      type: 'array',
+      of: [{ type: 'string' }],
     }),
     defineField({
       name: 'githubUrl',

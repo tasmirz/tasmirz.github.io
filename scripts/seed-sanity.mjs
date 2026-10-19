@@ -57,7 +57,12 @@ const mutations = [
       title: 'Vehicle Telemetry Platform (Project 3200)',
       description: 'Enterprise fleet intelligence & automotive telemetry platform with ESP32 firmware, ThingsBoard MQTT, Apache Kafka, QuestDB, and real-time operations dashboard.',
       languages: ['Go', 'TypeScript', 'Next.js', 'Kafka', 'ESP32', 'QuestDB'],
-      imageUrl: 'assets/projects/project-3200.png',
+      imageUrl: 'assets/projects/project-3200-hardware.jpg',
+      images: [
+        'assets/projects/project-3200-hardware.jpg',
+        'assets/projects/project-3200.png',
+        'assets/projects/project-3200-arch.png'
+      ],
       githubUrl: 'https://github.com/cse3200/root',
       status: 'completed',
       order: 1

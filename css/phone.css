@@ -330,7 +330,8 @@
 		}
 	}
 	
-	.project-image {
+	.project-image,
+	.project-image-carousel {
 		flex: none;
 		width: 100%;
 		height: auto;
