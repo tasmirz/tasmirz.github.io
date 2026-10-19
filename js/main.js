@@ -7,6 +7,7 @@ import WebGLLyf from './webgl-lyf.js'
 import { setupVideoLoop } from './video-loop.js'
 import initContactForm from './contact-form.js'
 initUI()
+setupVideoLoop()
 
 document.addEventListener('DOMContentLoaded', async () => {
 	setupVideoLoop()
