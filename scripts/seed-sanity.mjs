@@ -29,7 +29,7 @@ const mutations = [
       _type: 'profile',
       name: 'Tasmir Hossain Zihad',
       title: 'Studying CSE @ KUET',
-      email: 'zihad@tuta.io',
+      email: 'tasmirz@tuta.io',
       location: 'Khulna, Bangladesh',
       cgpa: 3.68,
       semestersCompleted: 6,

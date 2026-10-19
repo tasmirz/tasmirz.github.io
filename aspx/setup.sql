@@ -162,7 +162,7 @@ GO
 -- Insert or update profile record for the user
 IF EXISTS (SELECT 1
 FROM Profile
-WHERE Email = 'zihad@tuta.io')
+WHERE Email = 'tasmirz@tuta.io')
 BEGIN
     UPDATE Profile
     SET Name = 'Tasmir Hossain Zihad',
@@ -173,14 +173,14 @@ BEGIN
         LinkedinUrl = 'https://linkedin.com/in/tasmirz',
         AboutDescription = 'I''m always interested in new opportunities and collaborations. Feel free to reach out!',
         LastUpdated = GETDATE()
-    WHERE Email = 'zihad@tuta.io';
+    WHERE Email = 'tasmirz@tuta.io';
 END
 ELSE
 BEGIN
     INSERT INTO Profile
         (Name, Title, Email, Location, Bio, GithubUrl, LinkedinUrl, AboutDescription)
     VALUES
-        ('Tasmir Hossain Zihad', 'Studying CSE @ KUET', 'zihad@tuta.io', 'Khulna, Bangladesh',
+        ('Tasmir Hossain Zihad', 'Studying CSE @ KUET', 'tasmirz@tuta.io', 'Khulna, Bangladesh',
             'Full-Stack Developer passionate about creating innovative solutions.',
             'https://github.com/tasmirz', 'https://linkedin.com/in/tasmirz',
             'I''m always interested in new opportunities and collaborations. Feel free to reach out!');
@@ -192,7 +192,7 @@ DECLARE @ProfileId INT;
 SET @ProfileId = (SELECT TOP 1
     Id
 FROM Profile
-WHERE Email = 'zihad@tuta.io'
+WHERE Email = 'tasmirz@tuta.io'
 ORDER BY LastUpdated DESC);
 -- If a profile was found, replace any existing typewriter texts for idempotent runs
 IF @ProfileId IS NOT NULL AND @ProfileId > 0
