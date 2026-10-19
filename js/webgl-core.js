@@ -329,6 +329,10 @@ export default class WebGLContext {
 
 		this._handleResize = this._handleResize.bind(this)
 		window.addEventListener('resize', this._handleResize)
+		if (typeof ResizeObserver !== 'undefined' && this.container) {
+			this._resizeObserver = new ResizeObserver(() => this._handleResize())
+			this._resizeObserver.observe(this.container)
+		}
 
 		this.gl.enable(this.gl.BLEND)
 		this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA)
@@ -342,11 +346,15 @@ export default class WebGLContext {
 
 	_handleResize() {
 		if (this.options.width === null || this.options.height === null) {
-			this.width = this.options.width || this.container.clientWidth
-			this.height = this.options.height || this.container.clientHeight
-			this.canvas.width = this.width
-			this.canvas.height = this.height
-			this.gl.viewport(0, 0, this.width, this.height)
+			const w = this.container.clientWidth || window.innerWidth
+			const h = this.container.clientHeight || window.innerHeight
+			if (w > 0 && h > 0 && (this.width !== w || this.height !== h)) {
+				this.width = w
+				this.height = h
+				this.canvas.width = this.width
+				this.canvas.height = this.height
+				this.gl.viewport(0, 0, this.width, this.height)
+			}
 		}
 	}
 

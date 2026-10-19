@@ -51,7 +51,6 @@ export const initMobileMenu = () => {
 	const toggleMenu = (isActive) => {
 		// Only apply these effects if we're in mobile mode
 		if (mobileMediaQuery.matches) {
-			console.log(isActive)
 			if (isActive) {
 				navMenu.classList.add('active')
 				navMenu.style.opacity = '1'
@@ -61,8 +60,6 @@ export const initMobileMenu = () => {
 				mobileNavOverlay.style.pointerEvents = 'all'
 				navMenu.style.pointerEvents = 'all'
 				mobileNavOverlay.style.opacity = '1'
-				document.querySelector('#tree-bg-video').style.mixBlendMode =
-					'unset !important'
 			} else {
 				navMenu.classList.remove('active')
 				navMenu.style.opacity = '0'
@@ -72,7 +69,6 @@ export const initMobileMenu = () => {
 				mobileNavOverlay.style.pointerEvents = 'none'
 				navMenu.style.pointerEvents = 'none'
 				mobileNavOverlay.style.opacity = '0'
-				document.querySelector('#tree-bg-video').style.mixBlendMode = 'normal'
 			}
 			//document.body.style.overflow = isActive ? 'hidden' : ''
 		}

@@ -51,8 +51,8 @@ export default class WebGLBackground {
 		try {
 			this.program = await this.context.createProgram(
 				'leaves',
-				'../shaders/leaves.vert',
-				'../shaders/leaves.frag'
+				'./shaders/leaves.vert',
+				'./shaders/leaves.frag'
 			)
 
 			this._initParticles()
