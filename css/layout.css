@@ -853,96 +853,122 @@ p {
 	mask-size: contain;
 }
 
-/* Mobile Controls */
+/* Mobile / On-Screen Game Controls */
 .lyf-mobile-controls {
 	display: none;
-	position: relative;
 	width: 100%;
-	height: var(--lyf-controls-height);
-	margin-top: 10px;
+	max-width: 360px;
+	margin: 16px auto 0;
+	padding: 8px 16px;
+	justify-content: space-between;
+	align-items: center;
+	touch-action: none;
+	user-select: none;
+	-webkit-user-select: none;
 	pointer-events: auto;
 }
 
+@media (max-width: 900px), (pointer: coarse) {
+	.lyf-mobile-controls {
+		display: flex !important;
+	}
+}
+
 .lyf-dpad {
-	position: absolute;
-	left: 20px;
-	top: 10px;
-	width: var(--lyf-dpad-size);
-	height: var(--lyf-dpad-size);
+	position: relative;
+	width: 114px;
+	height: 114px;
+	touch-action: none;
+	flex-shrink: 0;
 	pointer-events: auto;
 }
 
 .lyf-dpad-button {
 	position: absolute;
-	width: var(--lyf-dpad-button-size);
-	height: var(--lyf-dpad-button-size);
-	background: rgba(255, 255, 255, 0.8);
-	border: 2px solid var(--accent-color);
-	border-radius: 4px;
+	width: 36px;
+	height: 36px;
+	background: rgba(30, 32, 33, 0.85);
+	border: 1.5px solid var(--color-primary);
+	border-radius: 8px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	font-size: var(--lyf-dpad-font-size);
-	font-weight: bold;
-	color: var(--accent-color);
+	font-size: 15px;
+	color: var(--color-primary);
 	cursor: pointer;
 	user-select: none;
-	touch-action: manipulation;
-	transition: all 0.1s ease;
+	-webkit-user-select: none;
+	touch-action: none;
+	transition: background 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease;
+	box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+	pointer-events: auto;
 }
 
-.lyf-dpad-button:active {
-	background: var(--accent-color);
-	color: white;
-	transform: scale(0.95);
+.lyf-dpad-button:hover {
+	background: rgba(45, 48, 50, 0.95);
+}
+
+.lyf-dpad-button:active,
+.lyf-dpad-button.is-pressed {
+	background: var(--color-primary) !important;
+	color: #1d2021 !important;
+	transform: scale(0.92);
+	box-shadow: 0 0 14px rgba(var(--color-primary-rgb), 0.7);
 }
 
 .lyf-dpad-up {
 	top: 0;
-	left: 35px;
+	left: 39px;
 }
 
 .lyf-dpad-down {
 	bottom: 0;
-	left: 35px;
+	left: 39px;
 }
 
 .lyf-dpad-left {
 	left: 0;
-	top: 35px;
+	top: 39px;
 }
 
 .lyf-dpad-right {
 	right: 0;
-	top: 35px;
+	top: 39px;
 }
 
 .lyf-action-button {
-	position: absolute;
-	right: 20px;
-	top: 30px;
-	width: var(--lyf-action-button-size);
-	height: var(--lyf-action-button-size);
-	background: rgba(255, 255, 255, 0.8);
-	border: 3px solid var(--accent-color);
+	position: relative;
+	width: 58px;
+	height: 58px;
 	border-radius: 50%;
+	background: rgba(30, 32, 33, 0.85);
+	border: 2px solid var(--color-primary);
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	font-size: var(--lyf-action-font-size);
-	font-weight: bold;
-	color: var(--accent-color);
+	font-size: 22px;
+	color: var(--color-primary);
 	cursor: pointer;
 	user-select: none;
-	touch-action: manipulation;
-	transition: all 0.1s ease;
+	-webkit-user-select: none;
+	touch-action: none;
+	transition: background 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease;
+	box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
 	pointer-events: auto;
+	flex-shrink: 0;
+	margin-right: 8px;
 }
 
-.lyf-action-button:active {
-	background: var(--accent-color);
-	color: white;
-	transform: scale(0.95);
+.lyf-action-button:hover {
+	background: rgba(45, 48, 50, 0.95);
+}
+
+.lyf-action-button:active,
+.lyf-action-button.is-pressed {
+	background: var(--color-primary) !important;
+	color: #1d2021 !important;
+	transform: scale(0.92);
+	box-shadow: 0 0 16px rgba(var(--color-primary-rgb), 0.7);
 }
 
 /* === CONTACT SECTION === */

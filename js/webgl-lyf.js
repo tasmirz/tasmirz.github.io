@@ -101,6 +101,7 @@ export default class WebGLLyf {
 		this.progressTracker = null
 
 		WebGLLyf.#instance = this
+		window.__lyf = this
 	}
 
 	static getInstance() {
@@ -173,9 +174,60 @@ export default class WebGLLyf {
 		this.setupMobileControls()
 	}
 
+	stepProgress(delta) {
+		const newProgress = Math.max(0, Math.min(1, this.scrollProgress + delta))
+		this.scrollProgress = newProgress
+		this.updatePositionOnScroll()
+		this.notifyProgressTracker()
+	}
+
+	jumpToNextMilestone() {
+		const totalSegments = this.path.length - 1
+		const namedMilestones = []
+		for (let i = 0; i < this.path.length; i++) {
+			if (this.path[i].name && this.path[i].name.trim().length > 0) {
+				namedMilestones.push({
+					index: i,
+					progress: i / totalSegments,
+					name: this.path[i].name
+				})
+			}
+		}
+
+		if (namedMilestones.length === 0) return
+
+		let target = namedMilestones.find(
+			(m) => m.progress > this.scrollProgress + 0.02
+		)
+		if (!target) {
+			target = namedMilestones[0]
+		}
+
+		this.animateProgressTo(target.progress)
+	}
+
+	animateProgressTo(targetProgress, duration = 450) {
+		const startProgress = this.scrollProgress
+		const startTime = performance.now()
+		const diff = targetProgress - startProgress
+
+		const step = (now) => {
+			const elapsed = now - startTime
+			const t = Math.min(1, elapsed / duration)
+			const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
+			this.scrollProgress = Math.max(0, Math.min(1, startProgress + diff * ease))
+			this.updatePositionOnScroll()
+			this.notifyProgressTracker()
+
+			if (t < 1) {
+				requestAnimationFrame(step)
+			}
+		}
+		requestAnimationFrame(step)
+	}
+
 	setupKeyboardControls() {
 		const onKey = (e, pressed) => {
-			// if not focused/has mouse over it return
 			const container = document.querySelector('.lyf-canvas-container')
 			const isHovered = container ? container.matches(':hover') : false
 			const active = document.activeElement
@@ -185,31 +237,21 @@ export default class WebGLLyf {
 					active.tagName === 'TEXTAREA' ||
 					active.isContentEditable)
 
-			// Only handle keyboard when the canvas is in view or hovered, and no text input is focused
 			if (!this.canvasInView && !isHovered) return
 			if (isTyping) return
-
 			if (!e) return
-			// Prefer e.key when available, fall back to e.code (e.g. 'KeyW')
-			let keyVal = null
-			if (typeof e.key === 'string' && e.key.length) keyVal = e.key
-			else if (typeof e.code === 'string' && e.code.length) keyVal = e.code
-			if (!keyVal) return
-			let k = keyVal.toLowerCase()
-			// Normalize 'KeyW' -> 'w'
-			if (k.startsWith('key') && k.length > 3) k = k.slice(3)
-			if (!(k in this.keys)) return
-			this.keys[k] = pressed
-			if (pressed) {
-				this.isManualControl = true
-				this.lockGlobalScroll()
-			} else {
-				if (!Object.values(this.keys).some(Boolean)) {
-					this.updateScrollProgressFromPosition()
-					this.isManualControl = false
-				}
+
+			const key = (e.key || '').toLowerCase()
+			if (key === 'arrowdown' || key === 's' || key === 'arrowright' || key === 'd') {
+				if (pressed) this.stepProgress(0.02)
+				e.preventDefault()
+			} else if (key === 'arrowup' || key === 'w' || key === 'arrowleft' || key === 'a') {
+				if (pressed) this.stepProgress(-0.02)
+				e.preventDefault()
+			} else if ((key === ' ' || key === 'enter') && pressed) {
+				this.jumpToNextMilestone()
+				e.preventDefault()
 			}
-			e.preventDefault()
 		}
 
 		document.addEventListener('keydown', (e) => onKey(e, true))
@@ -242,32 +284,90 @@ export default class WebGLLyf {
 	}
 
 	setupMobileControls() {
-		document.querySelectorAll('.lyf-dpad-button').forEach((btn) => {
-			const key = btn.dataset.key
-			const handleTouch = (e, pressed) => {
-				e.preventDefault()
-				this.keys[key] = pressed
-				if (pressed) {
-					this.isManualControl = true
-					this.lockGlobalScroll()
-				} else if (!Object.values(this.keys).some(Boolean)) {
-					this.updateScrollProgressFromPosition()
-					this.isManualControl = false
+		const dpadButtons = document.querySelectorAll('.lyf-dpad-button')
+		const actionBtn = document.querySelector('.lyf-action-button')
+
+		const bindControl = (btn, onStart, onTick) => {
+			let isPressed = false
+			let holdInterval = null
+			let holdTimeout = null
+
+			const press = (e) => {
+				if (e) {
+					if (e.cancelable && e.type !== 'touchstart') e.preventDefault()
+					e.stopPropagation()
+				}
+				if (isPressed) return
+				isPressed = true
+				btn.classList.add('is-pressed')
+
+				if (typeof onStart === 'function') onStart()
+
+				if (typeof onTick === 'function') {
+					holdTimeout = setTimeout(() => {
+						holdInterval = setInterval(onTick, 35)
+					}, 220)
 				}
 			}
 
-			btn.addEventListener('touchstart', (e) => handleTouch(e, true))
-			btn.addEventListener('touchend', (e) => handleTouch(e, false))
+			const release = (e) => {
+				if (!isPressed) return
+				isPressed = false
+				btn.classList.remove('is-pressed')
+				if (holdTimeout) clearTimeout(holdTimeout)
+				if (holdInterval) clearInterval(holdInterval)
+				holdTimeout = null
+				holdInterval = null
+			}
+
+			// Pointer events
+			btn.addEventListener('pointerdown', press)
+			btn.addEventListener('pointerup', release)
+			btn.addEventListener('pointercancel', release)
+			btn.addEventListener('pointerleave', release)
+
+			// Touch events
+			btn.addEventListener('touchstart', press, { passive: false })
+			btn.addEventListener('touchend', release, { passive: false })
+			btn.addEventListener('touchcancel', release, { passive: false })
+
+			// Mouse events
+			btn.addEventListener('mousedown', press)
+			btn.addEventListener('mouseup', release)
+			btn.addEventListener('mouseleave', release)
+
+			// Click fallback
+			btn.addEventListener('click', (e) => {
+				e.preventDefault()
+				e.stopPropagation()
+				if (!isPressed && typeof onStart === 'function') {
+					onStart()
+				}
+			})
+		}
+
+		dpadButtons.forEach((btn) => {
+			const key = btn.dataset.key
+			// 's' (Down) and 'd' (Right) step forward along the timeline road
+			// 'w' (Up) and 'a' (Left) step backward along the timeline road
+			const isForward = key === 's' || key === 'd'
+			const stepSize = isForward ? 0.025 : -0.025
+			const holdSpeed = isForward ? 0.0035 : -0.0035
+
+			bindControl(
+				btn,
+				() => this.stepProgress(stepSize),
+				() => this.stepProgress(holdSpeed)
+			)
 		})
 
-		const actionBtn = document.querySelector('.lyf-action-button')
-		if (actionBtn)
-			actionBtn.addEventListener('touchstart', () => {
-				this.scrollProgress = 0
-				this.isManualControl = false
-				this.worldOffset = { x: this.path[0].x, y: this.path[0].y }
-				this.updateLocationText(0)
-			})
+		if (actionBtn) {
+			bindControl(
+				actionBtn,
+				() => this.jumpToNextMilestone(),
+				null
+			)
+		}
 	}
 
 	shouldHandleScroll(newProgress) {
