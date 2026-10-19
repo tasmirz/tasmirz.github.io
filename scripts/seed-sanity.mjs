@@ -51,6 +51,20 @@ const mutations = [
   // Projects
   {
     createOrReplace: {
+      _id: 'project-cse3200',
+      _type: 'project',
+      name: 'project-3200',
+      title: 'Vehicle Telemetry Platform (Project 3200)',
+      description: 'Enterprise fleet intelligence & automotive telemetry platform with ESP32 firmware, ThingsBoard MQTT, Apache Kafka, QuestDB, and real-time operations dashboard.',
+      languages: ['Go', 'TypeScript', 'Next.js', 'Kafka', 'ESP32', 'QuestDB'],
+      imageUrl: 'assets/projects/project-3200.png',
+      githubUrl: 'https://github.com/cse3200/root',
+      status: 'completed',
+      order: 1
+    }
+  },
+  {
+    createOrReplace: {
       _id: 'project-jagoo-bahee',
       _type: 'project',
       name: 'jagoo-bahee',
@@ -60,7 +74,7 @@ const mutations = [
       imageUrl: 'assets/projects/jagoo-bahee.svg',
       githubUrl: 'https://github.com/tasmirz/jagoo-bahee',
       status: 'completed',
-      order: 1
+      order: 2
     }
   },
   {
@@ -74,7 +88,7 @@ const mutations = [
       imageUrl: 'assets/projects/computer.png',
       githubUrl: 'https://github.com/tasmirz/Computer',
       status: 'completed',
-      order: 2
+      order: 3
     }
   },
   {
@@ -88,7 +102,7 @@ const mutations = [
       imageUrl: 'assets/projects/terra.png',
       githubUrl: 'https://github.com/tasmirz/Terra',
       status: 'completed',
-      order: 3
+      order: 4
     }
   },
   {
@@ -102,7 +116,7 @@ const mutations = [
       imageUrl: 'assets/projects/eyewear.svg',
       githubUrl: 'https://github.com/tasmirz/EyeWear',
       status: 'completed',
-      order: 3
+      order: 5
     }
   },
   {
@@ -113,10 +127,10 @@ const mutations = [
       title: 'lumina',
       description: 'Modern Android EPUB reader built with Kotlin, featuring fluid typography and reflowable rendering.',
       languages: ['Kotlin', 'Android'],
-      imageUrl: 'assets/projects/lumina.svg',
+      imageUrl: 'assets/projects/lumina.png',
       githubUrl: 'https://github.com/tasmirz/lumina',
       status: 'completed',
-      order: 4
+      order: 6
     }
   },
   {
@@ -127,24 +141,10 @@ const mutations = [
       title: 'Chirkut',
       description: 'End-to-end encrypted anonymous messaging application with zero-knowledge verification.',
       languages: ['Java', 'Cryptography'],
-      imageUrl: 'assets/projects/chirkut.svg',
+      imageUrl: 'assets/projects/chirkut.png',
       githubUrl: 'https://github.com/tasmirz/Chirkut',
       status: 'completed',
-      order: 5
-    }
-  },
-  {
-    createOrReplace: {
-      _id: 'project-cse3200',
-      _type: 'project',
-      name: 'cse3200',
-      title: 'cse3200 Organization',
-      description: 'Academic systems engineering and advanced computing organization focusing on OS kernels, concurrency, and hardware integration.',
-      languages: ['C++', 'C', 'Systems'],
-      imageUrl: 'assets/projects/cse3200.svg',
-      githubUrl: 'https://github.com/cse3200',
-      status: 'completed',
-      order: 6
+      order: 7
     }
   },
   // Skill Categories

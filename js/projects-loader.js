@@ -109,16 +109,16 @@ class ProjectsLoader extends BaseSingleton {
 			}
 
 			this.renderProjects(projects)
-			window.addEventListener('scroll', () => {
+			const updateCards = () => {
 				const projectCards = document.querySelectorAll('.project-card')
-				projectCards.forEach((card, i) => {
+				projectCards.forEach((card) => {
 					const rect = card.getBoundingClientRect()
 					const scrollProgress =
 						Math.min(
 							Math.max(0, window.innerHeight * 1.1 - rect.top),
 							rect.height
 						) / rect.height
-					const mappedProgress = 0.4 + 0.6 * scrollProgress
+					const mappedProgress = Math.min(1, Math.max(0, 0.4 + 0.6 * scrollProgress))
 					card.style.transform = `translate(${
 						window.innerWidth * (1 - mappedProgress)
 					}px, ${
@@ -127,7 +127,9 @@ class ProjectsLoader extends BaseSingleton {
 					card.style.opacity = `${mappedProgress}`
 					card.style.filter = `blur(${50 * (1 - mappedProgress)}px)`
 				})
-			})
+			}
+			window.addEventListener('scroll', updateCards)
+			requestAnimationFrame(updateCards)
 			const items = document.querySelectorAll('.project-card')
 			const observer = new IntersectionObserver(
 				(entries) => {

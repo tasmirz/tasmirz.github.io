@@ -457,10 +457,12 @@ p {
 
 .project-image {
 	width: 100%;
+	aspect-ratio: 16 / 9;
 	overflow: hidden;
 	border-radius: var(--border-radius-md);
 	margin-bottom: var(--spacing-md);
 	position: relative;
+	background: rgba(var(--color-bg-rgb), 0.6);
 }
 
 .project-image img {
