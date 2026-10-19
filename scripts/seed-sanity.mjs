@@ -144,7 +144,7 @@ const mutations = [
       title: 'Chirkut',
       description: 'End-to-end encrypted anonymous messaging application with zero-knowledge verification.',
       languages: ['Java', 'Cryptography'],
-      imageUrl: 'assets/projects/chirkut.png',
+      imageUrl: 'assets/projects/chirkut.svg',
       githubUrl: 'https://github.com/tasmirz/Chirkut',
       status: 'completed',
       order: 7

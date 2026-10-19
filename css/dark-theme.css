@@ -13,8 +13,8 @@
 	--color-primary-darker: #665c54;
 	--color-primary-light: #a89984;
 	--color-primary-lighter: #bdae93;
-	--color-highlight-bg:pink;
-  --color-highlight-border: #bdae93;
+	--color-highlight-bg: pink;
+	--color-highlight-border: #bdae93;
 
 	/* Text variations */
 	--color-text-light: #a89984;
@@ -32,4 +32,42 @@
 	--shadow-small: 0 2px 4px rgba(0, 0, 0, 0.3);
 	--shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.3);
 	--lyf-filter: sepia(.8) brightness(.5);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		/* Base colors */
+		--color-bg: #282828;
+		--color-bg-rgb: 40, 40, 40;
+		--color-bg-secondary: #3c3836;
+		--color-text: #ebdbb2;
+		--color-nav-text: #d5c4a1;
+		--color-accent: #a89984;
+
+		/* Primary palette */
+		--color-primary: #928374;
+		--color-primary-dark: #7c6f64;
+		--color-primary-darker: #665c54;
+		--color-primary-light: #a89984;
+		--color-primary-lighter: #bdae93;
+		--color-highlight-bg: pink;
+		--color-highlight-border: #bdae93;
+
+		/* Text variations */
+		--color-text-light: #a89984;
+		--color-text-secondary: #928374;
+
+		/* Border colors */
+		--color-border: rgba(189, 174, 147, 0.4);
+
+		/* UI elements */
+		--color-button-bg: var(--color-primary-dark);
+		--color-button-text: var(--color-bg);
+		--color-button-hover: var(--color-primary-darker);
+
+		/* Effects */
+		--shadow-small: 0 2px 4px rgba(0, 0, 0, 0.3);
+		--shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.3);
+		--lyf-filter: sepia(.8) brightness(.5);
+	}
 }

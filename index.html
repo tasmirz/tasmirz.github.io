@@ -81,6 +81,17 @@
 			]
 		}
 		</script>
+		<!-- Instant theme pre-initialization (prevents flash of light mode on cold load) -->
+		<script>
+			(function() {
+				try {
+					var saved = localStorage.getItem('theme');
+					var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+					var isDark = saved ? (saved === 'dark') : prefersDark;
+					document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+				} catch (e) {}
+			})();
+		</script>
 
 		<!-- Base styles first -->
 		<link rel="stylesheet" href="css/base.css" />
@@ -125,10 +136,10 @@
 		<main>
 			<section id="welcome">
 				<div class="welcome-content">
-					<h1><span id="typewriter" class="typewriter">Tasmir Hossain Zihad</span></h1>
-					<div class="subtitle">Full-Stack Developer &amp; Systems Engineer</div>
+					<h1><span id="typewriter" class="typewriter"></span></h1>
+					<div class="subtitle"></div>
 					<div class="contact-info">
-						<a href="mailto:tasmirz@tuta.io" class="email-text">tasmirz@tuta.io</a>
+						<a href="#" class="email-text"></a>
 					</div>
 					<div class="social-icons">
 						<a href="https://github.com/tasmirz" target="_blank" class="social-btn github">
@@ -144,7 +155,7 @@
 				<h2>About Me</h2>
 				<div class="about-container">
 					<div class="about-content">
-						<div class="about-text">I am a Computer Science and Engineering student at KUET passionate about full-stack development, systems design, and AI tooling.</div>
+						<div class="about-text"></div>
 						<div class="skills-section">
 						</div>
 					</div>

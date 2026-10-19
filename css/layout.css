@@ -791,8 +791,8 @@ p {
 	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
-	justify-content: flex-start;
-	align-items: flex-start;
+	justify-content: center;
+	align-items: center;
 }
 
 .lyf-container {
@@ -800,6 +800,7 @@ p {
 	display: flex;
 	flex-direction: column;
 	gap: var(--spacing-md);
+	align-items: center;
 }
 
 .lyf-location-indicator {
@@ -1323,34 +1324,26 @@ body {
 
 /* === TREE BACKGROUND VIDEO === */
 #tree-bg-video {
+	video {
+		width: 100vw;
+	}
+	z-index: -1;
+	mix-blend-mode: multiply !important;
 	position: fixed;
 	bottom: 0px;
 	right: 0px;
-	width: 100vw;
-	max-width: 100%;
-	z-index: -1;
-	pointer-events: none;
-	mix-blend-mode: multiply !important;
 	transition: filter 0.3s ease;
+	video {
+		transform: scaleX(-1);
+	}
+	canvas {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}
 	animation: from50to100 3s ease forwards;
-}
-
-#tree-bg-video video {
-	display: block;
-	width: 100vw;
-	max-width: 100%;
-	height: auto;
-	transform: scaleX(-1);
-	pointer-events: none;
-}
-
-#tree-bg-video canvas {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	pointer-events: none;
 }
 
 header {

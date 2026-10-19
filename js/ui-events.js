@@ -7,9 +7,11 @@ export const initThemeToggle = () => {
 
 	const setTheme = (theme) => {
 		if (theme === 'dark') {
+			document.documentElement.setAttribute('data-theme', 'dark')
 			document.body.setAttribute('data-theme', 'dark')
 			themeIcon.textContent = 'dark_mode'
 		} else {
+			document.documentElement.setAttribute('data-theme', 'light')
 			document.body.removeAttribute('data-theme')
 			themeIcon.textContent = 'light_mode'
 		}
@@ -19,8 +21,15 @@ export const initThemeToggle = () => {
 	const savedTheme = localStorage.getItem('theme')
 	setTheme(savedTheme || (prefersDark ? 'dark' : 'light'))
 
+	// Respect live device theme changes if user hasn't explicitly set a preference
+	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+		if (!localStorage.getItem('theme')) {
+			setTheme(e.matches ? 'dark' : 'light')
+		}
+	})
+
 	themeToggle.addEventListener('click', () => {
-		const isDark = document.body.getAttribute('data-theme') === 'dark'
+		const isDark = document.documentElement.getAttribute('data-theme') === 'dark' || document.body.getAttribute('data-theme') === 'dark'
 		setTheme(isDark ? 'light' : 'dark')
 	})
 }
