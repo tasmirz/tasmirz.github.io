@@ -27,25 +27,6 @@ export function setupVideoLoop() {
 	video.loop = false
 	video.removeAttribute('loop')
 
-	// Preload into in-memory Blob to guarantee exact zero-latency seeking in all browser engines
-	const originalSrc = video.src || video.currentSrc || 'assets/tree_bg.webm'
-	fetch(originalSrc)
-		.then(res => res.blob())
-		.then(blob => {
-			const savedTime = video.currentTime
-			const wasPlaying = !video.paused
-			const blobUrl = URL.createObjectURL(blob)
-			video.src = blobUrl
-			video.playbackRate = 0.2
-			if (savedTime > 0) {
-				video.currentTime = savedTime
-			}
-			if (wasPlaying) {
-				video.play().catch(() => {})
-			}
-		})
-		.catch(() => {})
-
 	video.play().catch(() => {})
 
 	const loopLastFrames = () => {
