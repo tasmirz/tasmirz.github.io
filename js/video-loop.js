@@ -1,10 +1,22 @@
+let isVideoLoopInitialized = false
+
 export function setupVideoLoop() {
+	if (isVideoLoopInitialized) return
+	isVideoLoopInitialized = true
+
 	const container = document.querySelector('#tree-bg-video')
 	if (!container) return
 	const video = container.querySelector('video')
 	if (!video) return
 
 	let hasBloomed = false
+
+	const notifyBloomComplete = () => {
+		if (hasBloomed) return
+		hasBloomed = true
+		window.__treeBloomComplete = true
+		window.dispatchEvent(new CustomEvent('treeBloomComplete'))
+	}
 
 	video.playbackRate = 0.2
 	video.muted = true
@@ -14,7 +26,7 @@ export function setupVideoLoop() {
 	video.play().catch(() => {})
 
 	const loopLastFrames = () => {
-		hasBloomed = true
+		notifyBloomComplete()
 		video.currentTime = 0.514
 		video.play().catch(() => {})
 	}
@@ -29,6 +41,11 @@ export function setupVideoLoop() {
 			video.play().catch(() => {})
 		}
 	})
+
+	// Fallback in case video fails to autoplay or load
+	setTimeout(() => {
+		notifyBloomComplete()
+	}, 3500)
 
 	const unlock = () => {
 		video.playbackRate = 0.2

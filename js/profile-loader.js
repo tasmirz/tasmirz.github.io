@@ -128,21 +128,57 @@ class ProfileLoader extends BaseSingleton {
 			return
 		}
 
-		const texts = profileData?.typewriterTexts || ['Tasmir Hossain Zihad']
+		const fullName =
+			profileData?.name ||
+			profileData?.typewriterTexts?.[0] ||
+			'Tasmir Hossain Zihad'
 
-		if (!texts || texts.length === 0) {
-			console.warn('No typewriter texts available')
-			typewriterElement.textContent = 'Tasmir Hossain Zihad'
+		// If typewriter already exists, update text
+		if (typewriterElement.typewriterInstance) {
+			typewriterElement.typewriterInstance.text = fullName
 			return
 		}
 
-		const typewriter = new TypeWriter(typewriterElement, texts, {
-			typingDelay: 100,
-			pauseBeforeDelete: 5000,
-			loop: true
+		const typewriter = new TypeWriter(typewriterElement, fullName, {
+			typingDelay: 90,
+			autoStart: false
 		})
 
 		typewriterElement.typewriterInstance = typewriter
+
+		// Start typing once the background tree loading animation finishes
+		const startTyping = () => {
+			typewriter.typeFromStart()
+		}
+
+		if (window.__treeBloomComplete) {
+			startTyping()
+		} else {
+			window.addEventListener('treeBloomComplete', startTyping, { once: true })
+			// Fallback timer if bloom event didn't fire
+			setTimeout(() => {
+				if (typewriter.currentCharIndex === 0) {
+					startTyping()
+				}
+			}, 3500)
+		}
+
+		// Detect when user returns to top section and type full name from start immediately
+		let wasAwayFromTop = false
+		window.addEventListener(
+			'scroll',
+			() => {
+				const scrollY =
+					window.pageYOffset || document.documentElement.scrollTop
+				if (scrollY > 200) {
+					wasAwayFromTop = true
+				} else if (scrollY < 40 && wasAwayFromTop) {
+					wasAwayFromTop = false
+					typewriter.typeFromStart()
+				}
+			},
+			{ passive: true }
+		)
 	}
 
 	showState(type, message) {

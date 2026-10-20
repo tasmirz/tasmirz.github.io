@@ -1,51 +1,62 @@
 export default class TypeWriter {
-	constructor(element, texts, options = {}) {
+	constructor(element, text, options = {}) {
 		this.element = element
-		this.texts = texts
-		this.currentTextIndex = 0
+		this.text =
+			typeof text === 'string'
+				? text
+				: Array.isArray(text) && text.length > 0
+				? text[0]
+				: 'Tasmir Hossain Zihad'
 		this.currentCharIndex = 0
-		this.isDeleting = false
+		this.timeoutId = null
 		this.options = {
-			typingDelay: options.typingSpeed || 100,
-			deletingDelay: options.deletingSpeed || 50,
-			pauseBeforeDelete: options.pauseBeforeDelete || 2000,
-			pauseBeforeType: options.pauseBeforeType || 500,
-			loop: options.loop !== undefined ? options.loop : true
+			typingDelay: options.typingDelay || options.typingSpeed || 90,
+			autoStart: options.autoStart !== undefined ? options.autoStart : false
 		}
-		this.startTyping()
+
+		if (this.options.autoStart) {
+			this.typeFromStart()
+		} else {
+			this.render()
+		}
 	}
 
-	startTyping() {
-		const currentText = this.texts[this.currentTextIndex]
-		const typingDelay = this.isDeleting
-			? this.options.deletingDelay
-			: this.options.typingDelay
-
-		if (this.isDeleting) {
-			this.currentCharIndex--
-		} else {
-			this.currentCharIndex++
+	typeFromStart() {
+		if (this.timeoutId) {
+			clearTimeout(this.timeoutId)
+			this.timeoutId = null
 		}
+		this.currentCharIndex = 0
+		this.render()
+		this.step()
+	}
 
-		this.element.innerHTML = `${currentText.substring(
-			0,
-			this.currentCharIndex
-		)}<span class="cursor">|</span>` // the last | cursor
+	step() {
+		if (this.currentCharIndex < this.text.length) {
+			this.currentCharIndex++
+			this.render()
+			this.timeoutId = setTimeout(() => this.step(), this.options.typingDelay)
+		}
+	}
 
-		if (!this.isDeleting && this.currentCharIndex === currentText.length) {
-			//reached end
-			this.isDeleting = true
-			setTimeout(() => this.startTyping(), this.options.pauseBeforeDelete)
-		} else if (this.isDeleting && this.currentCharIndex === 0) {
-			this.isDeleting = false
-			this.currentTextIndex = (this.currentTextIndex + 1) % this.texts.length
+	render() {
+		const visibleText = this.text.substring(0, this.currentCharIndex)
+		this.element.innerHTML = `${visibleText}<span class="cursor">|</span>`
+	}
 
-			if (!this.options.loop && this.currentTextIndex === 0) {
-				return
-			}
-			setTimeout(() => this.startTyping(), this.options.pauseBeforeType)
-		} else {
-			setTimeout(() => this.startTyping(), typingDelay)
+	showFull() {
+		if (this.timeoutId) {
+			clearTimeout(this.timeoutId)
+			this.timeoutId = null
+		}
+		this.currentCharIndex = this.text.length
+		this.render()
+	}
+
+	destroy() {
+		if (this.timeoutId) {
+			clearTimeout(this.timeoutId)
+			this.timeoutId = null
 		}
 	}
 }
