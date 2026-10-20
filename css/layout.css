@@ -1325,17 +1325,14 @@ body {
 /* === TREE BACKGROUND VIDEO === */
 #tree-bg-video {
 	video {
-		width: auto;
-		max-width: 100vw;
-		max-height: 90vh;
-		height: auto;
-		display: block;
+		width: 100vw;
 	}
 	z-index: -1;
 	mix-blend-mode: multiply !important;
 	position: fixed;
 	bottom: 0px;
 	right: 0px;
+	transform-origin: bottom right;
 	transition: filter 0.3s ease;
 	video {
 		transform: scaleX(-1);
