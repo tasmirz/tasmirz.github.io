@@ -22,7 +22,6 @@
 	
 	body {
 		background-color: var(--color-bg) !important;
-		overflow-x: hidden;
 		display: block !important;
 	}
 	
@@ -289,15 +288,17 @@
 	}
 	
 	.projects-sticky-frame {
-		padding-top: 56px;
+		position: sticky;
+		top: 60px;
+		height: calc(100vh - 60px);
+		height: calc(100dvh - 60px);
+		padding-top: 12px;
 		padding-left: var(--section-padding-mobile);
 		padding-right: var(--section-padding-mobile);
 		padding-bottom: 12px;
-		height: 100vh;
-		height: 100dvh;
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
+		justify-content: flex-start;
 		align-items: center;
 		box-sizing: border-box;
 	}

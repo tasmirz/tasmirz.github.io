@@ -1,5 +1,5 @@
-import DataLoader from './data-loader.js'
-import BaseSingleton from './base-singleton.js'
+import DataLoader from './data-loader.js?v=20261020-2'
+import BaseSingleton from './base-singleton.js?v=20261020-2'
 
 class ProjectsLoader extends BaseSingleton {
 	constructor() {
@@ -250,19 +250,21 @@ class ProjectsLoader extends BaseSingleton {
 
 				if (totalScroll <= 0) return
 
-				const scrolled = -rect.top
+				const stickyOffset = 60
+				const scrolled = stickyOffset - rect.top
 				const p = Math.max(0, Math.min(1, scrolled / totalScroll))
 
 				// Landscape desktop: width >= 768 AND width > height
-				// Portrait: height >= width OR width < 768 OR portrait orientation
-				const isPortrait = (vh >= vw) || (vw < 768) || window.matchMedia('(orientation: portrait)').matches
+				// Portrait: any screen where height >= width, or width < 768 (mobile / tablet portrait)
+				const isLandscapeDesktop = (vw >= 768) && (vw > vh)
+				const isPortrait = !isLandscapeDesktop
 
 				const cardWidth = projectCards[0]?.offsetWidth || 520
-				const cardHeight = projectCards[0]?.offsetHeight || 360
+				const cardHeight = projectCards[0]?.offsetHeight || 300
 
 				const gapX = 32
 				const stepDistanceX = cardWidth + gapX
-				const stepDistanceY = Math.max(cardHeight + 24, vh * 0.72)
+				const stepDistanceY = Math.max(cardHeight + 20, vh * 0.65)
 
 				const rawPhase = p * (N - 1)
 				const k = Math.floor(rawPhase)
