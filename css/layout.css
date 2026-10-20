@@ -269,10 +269,6 @@ section h2 {
 	margin-bottom: var(--spacing-xl);
 }
 
-#lyf h2 {
-	margin-bottom: var(--spacing-xs);
-}
-
 h1,
 h2,
 h3,
@@ -831,29 +827,45 @@ p {
 /* === LYF SECTION === */
 
 #lyf {
+	height: 100vh;
 	min-height: 100vh;
-	padding-top: 50px;
-	padding-bottom: 20px;
+	scroll-margin-top: 0;
+	padding-top: calc(var(--header-fixed-height) + 10px);
+	padding-left: var(--section-padding-desktop);
+	padding-right: var(--section-padding-desktop);
+	padding-bottom: var(--spacing-md);
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+	box-sizing: border-box;
+	overflow: hidden;
+}
+
+#lyf h2 {
+	margin-top: 0;
+	margin-bottom: 6px;
+	align-self: flex-start;
+	flex-shrink: 0;
+}
+
+.lyf-container {
+	flex: 1;
+	width: 100%;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-}
-
-.lyf-container {
-	width: 100%;
-	max-width: min(600px, calc((100vh - 220px) * 16 / 9));
-	display: flex;
-	flex-direction: column;
-	gap: var(--spacing-sm);
-	align-items: center;
+	margin: 0 auto;
+	min-height: 0;
+	gap: 6px;
 }
 
 .lyf-location-indicator {
 	background: rgba(var(--color-bg-rgb), 0.9);
 	border: 1px solid var(--color-primary-light);
 	border-radius: var(--border-radius-md);
-	padding: 4px 12px;
+	padding: 3px 10px;
 	text-align: center;
 	backdrop-filter: blur(10px);
 	-webkit-backdrop-filter: blur(10px);
@@ -861,6 +873,7 @@ p {
 	margin: 0 auto;
 	transition: all var(--transition-normal);
 	box-shadow: 0 2px 8px rgba(var(--color-primary-rgb), 0.1);
+	flex-shrink: 0;
 }
 
 .lyf-location-indicator:hover {
@@ -871,7 +884,7 @@ p {
 
 .lyf-location-text {
 	font-family: var(--font-mono);
-	font-size: 0.9rem;
+	font-size: 0.85rem;
 	color: var(--color-primary);
 	font-weight: 500;
 	text-transform: uppercase;
@@ -885,9 +898,11 @@ p {
 	background: var(--bg-primary);
 	border-radius: 8px;
 	overflow: hidden;
-	width: 100%;
-	aspect-ratio: 16/9;
-	max-height: calc(100vh - 220px);
+	aspect-ratio: 16 / 9;
+	height: 100%;
+	max-height: calc(100vh - 160px);
+	max-width: min(850px, calc((100vh - 160px) * 16 / 9), 100%);
+	width: auto;
 	margin: 0 auto;
 }
 
