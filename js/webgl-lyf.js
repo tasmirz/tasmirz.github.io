@@ -85,13 +85,18 @@ export default class WebGLLyf {
 
 		// Game state
 		this.worldOffset = { x: -1.37, y: 0.38 }
-		this.moveSpeed = 0.002
+		this.moveSpeed = 0.003
 		this.keys = { w: false, a: false, s: false, d: false }
 		this.scrollProgress = 0 // 0 to 1, controls position along path
 		this.isScrollLocked = false
 		this.isManualControl = false
 		this.canvasInView = false
 		staticSpace.navJump = false // Track when navigation is happening
+
+		// Collision barrier
+		this.barrierData = null
+		this.barrierWidth = 0
+		this.barrierHeight = 0
 
 		// Location tracking
 		this.currentLocationIndex = 0
@@ -135,6 +140,7 @@ export default class WebGLLyf {
 			)
 
 			await this.loadTexture()
+			await this.loadBarrier()
 			this.setupQuad()
 			this.setupControls()
 			this.setupScrollLock()
@@ -156,6 +162,83 @@ export default class WebGLLyf {
 			image.onerror = () => reject(new Error('Failed to load lyf.png'))
 			image.src = './assets/lyf.png'
 		})
+	}
+
+	async loadBarrier() {
+		const img = new Image()
+		return new Promise((resolve) => {
+			img.onload = () => {
+				const canvas = document.createElement('canvas')
+				canvas.width = img.width
+				canvas.height = img.height
+				const ctx = canvas.getContext('2d', { willReadFrequently: true })
+				ctx.drawImage(img, 0, 0)
+				const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+				this.barrierData = imgData.data
+				this.barrierWidth = canvas.width
+				this.barrierHeight = canvas.height
+
+				// Clear the bridge passage in the barrier data so the bridge is walkable
+				// Bridge deck spans: px 415 to 545, py 530 to 570
+				for (let y = 530; y <= 570; y++) {
+					for (let x = 415; x <= 545; x++) {
+						const idx = (y * this.barrierWidth + x) * 4
+						this.barrierData[idx + 3] = 0 // clear alpha so bridge is unblocked
+					}
+				}
+				resolve()
+			}
+			img.onerror = (err) => {
+				console.warn('Failed to load barrier.png:', err)
+				this.barrierData = null
+				resolve()
+			}
+			img.src = './assets/barrier.png'
+		})
+	}
+
+	isBlocked(worldX, worldY, radius = 8) {
+		if (!this.barrierData) return false
+
+		// Convert worldOffset to 2000x1200 pixel coordinates:
+		// normX = 0.5 + worldX / 4.0
+		// normY = 0.5 - worldY / 4.0
+		const centerX = Math.round((0.5 + worldX / 4.0) * this.barrierWidth)
+		const centerY = Math.round((0.5 - worldY / 4.0) * this.barrierHeight)
+
+		const diagR = Math.round(radius * 0.707)
+		const sampleOffsets = [
+			[0, 0],
+			[radius, 0],
+			[-radius, 0],
+			[0, radius],
+			[0, -radius],
+			[diagR, diagR],
+			[-diagR, diagR],
+			[diagR, -diagR],
+			[-diagR, -diagR]
+		]
+
+		for (let i = 0; i < sampleOffsets.length; i++) {
+			const px = centerX + sampleOffsets[i][0]
+			const py = centerY + sampleOffsets[i][1]
+
+			if (
+				px < 0 ||
+				px >= this.barrierWidth ||
+				py < 0 ||
+				py >= this.barrierHeight
+			) {
+				return true
+			}
+
+			const alpha = this.barrierData[(py * this.barrierWidth + px) * 4 + 3]
+			if (alpha > 50) {
+				return true
+			}
+		}
+
+		return false
 	}
 
 	setupQuad() {
@@ -203,6 +286,7 @@ export default class WebGLLyf {
 			target = namedMilestones[0]
 		}
 
+		this.isManualControl = false
 		this.animateProgressTo(target.progress)
 	}
 
@@ -242,11 +326,23 @@ export default class WebGLLyf {
 			if (!e) return
 
 			const key = (e.key || '').toLowerCase()
-			if (key === 'arrowdown' || key === 's' || key === 'arrowright' || key === 'd') {
-				if (pressed) this.stepProgress(0.02)
-				e.preventDefault()
-			} else if (key === 'arrowup' || key === 'w' || key === 'arrowleft' || key === 'a') {
-				if (pressed) this.stepProgress(-0.02)
+			let dir = null
+			if (key === 'w' || key === 'arrowup') dir = 'w'
+			else if (key === 's' || key === 'arrowdown') dir = 's'
+			else if (key === 'a' || key === 'arrowleft') dir = 'a'
+			else if (key === 'd' || key === 'arrowright') dir = 'd'
+
+			if (dir) {
+				this.keys[dir] = pressed
+				if (pressed) {
+					this.isManualControl = true
+					this.lockGlobalScroll()
+				} else {
+					const anyPressed = Object.values(this.keys).some(Boolean)
+					if (!anyPressed) {
+						this.isManualControl = false
+					}
+				}
 				e.preventDefault()
 			} else if ((key === ' ' || key === 'enter') && pressed) {
 				this.jumpToNextMilestone()
@@ -287,10 +383,8 @@ export default class WebGLLyf {
 		const dpadButtons = document.querySelectorAll('.lyf-dpad-button')
 		const actionBtn = document.querySelector('.lyf-action-button')
 
-		const bindControl = (btn, onStart, onTick) => {
+		const bindControl = (btn, onPress, onRelease) => {
 			let isPressed = false
-			let holdInterval = null
-			let holdTimeout = null
 
 			const press = (e) => {
 				if (e) {
@@ -300,65 +394,49 @@ export default class WebGLLyf {
 				if (isPressed) return
 				isPressed = true
 				btn.classList.add('is-pressed')
-
-				if (typeof onStart === 'function') onStart()
-
-				if (typeof onTick === 'function') {
-					holdTimeout = setTimeout(() => {
-						holdInterval = setInterval(onTick, 35)
-					}, 220)
-				}
+				if (typeof onPress === 'function') onPress()
 			}
 
 			const release = (e) => {
 				if (!isPressed) return
 				isPressed = false
 				btn.classList.remove('is-pressed')
-				if (holdTimeout) clearTimeout(holdTimeout)
-				if (holdInterval) clearInterval(holdInterval)
-				holdTimeout = null
-				holdInterval = null
+				if (typeof onRelease === 'function') onRelease()
 			}
 
-			// Pointer events
 			btn.addEventListener('pointerdown', press)
 			btn.addEventListener('pointerup', release)
 			btn.addEventListener('pointercancel', release)
 			btn.addEventListener('pointerleave', release)
 
-			// Touch events
 			btn.addEventListener('touchstart', press, { passive: false })
 			btn.addEventListener('touchend', release, { passive: false })
 			btn.addEventListener('touchcancel', release, { passive: false })
 
-			// Mouse events
 			btn.addEventListener('mousedown', press)
 			btn.addEventListener('mouseup', release)
 			btn.addEventListener('mouseleave', release)
-
-			// Click fallback
-			btn.addEventListener('click', (e) => {
-				e.preventDefault()
-				e.stopPropagation()
-				if (!isPressed && typeof onStart === 'function') {
-					onStart()
-				}
-			})
 		}
 
 		dpadButtons.forEach((btn) => {
 			const key = btn.dataset.key
-			// 's' (Down) and 'd' (Right) step forward along the timeline road
-			// 'w' (Up) and 'a' (Left) step backward along the timeline road
-			const isForward = key === 's' || key === 'd'
-			const stepSize = isForward ? 0.025 : -0.025
-			const holdSpeed = isForward ? 0.0035 : -0.0035
-
-			bindControl(
-				btn,
-				() => this.stepProgress(stepSize),
-				() => this.stepProgress(holdSpeed)
-			)
+			if (key in this.keys) {
+				bindControl(
+					btn,
+					() => {
+						this.keys[key] = true
+						this.isManualControl = true
+						this.lockGlobalScroll()
+					},
+					() => {
+						this.keys[key] = false
+						const anyPressed = Object.values(this.keys).some(Boolean)
+						if (!anyPressed) {
+							this.isManualControl = false
+						}
+					}
+				)
+			}
 		})
 
 		if (actionBtn) {
@@ -458,13 +536,42 @@ export default class WebGLLyf {
 	}
 
 	updateMovement() {
-		if (this.keys.w) this.worldOffset.y += this.moveSpeed
-		if (this.keys.s) this.worldOffset.y -= this.moveSpeed
-		if (this.keys.a) this.worldOffset.x -= this.moveSpeed
-		if (this.keys.d) this.worldOffset.x += this.moveSpeed
+		let dx = 0
+		let dy = 0
+
+		if (this.keys.w) dy += this.moveSpeed
+		if (this.keys.s) dy -= this.moveSpeed
+		if (this.keys.a) dx -= this.moveSpeed
+		if (this.keys.d) dx += this.moveSpeed
+
+		if (dx === 0 && dy === 0) return
+
+		// Normalize diagonal movement speed
+		if (dx !== 0 && dy !== 0) {
+			const invSqrt2 = 0.70710678
+			dx *= invSqrt2
+			dy *= invSqrt2
+		}
+
+		const newX = this.worldOffset.x + dx
+		const newY = this.worldOffset.y + dy
+
+		if (!this.isBlocked(newX, newY)) {
+			this.worldOffset.x = newX
+			this.worldOffset.y = newY
+		} else {
+			// Slide along unblocked axis if moving diagonally or against a barrier
+			if (dx !== 0 && !this.isBlocked(newX, this.worldOffset.y)) {
+				this.worldOffset.x = newX
+			}
+			if (dy !== 0 && !this.isBlocked(this.worldOffset.x, newY)) {
+				this.worldOffset.y = newY
+			}
+		}
 
 		// Update location based on manual movement
 		this.updateLocationBasedOnPosition()
+		this.updateScrollProgressFromPosition()
 	}
 
 	updateLocationText(locationIndex) {
