@@ -1,11 +1,11 @@
-import initUI from './ui-events.js?v=20261020-2'
-import ProjectsLoader from './projects-loader.js?v=20261020-2'
-import SkillsLoader from './skills-loader.js?v=20261020-2'
-import ProfileLoader from './profile-loader.js?v=20261020-2'
-import WebGLBackground from './webgl-background.js?v=20261020-2'
-import WebGLLyf from './webgl-lyf.js?v=20261020-2'
-import { setupVideoLoop } from './video-loop.js?v=20261020-2'
-import initContactForm from './contact-form.js?v=20261020-2'
+import initUI from './ui-events.js?v=20261020-3'
+import ProjectsLoader from './projects-loader.js?v=20261020-3'
+import SkillsLoader from './skills-loader.js?v=20261020-3'
+import ProfileLoader from './profile-loader.js?v=20261020-3'
+import WebGLBackground from './webgl-background.js?v=20261020-3'
+import WebGLLyf from './webgl-lyf.js?v=20261020-3'
+import { setupVideoLoop } from './video-loop.js?v=20261020-3'
+import initContactForm from './contact-form.js?v=20261020-3'
 initUI()
 setupVideoLoop()
 
