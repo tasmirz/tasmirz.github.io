@@ -18,7 +18,6 @@ export function setupVideoLoop() {
 		window.dispatchEvent(new CustomEvent('treeBloomComplete'))
 	}
 
-	// Loop starts from Frame 16 (0.500s) where tree bloom finishes and sway frames begin
 	const LOOP_START_TIME = 0.50
 
 	video.playbackRate = 0.2
@@ -26,7 +25,6 @@ export function setupVideoLoop() {
 	video.playsInline = true
 	video.loop = false
 	video.removeAttribute('loop')
-
 	video.play().catch(() => {})
 
 	const loopLastFrames = () => {
@@ -38,24 +36,13 @@ export function setupVideoLoop() {
 	video.addEventListener('ended', loopLastFrames)
 
 	video.addEventListener('timeupdate', () => {
-		if (video.duration && video.currentTime >= video.duration - 0.015) {
-			loopLastFrames()
-		} else if (hasBloomed && video.currentTime < LOOP_START_TIME - 0.05) {
-			video.currentTime = LOOP_START_TIME
-			video.play().catch(() => {})
+		if (video.currentTime >= LOOP_START_TIME) {
+			notifyBloomComplete()
 		}
 	})
 
-	// Fallback in case video fails to autoplay or load
-	setTimeout(() => {
-		notifyBloomComplete()
-	}, 3500)
-
 	const unlock = () => {
 		video.playbackRate = 0.2
-		if (hasBloomed && video.currentTime < LOOP_START_TIME - 0.05) {
-			video.currentTime = LOOP_START_TIME
-		}
 		if (video.paused) {
 			video.play().catch(() => {})
 		}
