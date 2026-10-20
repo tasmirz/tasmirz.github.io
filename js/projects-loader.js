@@ -231,51 +231,78 @@ class ProjectsLoader extends BaseSingleton {
 
 			this.renderProjects(projects)
 
+			const projectsSection = document.getElementById('projects')
+			const projectCards = document.querySelectorAll('.project-card')
+			const N = projectCards.length
+
+			if (projectsSection && N > 0) {
+				// Height ensures comfortable scroll distance per project card
+				projectsSection.style.minHeight = `calc(100vh + ${(N - 1) * 85}vh)`
+			}
+
 			const updateCards = () => {
-				const projectCards = document.querySelectorAll('.project-card')
+				if (!projectsSection || N === 0) return
+
+				const rect = projectsSection.getBoundingClientRect()
 				const vh = window.innerHeight
-				const enterThreshold = vh * 0.45
-				const exitThreshold = vh * 0.15
+				const totalScroll = projectsSection.offsetHeight - vh
 
-				projectCards.forEach((card) => {
-					const rect = card.getBoundingClientRect()
-					let progress = 1
-					let direction = 0 // 0 = centered, 1 = right (entering), -1 = left (exiting)
+				if (totalScroll <= 0) return
 
-					if (rect.top >= enterThreshold) {
-						// Entering from right
-						const raw = (vh * 1.05 - rect.top) / (vh * 1.05 - enterThreshold)
-						progress = Math.max(0, Math.min(1, raw))
-						direction = 1
-					} else if (rect.top <= exitThreshold) {
-						// Vanishing to left
-						const exitLimit = -rect.height * 0.6
-						const raw = (rect.top - exitLimit) / (exitThreshold - exitLimit)
-						progress = Math.max(0, Math.min(1, raw))
-						direction = -1
+				const scrolled = -rect.top
+				const p = Math.max(0, Math.min(1, scrolled / totalScroll))
+				const cardWidth = projectCards[0]?.offsetWidth || 520
+				const gap = 32 // tight, intentional horizontal gap between cards
+				const stepDistance = cardWidth + gap
+
+				const rawPhase = p * (N - 1)
+				const k = Math.floor(rawPhase)
+				const frac = rawPhase - k
+
+				// Dwell comfortably at each card, then smoothly transition to next
+				let cardPhase = rawPhase
+				if (k < N - 1) {
+					if (frac <= 0.2) {
+						cardPhase = k
+					} else if (frac >= 0.8) {
+						cardPhase = k + 1
 					} else {
-						// Centered reading area
-						progress = 1
-						direction = 0
+						const t = (frac - 0.2) / 0.6
+						const smoothT = t * t * (3 - 2 * t)
+						cardPhase = k + smoothT
 					}
+				}
 
-					// Smoothstep easing for silky acceleration and deceleration
-					const smooth = progress * progress * (3 - 2 * progress)
+				projectCards.forEach((card, i) => {
+					const diff = i - cardPhase
+					const absDiff = Math.abs(diff)
+					const translateX = diff * stepDistance
 
-					if (direction === 0 || smooth >= 0.999) {
-						card.style.transform = 'translate3d(0px, 0px, 0)'
+					if (absDiff <= 0.25) {
+						// Centered reading & interaction zone
+						card.style.transform = `translate3d(${translateX}px, 0px, 0)`
 						card.style.opacity = '1'
 						card.style.filter = 'none'
 						card.style.pointerEvents = 'auto'
-					} else {
-						const distance = window.innerWidth
-						const translateX = direction * distance * (1 - smooth)
-						const opacity = smooth
-						const blur = 25 * (1 - smooth)
+						card.style.zIndex = '5'
+					} else if (absDiff <= 1.25) {
+						// Adjacent cards coming / going with little gap
+						const fade = Math.min(1, (absDiff - 0.25) / 1.0)
+						const opacity = 1 - 0.55 * fade
+						const blur = 8 * fade
+
 						card.style.transform = `translate3d(${translateX}px, 0px, 0)`
 						card.style.opacity = `${opacity}`
-						card.style.filter = blur > 0.2 ? `blur(${blur}px)` : 'none'
-						card.style.pointerEvents = smooth < 0.2 ? 'none' : 'auto'
+						card.style.filter = blur > 0.5 ? `blur(${blur}px)` : 'none'
+						card.style.pointerEvents = 'none'
+						card.style.zIndex = '3'
+					} else {
+						// Beyond adjacent cards
+						card.style.transform = `translate3d(${translateX}px, 0px, 0)`
+						card.style.opacity = '0'
+						card.style.filter = 'blur(20px)'
+						card.style.pointerEvents = 'none'
+						card.style.zIndex = '1'
 					}
 				})
 			}

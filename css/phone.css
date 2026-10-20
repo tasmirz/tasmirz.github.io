@@ -285,20 +285,24 @@
 	
 	/* Projects section mobile */
 	#projects {
+		padding: 0;
+	}
+	
+	.projects-sticky-frame {
+		padding-top: var(--section-padding-top);
+		padding-left: var(--section-padding-mobile);
+		padding-right: var(--section-padding-mobile);
 	}
 	
 	#projects::after {
 		display: none; /* Hide scroll hint on mobile */
 	}
 	
-	#projects h2 {
-	}
-	
 	.projects-container {
-		display: flex;
-		flex-direction: column;
-		gap: var(--spacing-xl);
-		padding: 0 var(--spacing-sm);
+		display: grid;
+		grid-template-columns: 1fr;
+		grid-template-rows: 1fr;
+		padding: 0;
 		width: 100%;
 		max-width: 100%;
 		box-sizing: border-box;

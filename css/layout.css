@@ -415,16 +415,49 @@ p {
 /* === PROJECTS SECTION === */
 
 #projects {
+	display: block;
+	position: relative;
 	overflow-x: clip;
+	padding: 0;
+	min-height: 500vh;
+}
+
+.projects-sticky-frame {
+	position: sticky;
+	top: 0;
+	height: 100vh;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: flex-start;
+	overflow: hidden;
+	padding-top: var(--section-padding-top);
+	padding-left: var(--section-padding-desktop);
+	padding-right: var(--section-padding-desktop);
+	padding-bottom: var(--spacing-lg);
+	box-sizing: border-box;
+	z-index: 2;
+}
+
+.projects-sticky-frame h2 {
+	font-family: var(--font-primary);
+	color: var(--color-text);
+	align-self: flex-start;
+	margin-bottom: var(--spacing-md);
+	flex-shrink: 0;
 }
 
 .projects-container {
-	display: flex;
-	flex-direction: column;
-	gap: var(--spacing-xl);
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: 1fr;
+	align-items: center;
+	justify-items: flex-start;
 	max-width: 520px;
-	margin: 0 auto;
-	padding: 0 var(--spacing-lg);
+	width: 100%;
+	margin: 0;
+	padding: 0;
 	position: relative;
 	z-index: 2;
 	overflow: visible;
@@ -435,6 +468,9 @@ p {
 }
 
 .project-card {
+	grid-area: 1 / 1;
+	width: 100%;
+	box-sizing: border-box;
 	background: rgba(var(--color-bg-rgb), 0.8);
 	border: 1px solid rgba(var(--color-primary-rgb), 0.2);
 	border-radius: var(--project-border-radius);
