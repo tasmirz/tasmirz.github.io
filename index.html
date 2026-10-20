@@ -85,10 +85,18 @@
 		<script>
 			(function() {
 				try {
+					if (!localStorage.getItem('theme_initialized_v2')) {
+						localStorage.setItem('theme', 'auto');
+						localStorage.setItem('theme_initialized_v2', 'true');
+					}
 					var saved = localStorage.getItem('theme');
 					var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-					var isDark = saved ? (saved === 'dark') : prefersDark;
+					var isDark = (saved === 'dark') || ((!saved || saved === 'auto') && prefersDark);
 					document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+					if (document.body) {
+						if (isDark) document.body.setAttribute('data-theme', 'dark');
+						else document.body.removeAttribute('data-theme');
+					}
 				} catch (e) {}
 			})();
 		</script>
@@ -122,8 +130,8 @@
 				</ul>
 			</nav>
 			<div class="header-buttons">
-				<button class="theme-toggle" id="theme-toggle">
-					<span class="material-icons" id="theme-icon">light_mode</span>
+				<button class="theme-toggle" id="theme-toggle" title="Theme: Auto - click to change" aria-label="Theme: Auto">
+					<span class="material-icons" id="theme-icon">brightness_auto</span>
 				</button>
 				<button class="hamburger-menu" id="hamburger-menu">
 					<span class="material-icons" id="menu-icon">menu</span>

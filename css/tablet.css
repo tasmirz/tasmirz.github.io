@@ -93,9 +93,26 @@
 	}
 	
 	.projects-sticky-frame {
-		padding-top: var(--section-padding-top);
+		padding-top: calc(var(--spacing-xl) + 16px);
 		padding-left: var(--section-padding-tablet);
-		padding-right: 5%;
+		padding-right: var(--section-padding-tablet);
+		padding-bottom: var(--spacing-md);
+		height: 100vh;
+		height: 100dvh;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		box-sizing: border-box;
+	}
+
+	.projects-sticky-frame h2 {
+		width: 100%;
+		max-width: 580px;
+		margin-left: auto;
+		margin-right: auto;
+		margin-bottom: 10px;
+		font-size: 1.6rem;
 	}
 	
 	.projects-container {
@@ -103,11 +120,13 @@
 		grid-template-columns: 1fr;
 		grid-template-rows: 1fr;
 		width: 100%;
-		max-width: 640px;
-		margin: 0;
+		max-width: 580px;
+		margin: 0 auto;
 		padding: 0;
 		box-sizing: border-box;
 		overflow: visible;
+		justify-items: center;
+		align-items: center;
 	}
 	
 	.project-card {
@@ -115,14 +134,15 @@
 		width: 100% !important;
 		max-width: 100% !important;
 		height: auto !important;
-		min-height: auto !important;
-		max-height: none !important;
+		max-height: calc(100dvh - 130px) !important;
 		border-radius: 16px;
-		padding: var(--spacing-md);
+		padding: 14px 18px !important;
 		box-sizing: border-box;
-		background: rgba(var(--color-bg-rgb), 0.7);
+		background: rgba(var(--color-bg-rgb), 0.85);
 		box-shadow: var(--shadow-small);
 		transition: transform 200ms ease, box-shadow 200ms ease;
+		overflow: hidden;
+		display: flex;
 	}
 	
 	.project-card:nth-child(even) {
@@ -131,13 +151,29 @@
 	
 	.project-image,
 	.project-image-carousel {
-		flex: none;
+		flex: 0 0 auto;
 		width: 100%;
 		height: auto;
+		max-height: clamp(100px, 20dvh, 160px);
 		aspect-ratio: 16 / 9;
 		overflow: hidden;
 		border-radius: 10px;
 		margin-bottom: var(--spacing-sm);
+	}
+
+	.project-content {
+		padding: 0 !important;
+		display: flex;
+		flex-direction: column;
+		min-height: 0;
+		flex: 1 1 auto;
+	}
+
+	.project-content p {
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
 	}
 	
 			/* only apply the stronger hover lift on devices that support hover */

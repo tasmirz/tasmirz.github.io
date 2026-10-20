@@ -289,9 +289,27 @@
 	}
 	
 	.projects-sticky-frame {
-		padding-top: var(--section-padding-top);
+		padding-top: 56px;
 		padding-left: var(--section-padding-mobile);
 		padding-right: var(--section-padding-mobile);
+		padding-bottom: 12px;
+		height: 100vh;
+		height: 100dvh;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		box-sizing: border-box;
+	}
+	
+	.projects-sticky-frame h2 {
+		font-size: 1.35rem;
+		margin-bottom: 8px;
+		align-self: flex-start;
+		width: 100%;
+		max-width: 420px;
+		margin-left: auto;
+		margin-right: auto;
 	}
 	
 	#projects::after {
@@ -304,9 +322,12 @@
 		grid-template-rows: 1fr;
 		padding: 0;
 		width: 100%;
-		max-width: 100%;
+		max-width: 420px;
 		box-sizing: border-box;
 		overflow: visible;
+		justify-items: center;
+		align-items: center;
+		margin: 0 auto;
 	}
 	
 	.project-card {
@@ -317,13 +338,14 @@
 		max-width: 100% !important;
 		min-width: 0 !important;
 		height: auto !important;
-		min-height: auto !important;
-		max-height: none !important;
+		max-height: calc(100dvh - 110px) !important;
 		box-sizing: border-box;
-		padding: var(--spacing-md);
-		background: rgba(var(--color-bg-rgb), 0.7);
+		padding: 10px 12px !important;
+		background: rgba(var(--color-bg-rgb), 0.85);
 		box-shadow: var(--shadow-small);
 		transition: none;
+		overflow: hidden;
+		display: flex;
 	}
 	
 	.project-card:nth-child(even) {
@@ -332,60 +354,100 @@
 	
 	@media (hover: hover) and (pointer: fine) {
 		.project-card:hover {
-			transform: translateY(-4px);
+			transform: translateY(-2px);
 		}
 	}
 	
 	.project-image,
 	.project-image-carousel {
-		flex: none;
+		flex: 0 0 auto;
 		width: 100%;
 		height: auto;
+		max-height: clamp(85px, 18dvh, 135px) !important;
 		aspect-ratio: 16 / 9;
 		overflow: hidden;
 		border-radius: 8px;
-		margin-bottom: var(--spacing-sm);
+		margin-bottom: 6px;
+	}
+
+	.carousel-btn {
+		width: 26px !important;
+		height: 26px !important;
+	}
+
+	.carousel-btn .material-icons {
+		font-size: 1rem !important;
 	}
 	
 	.project-content {
-		padding: calc(var(--spacing-md) * 0.9);
+		padding: 0 !important;
+		display: flex;
+		flex-direction: column;
+		min-height: 0;
+		flex: 1 1 auto;
+		overflow: hidden;
 	}
 	
 	.project-content h3 {
-		font-size: 1.2rem;
-		margin-bottom: var(--spacing-sm);
+		font-size: 1.02rem;
+		margin-bottom: 3px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 	
 	.project-content p {
-		font-size: 0.9rem;
-		margin-bottom: var(--spacing-md);
-		line-height: 1.6;
+		font-size: 0.8rem;
+		margin-bottom: 5px;
+		line-height: 1.32;
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
 	}
 	
 	.project-meta {
-		flex-direction: column;
-		gap: var(--spacing-sm);
+		flex-direction: row !important;
+		justify-content: space-between !important;
+		align-items: center !important;
+		margin-bottom: 5px !important;
+		gap: 6px !important;
 	}
 	
 	.project-links {
-		width: 100%;
+		width: auto !important;
+		gap: 6px;
 	}
 	
 	.project-link {
-		flex: 1;
-		justify-content: center;
-		padding: var(--spacing-sm);
-		font-size: 0.8rem;
+		flex: none;
+		padding: 2px 7px !important;
+		font-size: 0.72rem !important;
+	}
+
+	.project-link .material-icons {
+		font-size: 0.85rem !important;
 	}
 	
 	.project-status {
-		align-self: flex-start;
-		font-size: 0.75rem;
+		align-self: auto !important;
+		font-size: 0.7rem !important;
+		padding: 2px 6px !important;
+	}
+
+	.project-status .material-icons {
+		font-size: 0.85rem !important;
 	}
 	
+	.project-technologies {
+		padding-top: 3px !important;
+		margin-top: auto !important;
+		gap: 4px !important;
+	}
+
 	.tech-tag {
-		font-size: 0.7rem;
-		padding: calc(var(--spacing-xs) * 0.6) var(--spacing-xs);
+		font-size: 0.65rem !important;
+		padding: 2px 5px !important;
 	}
 	
 	/* Lyf section mobile */

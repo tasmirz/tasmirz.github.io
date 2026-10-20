@@ -245,15 +245,24 @@ class ProjectsLoader extends BaseSingleton {
 
 				const rect = projectsSection.getBoundingClientRect()
 				const vh = window.innerHeight
+				const vw = window.innerWidth
 				const totalScroll = projectsSection.offsetHeight - vh
 
 				if (totalScroll <= 0) return
 
 				const scrolled = -rect.top
 				const p = Math.max(0, Math.min(1, scrolled / totalScroll))
+
+				// Landscape desktop: width >= 768 AND width > height
+				// Portrait: height >= width OR width < 768 OR portrait orientation
+				const isPortrait = (vh >= vw) || (vw < 768) || window.matchMedia('(orientation: portrait)').matches
+
 				const cardWidth = projectCards[0]?.offsetWidth || 520
-				const gap = 32 // tight, intentional horizontal gap between cards
-				const stepDistance = cardWidth + gap
+				const cardHeight = projectCards[0]?.offsetHeight || 360
+
+				const gapX = 32
+				const stepDistanceX = cardWidth + gapX
+				const stepDistanceY = Math.max(cardHeight + 24, vh * 0.72)
 
 				const rawPhase = p * (N - 1)
 				const k = Math.floor(rawPhase)
@@ -276,29 +285,39 @@ class ProjectsLoader extends BaseSingleton {
 				projectCards.forEach((card, i) => {
 					const diff = i - cardPhase
 					const absDiff = Math.abs(diff)
-					const translateX = diff * stepDistance
+
+					let transform
+					if (isPortrait) {
+						// Vertical scrolling motion for portrait / mobile
+						const translateY = diff * stepDistanceY
+						transform = `translate3d(0px, ${translateY}px, 0)`
+					} else {
+						// Horizontal scrolling motion for landscape desktop
+						const translateX = diff * stepDistanceX
+						transform = `translate3d(${translateX}px, 0px, 0)`
+					}
 
 					if (absDiff <= 0.25) {
 						// Centered reading & interaction zone
-						card.style.transform = `translate3d(${translateX}px, 0px, 0)`
+						card.style.transform = transform
 						card.style.opacity = '1'
 						card.style.filter = 'none'
 						card.style.pointerEvents = 'auto'
 						card.style.zIndex = '5'
 					} else if (absDiff <= 1.25) {
-						// Adjacent cards coming / going with little gap
+						// Adjacent cards coming / going
 						const fade = Math.min(1, (absDiff - 0.25) / 1.0)
 						const opacity = 1 - 0.55 * fade
 						const blur = 8 * fade
 
-						card.style.transform = `translate3d(${translateX}px, 0px, 0)`
+						card.style.transform = transform
 						card.style.opacity = `${opacity}`
 						card.style.filter = blur > 0.5 ? `blur(${blur}px)` : 'none'
 						card.style.pointerEvents = 'none'
 						card.style.zIndex = '3'
 					} else {
 						// Beyond adjacent cards
-						card.style.transform = `translate3d(${translateX}px, 0px, 0)`
+						card.style.transform = transform
 						card.style.opacity = '0'
 						card.style.filter = 'blur(20px)'
 						card.style.pointerEvents = 'none'
@@ -308,6 +327,11 @@ class ProjectsLoader extends BaseSingleton {
 			}
 			window.addEventListener('scroll', updateCards, { passive: true })
 			window.addEventListener('resize', updateCards, { passive: true })
+			window.addEventListener('orientationchange', updateCards, { passive: true })
+			const portraitQuery = window.matchMedia('(orientation: portrait)')
+			if (portraitQuery.addEventListener) {
+				portraitQuery.addEventListener('change', updateCards)
+			}
 			requestAnimationFrame(updateCards)
 		} catch (error) {
 			this.showState('error', `Error loading projects: ${error.message}`)

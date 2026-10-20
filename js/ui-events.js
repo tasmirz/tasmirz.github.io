@@ -1,36 +1,102 @@
 export const initThemeToggle = () => {
 	const themeToggle = document.getElementById('theme-toggle')
 	const themeIcon = document.getElementById('theme-icon')
-	const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-
 	if (!themeToggle || !themeIcon) return
 
-	const setTheme = (theme) => {
-		if (theme === 'dark') {
-			document.documentElement.setAttribute('data-theme', 'dark')
-			document.body.setAttribute('data-theme', 'dark')
-			themeIcon.textContent = 'dark_mode'
-		} else {
-			document.documentElement.setAttribute('data-theme', 'light')
-			document.body.removeAttribute('data-theme')
-			themeIcon.textContent = 'light_mode'
-		}
-		localStorage.setItem('theme', theme)
+	const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+
+	// Ensure default is auto for users on first visit or migration
+	if (!localStorage.getItem('theme_initialized_v2')) {
+		localStorage.setItem('theme', 'auto')
+		localStorage.setItem('theme_initialized_v2', 'true')
 	}
 
-	const savedTheme = localStorage.getItem('theme')
-	setTheme(savedTheme || (prefersDark ? 'dark' : 'light'))
-
-	// Respect live device theme changes if user hasn't explicitly set a preference
-	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-		if (!localStorage.getItem('theme')) {
-			setTheme(e.matches ? 'dark' : 'light')
+	const getSavedMode = () => {
+		const saved = localStorage.getItem('theme')
+		if (saved === 'dark' || saved === 'light') {
+			return saved
 		}
-	})
+		return 'auto'
+	}
 
+	const updateThemeColorMeta = (isDark) => {
+		const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+		if (metaThemeColor) {
+			metaThemeColor.setAttribute('content', isDark ? '#282828' : '#fbf1c7')
+		}
+	}
+
+	const applyTheme = (mode, save = true) => {
+		const prefersDark = mediaQuery.matches
+		const effectiveTheme = mode === 'auto' ? (prefersDark ? 'dark' : 'light') : mode
+		const isDark = effectiveTheme === 'dark'
+
+		if (isDark) {
+			document.documentElement.setAttribute('data-theme', 'dark')
+			if (document.body) document.body.setAttribute('data-theme', 'dark')
+		} else {
+			document.documentElement.setAttribute('data-theme', 'light')
+			if (document.body) document.body.removeAttribute('data-theme')
+		}
+
+		updateThemeColorMeta(isDark)
+
+		if (mode === 'auto') {
+			themeIcon.textContent = 'brightness_auto'
+			const label = `Theme: Auto (${effectiveTheme})`
+			themeToggle.setAttribute('title', `${label} - click to change`)
+			themeToggle.setAttribute('aria-label', label)
+		} else if (mode === 'dark') {
+			themeIcon.textContent = 'dark_mode'
+			const label = 'Theme: Dark'
+			themeToggle.setAttribute('title', `${label} - click to change`)
+			themeToggle.setAttribute('aria-label', label)
+		} else {
+			themeIcon.textContent = 'light_mode'
+			const label = 'Theme: Light'
+			themeToggle.setAttribute('title', `${label} - click to change`)
+			themeToggle.setAttribute('aria-label', label)
+		}
+
+		if (save) {
+			localStorage.setItem('theme', mode)
+		}
+	}
+
+	// Apply current mode without re-saving
+	applyTheme(getSavedMode(), false)
+
+	// Instantly update when system theme changes if in auto mode
+	const handleSystemThemeChange = () => {
+		if (getSavedMode() === 'auto') {
+			applyTheme('auto', false)
+		}
+	}
+
+	if (mediaQuery.addEventListener) {
+		mediaQuery.addEventListener('change', handleSystemThemeChange)
+	} else if (mediaQuery.addListener) {
+		mediaQuery.addListener(handleSystemThemeChange)
+	}
+
+	// Cycle through auto -> opposite of system -> system -> auto
 	themeToggle.addEventListener('click', () => {
-		const isDark = document.documentElement.getAttribute('data-theme') === 'dark' || document.body.getAttribute('data-theme') === 'dark'
-		setTheme(isDark ? 'light' : 'dark')
+		const prefersDark = mediaQuery.matches
+		const currentMode = getSavedMode()
+		let nextMode
+
+		if (currentMode === 'auto') {
+			// Switch to opposite of system theme for instant visual feedback
+			nextMode = prefersDark ? 'light' : 'dark'
+		} else if (currentMode === (prefersDark ? 'light' : 'dark')) {
+			// Switch to same as system theme
+			nextMode = prefersDark ? 'dark' : 'light'
+		} else {
+			// Cycle back to auto
+			nextMode = 'auto'
+		}
+
+		applyTheme(nextMode, true)
 	})
 }
 
