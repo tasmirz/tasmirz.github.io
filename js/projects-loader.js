@@ -233,25 +233,54 @@ class ProjectsLoader extends BaseSingleton {
 
 			const updateCards = () => {
 				const projectCards = document.querySelectorAll('.project-card')
+				const vh = window.innerHeight
+				const enterThreshold = vh * 0.45
+				const exitThreshold = vh * 0.15
+
 				projectCards.forEach((card) => {
 					const rect = card.getBoundingClientRect()
-					const scrollProgress =
-						Math.min(
-							Math.max(0, window.innerHeight * 1.1 - rect.top),
-							rect.height
-						) / rect.height
-					const mappedProgress = Math.min(
-						1,
-						Math.max(0.4, 0.4 + 0.6 * scrollProgress)
-					)
-					card.style.transform = `translate(${
-						window.innerWidth * (1 - mappedProgress)
-					}px, 0px) scale(${mappedProgress})`
-					card.style.opacity = `${mappedProgress}`
-					card.style.filter = `blur(${50 * (1 - mappedProgress)}px)`
+					let progress = 1
+					let direction = 0 // 0 = centered, 1 = right (entering), -1 = left (exiting)
+
+					if (rect.top >= enterThreshold) {
+						// Entering from right
+						const raw = (vh * 1.05 - rect.top) / (vh * 1.05 - enterThreshold)
+						progress = Math.max(0, Math.min(1, raw))
+						direction = 1
+					} else if (rect.top <= exitThreshold) {
+						// Vanishing to left
+						const exitLimit = -rect.height * 0.6
+						const raw = (rect.top - exitLimit) / (exitThreshold - exitLimit)
+						progress = Math.max(0, Math.min(1, raw))
+						direction = -1
+					} else {
+						// Centered reading area
+						progress = 1
+						direction = 0
+					}
+
+					// Smoothstep easing for silky acceleration and deceleration
+					const smooth = progress * progress * (3 - 2 * progress)
+
+					if (direction === 0 || smooth >= 0.999) {
+						card.style.transform = 'translate3d(0px, 0px, 0)'
+						card.style.opacity = '1'
+						card.style.filter = 'none'
+						card.style.pointerEvents = 'auto'
+					} else {
+						const distance = window.innerWidth
+						const translateX = direction * distance * (1 - smooth)
+						const opacity = smooth
+						const blur = 25 * (1 - smooth)
+						card.style.transform = `translate3d(${translateX}px, 0px, 0)`
+						card.style.opacity = `${opacity}`
+						card.style.filter = blur > 0.2 ? `blur(${blur}px)` : 'none'
+						card.style.pointerEvents = smooth < 0.2 ? 'none' : 'auto'
+					}
 				})
 			}
 			window.addEventListener('scroll', updateCards, { passive: true })
+			window.addEventListener('resize', updateCards, { passive: true })
 			requestAnimationFrame(updateCards)
 		} catch (error) {
 			this.showState('error', `Error loading projects: ${error.message}`)
