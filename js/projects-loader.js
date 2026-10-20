@@ -240,12 +240,13 @@ class ProjectsLoader extends BaseSingleton {
 							Math.max(0, window.innerHeight * 1.1 - rect.top),
 							rect.height
 						) / rect.height
-					const mappedProgress = 0.4 + 0.6 * scrollProgress
+					const mappedProgress = Math.min(
+						1,
+						Math.max(0.4, 0.4 + 0.6 * scrollProgress)
+					)
 					card.style.transform = `translate(${
 						window.innerWidth * (1 - mappedProgress)
-					}px, ${
-						(window.innerHeight / 10) * (1 - mappedProgress)
-					}px) scale(${mappedProgress})`
+					}px, 0px) scale(${mappedProgress})`
 					card.style.opacity = `${mappedProgress}`
 					card.style.filter = `blur(${50 * (1 - mappedProgress)}px)`
 				})
