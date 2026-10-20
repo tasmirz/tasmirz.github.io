@@ -1,5 +1,5 @@
-import DataLoader from './data-loader.js?v=20261020-3'
-import BaseSingleton from './base-singleton.js?v=20261020-3'
+import DataLoader from './data-loader.js?v=20261020-4'
+import BaseSingleton from './base-singleton.js?v=20261020-4'
 
 class ProjectsLoader extends BaseSingleton {
 	constructor() {

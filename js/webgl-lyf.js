@@ -90,6 +90,7 @@ export default class WebGLLyf {
 		this.scrollProgress = 0 // 0 to 1, controls position along path
 		this.isScrollLocked = false
 		this.isManualControl = false
+		this.manualReleaseTimer = null
 		this.canvasInView = false
 		staticSpace.navJump = false // Track when navigation is happening
 
@@ -283,9 +284,24 @@ export default class WebGLLyf {
 			(m) => m.progress > this.scrollProgress + 0.02
 		)
 		if (!target) {
-			target = namedMilestones[0]
+			// Last milestone: do not loop; scroll down to next section (#contact)
+			if (this.manualReleaseTimer) {
+				clearTimeout(this.manualReleaseTimer)
+				this.manualReleaseTimer = null
+			}
+			this.isManualControl = false
+			this.unlockGlobalScroll()
+			const contactSection = document.querySelector('#contact') || document.querySelector('footer')
+			if (contactSection) {
+				contactSection.scrollIntoView({ behavior: 'smooth' })
+			}
+			return
 		}
 
+		if (this.manualReleaseTimer) {
+			clearTimeout(this.manualReleaseTimer)
+			this.manualReleaseTimer = null
+		}
 		this.isManualControl = false
 		this.animateProgressTo(target.progress)
 	}
@@ -335,12 +351,11 @@ export default class WebGLLyf {
 			if (dir) {
 				this.keys[dir] = pressed
 				if (pressed) {
-					this.isManualControl = true
-					this.lockGlobalScroll()
+					this.startManualControl()
 				} else {
 					const anyPressed = Object.values(this.keys).some(Boolean)
 					if (!anyPressed) {
-						this.isManualControl = false
+						this.scheduleManualControlRelease(2000)
 					}
 				}
 				e.preventDefault()
@@ -425,14 +440,13 @@ export default class WebGLLyf {
 					btn,
 					() => {
 						this.keys[key] = true
-						this.isManualControl = true
-						this.lockGlobalScroll()
+						this.startManualControl()
 					},
 					() => {
 						this.keys[key] = false
 						const anyPressed = Object.values(this.keys).some(Boolean)
 						if (!anyPressed) {
-							this.isManualControl = false
+							this.scheduleManualControlRelease(2000)
 						}
 					}
 				)
@@ -533,6 +547,25 @@ export default class WebGLLyf {
 		this.isScrollLocked = false
 		document.body.style.overflow = ''
 		document.documentElement.style.overflow = ''
+	}
+
+	startManualControl() {
+		if (this.manualReleaseTimer) {
+			clearTimeout(this.manualReleaseTimer)
+			this.manualReleaseTimer = null
+		}
+		this.isManualControl = true
+		this.lockGlobalScroll()
+	}
+
+	scheduleManualControlRelease(delay = 2000) {
+		if (this.manualReleaseTimer) {
+			clearTimeout(this.manualReleaseTimer)
+		}
+		this.manualReleaseTimer = setTimeout(() => {
+			this.isManualControl = false
+			this.manualReleaseTimer = null
+		}, delay)
 	}
 
 	updateMovement() {
@@ -707,8 +740,18 @@ export default class WebGLLyf {
 		const p1 = this.path[Math.min(i + 1, this.path.length - 1)]
 
 		// Interpolate position
-		this.worldOffset.x = p0.x + (p1.x - p0.x) * segmentT
-		this.worldOffset.y = p0.y + (p1.y - p0.y) * segmentT
+		const targetX = p0.x + (p1.x - p0.x) * segmentT
+		const targetY = p0.y + (p1.y - p0.y) * segmentT
+
+		const dx = targetX - this.worldOffset.x
+		const dy = targetY - this.worldOffset.y
+		if (Math.hypot(dx, dy) > 0.002) {
+			this.worldOffset.x += dx * 0.08
+			this.worldOffset.y += dy * 0.08
+		} else {
+			this.worldOffset.x = targetX
+			this.worldOffset.y = targetY
+		}
 
 		// Update location text
 		const newLocationIndex =
@@ -765,6 +808,10 @@ export default class WebGLLyf {
 	}
 
 	destroy() {
+		if (this.manualReleaseTimer) {
+			clearTimeout(this.manualReleaseTimer)
+			this.manualReleaseTimer = null
+		}
 		this.unlockGlobalScroll()
 		this.context?.destroy()
 		WebGLLyf.#instance = null

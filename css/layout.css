@@ -960,33 +960,34 @@ p {
 	position: absolute;
 	width: 36px;
 	height: 36px;
-	background: rgba(30, 32, 33, 0.85);
-	border: 1.5px solid var(--color-primary);
+	background: #282828;
+	border: 1.5px solid rgba(251, 241, 199, 0.4);
 	border-radius: 8px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	font-size: 15px;
-	color: var(--color-primary);
+	font-size: 16px;
+	font-weight: bold;
+	color: #fbf1c7;
 	cursor: pointer;
 	user-select: none;
 	-webkit-user-select: none;
 	touch-action: none;
 	transition: background 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease;
-	box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 	pointer-events: auto;
 }
 
 .lyf-dpad-button:hover {
-	background: rgba(45, 48, 50, 0.95);
+	background: #3c3836;
 }
 
 .lyf-dpad-button:active,
 .lyf-dpad-button.is-pressed {
-	background: var(--color-primary) !important;
-	color: #1d2021 !important;
+	background: #ebdbb2 !important;
+	color: #282828 !important;
 	transform: scale(0.92);
-	box-shadow: 0 0 14px rgba(var(--color-primary-rgb), 0.7);
+	box-shadow: 0 0 14px rgba(235, 219, 178, 0.6);
 }
 
 .lyf-dpad-up {
@@ -1014,34 +1015,41 @@ p {
 	width: 58px;
 	height: 58px;
 	border-radius: 50%;
-	background: rgba(30, 32, 33, 0.85);
-	border: 2px solid var(--color-primary);
+	background: #282828;
+	border: 2px solid rgba(251, 241, 199, 0.4);
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	font-size: 22px;
-	color: var(--color-primary);
+	font-size: 26px;
+	color: #fbf1c7;
 	cursor: pointer;
 	user-select: none;
 	-webkit-user-select: none;
 	touch-action: none;
 	transition: background 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease;
-	box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 	pointer-events: auto;
 	flex-shrink: 0;
 	margin-right: 8px;
 }
 
 .lyf-action-button:hover {
-	background: rgba(45, 48, 50, 0.95);
+	background: #3c3836;
 }
 
 .lyf-action-button:active,
 .lyf-action-button.is-pressed {
-	background: var(--color-primary) !important;
-	color: #1d2021 !important;
+	background: #ebdbb2 !important;
+	color: #282828 !important;
 	transform: scale(0.92);
-	box-shadow: 0 0 16px rgba(var(--color-primary-rgb), 0.7);
+	box-shadow: 0 0 16px rgba(235, 219, 178, 0.6);
+}
+
+[data-theme="dark"] .lyf-dpad-button,
+[data-theme="dark"] .lyf-action-button {
+	background: #1d2021;
+	color: #ebdbb2;
+	border-color: rgba(235, 219, 178, 0.45);
 }
 
 /* === CONTACT SECTION === */
