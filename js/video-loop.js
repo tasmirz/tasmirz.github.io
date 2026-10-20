@@ -18,26 +18,49 @@ export function setupVideoLoop() {
 		window.dispatchEvent(new CustomEvent('treeBloomComplete'))
 	}
 
+	// Loop starts from Frame 16 (0.500s) where tree bloom finishes and sway frames begin
+	const LOOP_START_TIME = 0.50
+
 	video.playbackRate = 0.2
 	video.muted = true
 	video.playsInline = true
 	video.loop = false
 	video.removeAttribute('loop')
+
+	// Preload into in-memory Blob to guarantee exact zero-latency seeking in all browser engines
+	const originalSrc = video.src || video.currentSrc || 'assets/tree_bg.webm'
+	fetch(originalSrc)
+		.then(res => res.blob())
+		.then(blob => {
+			const savedTime = video.currentTime
+			const wasPlaying = !video.paused
+			const blobUrl = URL.createObjectURL(blob)
+			video.src = blobUrl
+			video.playbackRate = 0.2
+			if (savedTime > 0) {
+				video.currentTime = savedTime
+			}
+			if (wasPlaying) {
+				video.play().catch(() => {})
+			}
+		})
+		.catch(() => {})
+
 	video.play().catch(() => {})
 
 	const loopLastFrames = () => {
 		notifyBloomComplete()
-		video.currentTime = 0.514
+		video.currentTime = LOOP_START_TIME
 		video.play().catch(() => {})
 	}
 
 	video.addEventListener('ended', loopLastFrames)
 
 	video.addEventListener('timeupdate', () => {
-		if (video.duration && video.currentTime >= video.duration - 0.03) {
+		if (video.duration && video.currentTime >= video.duration - 0.015) {
 			loopLastFrames()
-		} else if (hasBloomed && video.currentTime < 0.45) {
-			video.currentTime = 0.514
+		} else if (hasBloomed && video.currentTime < LOOP_START_TIME - 0.05) {
+			video.currentTime = LOOP_START_TIME
 			video.play().catch(() => {})
 		}
 	})
@@ -49,8 +72,8 @@ export function setupVideoLoop() {
 
 	const unlock = () => {
 		video.playbackRate = 0.2
-		if (hasBloomed && video.currentTime < 0.45) {
-			video.currentTime = 0.514
+		if (hasBloomed && video.currentTime < LOOP_START_TIME - 0.05) {
+			video.currentTime = LOOP_START_TIME
 		}
 		if (video.paused) {
 			video.play().catch(() => {})
