@@ -288,7 +288,7 @@
 	}
 	
 	.projects-sticky-frame {
-		position: sticky;
+		position: sticky !important;
 		top: 60px;
 		height: calc(100vh - 60px);
 		height: calc(100dvh - 60px);
@@ -296,11 +296,12 @@
 		padding-left: var(--section-padding-mobile);
 		padding-right: var(--section-padding-mobile);
 		padding-bottom: 12px;
-		display: flex;
-		flex-direction: column;
+		display: flex !important;
+		flex-direction: column !important;
 		justify-content: flex-start;
 		align-items: center;
 		box-sizing: border-box;
+		overflow: hidden !important;
 	}
 	
 	.projects-sticky-frame h2 {
@@ -318,20 +319,21 @@
 	}
 	
 	.projects-container {
-		display: grid;
+		display: grid !important;
 		grid-template-columns: 1fr;
 		grid-template-rows: 1fr;
-		padding: 0;
-		width: 100%;
-		max-width: 420px;
+		padding: 0 !important;
+		width: 100% !important;
+		max-width: 420px !important;
 		box-sizing: border-box;
-		overflow: visible;
+		overflow: visible !important;
 		justify-items: center;
 		align-items: center;
 		margin: 0 auto;
 	}
 	
 	.project-card {
+		grid-area: 1 / 1 / 2 / 2;
 		flex-direction: column !important;
 		border-radius: 14px;
 		margin: 0;
@@ -339,14 +341,15 @@
 		max-width: 100% !important;
 		min-width: 0 !important;
 		height: auto !important;
-		max-height: calc(100dvh - 110px) !important;
+		max-height: calc(100dvh - 120px) !important;
 		box-sizing: border-box;
 		padding: 10px 12px !important;
 		background: rgba(var(--color-bg-rgb), 0.85);
 		box-shadow: var(--shadow-small);
 		transition: none;
 		overflow: hidden;
-		display: flex;
+		display: flex !important;
+		will-change: transform, opacity, filter;
 	}
 	
 	.project-card:nth-child(even) {
@@ -364,11 +367,11 @@
 		flex: 0 0 auto;
 		width: 100%;
 		height: auto;
-		max-height: clamp(85px, 18dvh, 135px) !important;
+		max-height: clamp(120px, 24dvh, 180px) !important;
 		aspect-ratio: 16 / 9;
 		overflow: hidden;
 		border-radius: 8px;
-		margin-bottom: 6px;
+		margin-bottom: 8px;
 	}
 
 	.carousel-btn {

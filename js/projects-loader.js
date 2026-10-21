@@ -235,17 +235,25 @@ class ProjectsLoader extends BaseSingleton {
 			const projectCards = document.querySelectorAll('.project-card')
 			const N = projectCards.length
 
-			if (projectsSection && N > 0) {
-				// Height ensures comfortable scroll distance per project card
-				projectsSection.style.minHeight = `calc(100vh + ${(N - 1) * 85}vh)`
+			const isLandscapeDesktop = () => {
+				const vw = window.innerWidth
+				const vh = window.innerHeight
+				return (vw >= 768) && (vw > vh)
 			}
 
 			const updateCards = () => {
 				if (!projectsSection || N === 0) return
 
-				const rect = projectsSection.getBoundingClientRect()
-				const vh = window.innerHeight
 				const vw = window.innerWidth
+				const vh = window.innerHeight
+				const isLandscapeDesktop = (vw >= 768) && (vw > vh)
+				const isPortrait = !isLandscapeDesktop
+
+				// Height: comfortable scroll distance (45vh on mobile/portrait, 75vh on desktop)
+				const heightMultiplier = isPortrait ? 45 : 75
+				projectsSection.style.minHeight = `calc(100vh + ${(N - 1) * heightMultiplier}vh)`
+
+				const rect = projectsSection.getBoundingClientRect()
 				const totalScroll = projectsSection.offsetHeight - vh
 
 				if (totalScroll <= 0) return
@@ -254,34 +262,19 @@ class ProjectsLoader extends BaseSingleton {
 				const scrolled = stickyOffset - rect.top
 				const p = Math.max(0, Math.min(1, scrolled / totalScroll))
 
-				// Landscape desktop: width >= 768 AND width > height
-				// Portrait: any screen where height >= width, or width < 768 (mobile / tablet portrait)
-				const isLandscapeDesktop = (vw >= 768) && (vw > vh)
-				const isPortrait = !isLandscapeDesktop
-
 				const cardWidth = projectCards[0]?.offsetWidth || 520
-				const cardHeight = projectCards[0]?.offsetHeight || 300
-
 				const gapX = 32
 				const stepDistanceX = cardWidth + gapX
-				const stepDistanceY = Math.max(cardHeight + 20, vh * 0.65)
 
 				const rawPhase = p * (N - 1)
 				const k = Math.floor(rawPhase)
 				const frac = rawPhase - k
 
-				// Dwell comfortably at each card, then smoothly transition to next
+				// Continuous smoothstep with zero dead zones - responds instantly to touch
 				let cardPhase = rawPhase
 				if (k < N - 1) {
-					if (frac <= 0.2) {
-						cardPhase = k
-					} else if (frac >= 0.8) {
-						cardPhase = k + 1
-					} else {
-						const t = (frac - 0.2) / 0.6
-						const smoothT = t * t * (3 - 2 * t)
-						cardPhase = k + smoothT
-					}
+					const smoothFrac = frac * frac * (3 - 2 * frac)
+					cardPhase = k + smoothFrac
 				}
 
 				projectCards.forEach((card, i) => {
@@ -290,40 +283,41 @@ class ProjectsLoader extends BaseSingleton {
 
 					let transform
 					if (isPortrait) {
-						// Vertical scrolling motion for portrait / mobile
-						const translateY = diff * stepDistanceY
-						transform = `translate3d(0px, ${translateY}px, 0)`
+						// Mobile portrait: subtle vertical drift (45px) and scale
+						const translateY = diff * 45
+						const scale = 1 - Math.min(0.08, absDiff * 0.08)
+						transform = `translate3d(0px, ${translateY.toFixed(1)}px, 0) scale(${scale.toFixed(3)})`
 					} else {
-						// Horizontal scrolling motion for landscape desktop
+						// Desktop landscape: horizontal slide
 						const translateX = diff * stepDistanceX
-						transform = `translate3d(${translateX}px, 0px, 0)`
+						transform = `translate3d(${translateX.toFixed(1)}px, 0px, 0)`
 					}
 
-					if (absDiff <= 0.25) {
-						// Centered reading & interaction zone
+					if (absDiff >= 1.0) {
+						// Beyond adjacent cards: completely hidden with blur
+						card.style.transform = transform
+						card.style.opacity = '0'
+						card.style.filter = 'blur(16px)'
+						card.style.pointerEvents = 'none'
+						card.style.zIndex = '1'
+					} else if (absDiff <= 0.08) {
+						// Centered reading & interaction zone: sharp and clear
 						card.style.transform = transform
 						card.style.opacity = '1'
 						card.style.filter = 'none'
 						card.style.pointerEvents = 'auto'
 						card.style.zIndex = '5'
-					} else if (absDiff <= 1.25) {
-						// Adjacent cards coming / going
-						const fade = Math.min(1, (absDiff - 0.25) / 1.0)
-						const opacity = 1 - 0.55 * fade
-						const blur = 8 * fade
+					} else {
+						// Transition zone: smooth blurred fade in and blurred fade out
+						const t = (absDiff - 0.08) / 0.92 // 0 to 1
+						const opacity = Math.max(0, 1 - Math.pow(t, 1.3))
+						const blur = 14 * t
 
 						card.style.transform = transform
-						card.style.opacity = `${opacity}`
-						card.style.filter = blur > 0.5 ? `blur(${blur}px)` : 'none'
-						card.style.pointerEvents = 'none'
-						card.style.zIndex = '3'
-					} else {
-						// Beyond adjacent cards
-						card.style.transform = transform
-						card.style.opacity = '0'
-						card.style.filter = 'blur(20px)'
-						card.style.pointerEvents = 'none'
-						card.style.zIndex = '1'
+						card.style.opacity = `${opacity.toFixed(3)}`
+						card.style.filter = blur > 0.4 ? `blur(${blur.toFixed(1)}px)` : 'none'
+						card.style.pointerEvents = absDiff <= 0.3 ? 'auto' : 'none'
+						card.style.zIndex = `${Math.round(5 - absDiff * 3)}`
 					}
 				})
 			}

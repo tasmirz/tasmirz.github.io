@@ -91,9 +91,9 @@
 	#projects {
 		padding: 0;
 	}
-	
+
 	.projects-sticky-frame {
-		position: sticky;
+		position: sticky !important;
 		top: 60px;
 		height: calc(100vh - 60px);
 		height: calc(100dvh - 60px);
@@ -101,11 +101,12 @@
 		padding-left: var(--section-padding-tablet);
 		padding-right: var(--section-padding-tablet);
 		padding-bottom: var(--spacing-md);
-		display: flex;
-		flex-direction: column;
+		display: flex !important;
+		flex-direction: column !important;
 		justify-content: flex-start;
 		align-items: center;
 		box-sizing: border-box;
+		overflow: hidden !important;
 	}
 
 	.projects-sticky-frame h2 {
@@ -118,20 +119,21 @@
 	}
 	
 	.projects-container {
-		display: grid;
+		display: grid !important;
 		grid-template-columns: 1fr;
 		grid-template-rows: 1fr;
-		width: 100%;
-		max-width: 580px;
+		width: 100% !important;
+		max-width: 580px !important;
 		margin: 0 auto;
-		padding: 0;
+		padding: 0 !important;
 		box-sizing: border-box;
-		overflow: visible;
+		overflow: visible !important;
 		justify-items: center;
 		align-items: center;
 	}
 	
 	.project-card {
+		grid-area: 1 / 1 / 2 / 2;
 		flex-direction: column !important;
 		width: 100% !important;
 		max-width: 100% !important;
@@ -142,9 +144,10 @@
 		box-sizing: border-box;
 		background: rgba(var(--color-bg-rgb), 0.85);
 		box-shadow: var(--shadow-small);
-		transition: transform 200ms ease, box-shadow 200ms ease;
+		transition: none;
 		overflow: hidden;
-		display: flex;
+		display: flex !important;
+		will-change: transform, opacity, filter;
 	}
 	
 	.project-card:nth-child(even) {

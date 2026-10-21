@@ -1,5 +1,5 @@
 import initUI from './ui-events.js?v=20261021-1'
-import ProjectsLoader from './projects-loader.js?v=20261021-1'
+import ProjectsLoader from './projects-loader.js?v=20261021-3'
 import SkillsLoader from './skills-loader.js?v=20261021-1'
 import ProfileLoader from './profile-loader.js?v=20261021-1'
 import WebGLBackground from './webgl-background.js?v=20261021-1'
