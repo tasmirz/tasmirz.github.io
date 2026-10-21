@@ -355,7 +355,7 @@ export default class WebGLLyf {
 				} else {
 					const anyPressed = Object.values(this.keys).some(Boolean)
 					if (!anyPressed) {
-						this.scheduleManualControlRelease(2000)
+						this.scheduleManualControlRelease(500)
 					}
 				}
 				e.preventDefault()
@@ -384,6 +384,7 @@ export default class WebGLLyf {
 				if (this.shouldHandleScroll(newProgress)) {
 					e.preventDefault()
 					this.scrollProgress = newProgress
+					this.updatePositionOnScroll()
 					this.lockGlobalScroll()
 					this.notifyProgressTracker()
 				} else {
@@ -446,7 +447,7 @@ export default class WebGLLyf {
 						this.keys[key] = false
 						const anyPressed = Object.values(this.keys).some(Boolean)
 						if (!anyPressed) {
-							this.scheduleManualControlRelease(2000)
+							this.scheduleManualControlRelease(500)
 						}
 					}
 				)
@@ -558,7 +559,7 @@ export default class WebGLLyf {
 		this.lockGlobalScroll()
 	}
 
-	scheduleManualControlRelease(delay = 2000) {
+	scheduleManualControlRelease(delay = 500) {
 		if (this.manualReleaseTimer) {
 			clearTimeout(this.manualReleaseTimer)
 		}
@@ -739,19 +740,9 @@ export default class WebGLLyf {
 		const p0 = this.path[i]
 		const p1 = this.path[Math.min(i + 1, this.path.length - 1)]
 
-		// Interpolate position
-		const targetX = p0.x + (p1.x - p0.x) * segmentT
-		const targetY = p0.y + (p1.y - p0.y) * segmentT
-
-		const dx = targetX - this.worldOffset.x
-		const dy = targetY - this.worldOffset.y
-		if (Math.hypot(dx, dy) > 0.002) {
-			this.worldOffset.x += dx * 0.08
-			this.worldOffset.y += dy * 0.08
-		} else {
-			this.worldOffset.x = targetX
-			this.worldOffset.y = targetY
-		}
+		// Interpolate position directly on the path
+		this.worldOffset.x = p0.x + (p1.x - p0.x) * segmentT
+		this.worldOffset.y = p0.y + (p1.y - p0.y) * segmentT
 
 		// Update location text
 		const newLocationIndex =
@@ -794,6 +785,7 @@ export default class WebGLLyf {
 				)
 
 				this.scrollProgress = newProgress
+				this.updatePositionOnScroll()
 			},
 			{ passive: true }
 		)
